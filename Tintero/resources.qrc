@@ -1,0 +1,45 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>img/041-bold.png</file>
+        <file>img/041-center-alignment.png</file>
+        <file>img/041-close.png</file>
+        <file>img/041-columns.png</file>
+        <file>img/041-copy.png</file>
+        <file>img/041-cut.png</file>
+        <file>img/041-document-1.png</file>
+        <file>img/041-document.png</file>
+        <file>img/041-eraser.png</file>
+        <file>img/041-export.png</file>
+        <file>img/041-folder.png</file>
+        <file>img/041-font.png</file>
+        <file>img/041-import.png</file>
+        <file>img/041-indent.png</file>
+        <file>img/041-italic.png</file>
+        <file>img/041-justify-align.png</file>
+        <file>img/041-left-alignment.png</file>
+        <file>img/041-link.png</file>
+        <file>img/041-list-1.png</file>
+        <file>img/041-list.png</file>
+        <file>img/041-outdent.png</file>
+        <file>img/041-paperclip.png</file>
+        <file>img/041-paragraph.png</file>
+        <file>img/041-paste.png</file>
+        <file>img/041-preview.png</file>
+        <file>img/041-printer.png</file>
+        <file>img/041-redo.png</file>
+        <file>img/041-right-alignment.png</file>
+        <file>img/041-save-1.png</file>
+        <file>img/041-save.png</file>
+        <file>img/041-strikethrough.png</file>
+        <file>img/041-subscript.png</file>
+        <file>img/041-superscript.png</file>
+        <file>img/041-table-1.png</file>
+        <file>img/041-table.png</file>
+        <file>img/041-text-height.png</file>
+        <file>img/041-text-width.png</file>
+        <file>img/041-underline.png</file>
+        <file>img/041-undo.png</file>
+        <file>img/041-unlink.png</file>
+        <file>img/plus.png</file>
+    </qresource>
+</RCC>
