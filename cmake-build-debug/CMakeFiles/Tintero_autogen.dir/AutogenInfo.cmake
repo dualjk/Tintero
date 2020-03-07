@@ -1,0 +1,34 @@
+# Meta
+set(AM_MULTI_CONFIG "FALSE")
+set(AM_PARALLEL "2")
+# Directories
+set(AM_CMAKE_SOURCE_DIR "/Users/giuliodg/Documents/GitHub/Tintero")
+set(AM_CMAKE_BINARY_DIR "/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug")
+set(AM_CMAKE_CURRENT_SOURCE_DIR "/Users/giuliodg/Documents/GitHub/Tintero")
+set(AM_CMAKE_CURRENT_BINARY_DIR "/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug")
+set(AM_CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE "")
+set(AM_BUILD_DIR "/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero_autogen")
+set(AM_INCLUDE_DIR "include")
+# Files
+set(AM_SOURCES "/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/client.cpp;/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/main.cpp;/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/mainwindow.cpp;/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_client.cpp;/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_mainwindow.cpp;/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/qrc_resources.cpp")
+set(AM_HEADERS "/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/client.h;/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/mainwindow.h;/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_predefs.h;/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/ui_client.h;/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/ui_mainwindow.h")
+set(AM_SETTINGS_FILE "/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles/Tintero_autogen.dir/AutogenOldSettings.txt")
+# Qt
+set(AM_QT_VERSION_MAJOR "5")
+set(AM_QT_MOC_EXECUTABLE "/Users/giuliodg/Qt/5.14.1/clang_64/bin/moc")
+set(AM_QT_UIC_EXECUTABLE "/Users/giuliodg/Qt/5.14.1/clang_64/bin/uic")
+# MOC settings
+set(AM_MOC_SKIP "/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero_autogen/mocs_compilation.cpp")
+set(AM_MOC_DEFINITIONS "QT_CORE_LIB;QT_GUI_LIB;QT_SQL_LIB;QT_WIDGETS_LIB")
+set(AM_MOC_INCLUDES "/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero_autogen/include;/Users/giuliodg/Documents/GitHub/Tintero/.;/Users/giuliodg/Documents/GitHub/Tintero/client;/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug;/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero;/Users/giuliodg/Documents/GitHub/Tintero/server;/Users/giuliodg/Documents/GitHub/Tintero/Tintero;/Users/giuliodg/Qt/5.14.1/clang_64/lib/QtWidgets.framework;/Users/giuliodg/Qt/5.14.1/clang_64/lib/QtWidgets.framework/Headers;/Users/giuliodg/Qt/5.14.1/clang_64/lib/QtGui.framework;/Users/giuliodg/Qt/5.14.1/clang_64/lib/QtGui.framework/Headers;/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/OpenGL.framework/Headers;/Users/giuliodg/Qt/5.14.1/clang_64/lib/QtCore.framework;/Users/giuliodg/Qt/5.14.1/clang_64/lib/QtCore.framework/Headers;/Users/giuliodg/Qt/5.14.1/clang_64/./mkspecs/macx-clang;/Users/giuliodg/Qt/5.14.1/clang_64/lib/QtSql.framework;/Users/giuliodg/Qt/5.14.1/clang_64/lib/QtSql.framework/Headers")
+set(AM_MOC_OPTIONS "")
+set(AM_MOC_RELAXED_MODE "")
+set(AM_MOC_MACRO_NAMES "Q_OBJECT;Q_GADGET;Q_NAMESPACE;Q_NAMESPACE_EXPORT")
+set(AM_MOC_DEPEND_FILTERS "")
+set(AM_MOC_PREDEFS_CMD "/Library/Developer/CommandLineTools/usr/bin/c++;-dM;-E;-c;/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.12/Modules/CMakeCXXCompilerABI.cpp")
+# UIC settings
+set(AM_UIC_SKIP "/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero_autogen/mocs_compilation.cpp")
+set(AM_UIC_TARGET_OPTIONS "")
+set(AM_UIC_OPTIONS_FILES "")
+set(AM_UIC_OPTIONS_OPTIONS "")
+set(AM_UIC_SEARCH_PATHS "")

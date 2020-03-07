@@ -6,19 +6,5 @@
 
 #IncludeRegexTransform: 
 
-/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/client.h
-QMainWindow
--
-
-/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/main.cpp
-mainwindow.h
-/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/mainwindow.h
-QApplication
--
-
-/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/mainwindow.h
-QMainWindow
--
-client.h
-/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/client.h
+/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp
 

@@ -57,9 +57,55 @@ include CMakeFiles/Tintero.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Tintero.dir/flags.make
 
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/resources.qrc
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: CMakeFiles/Tintero_autogen.dir/RCCresourcesInfo.cmake
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-columns.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-undo.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-folder.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-outdent.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-list-1.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-paperclip.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-superscript.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-underline.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-copy.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-preview.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-printer.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-justify-align.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-italic.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-document-1.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/plus.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-bold.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-left-alignment.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-paste.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-save.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-export.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-document.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-font.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-cut.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-list.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-table.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-redo.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-indent.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-close.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-link.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-strikethrough.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-right-alignment.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-unlink.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-paragraph.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-table-1.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-text-width.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-save-1.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-subscript.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-text-height.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-center-alignment.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-import.png
+Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp: ../client/Tintero/img/041-eraser.png
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic RCC for client/Tintero/resources.qrc"
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E cmake_autorcc /Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles/Tintero_autogen.dir/RCCresourcesInfo.cmake Debug
+
 CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_client.cpp.o: CMakeFiles/Tintero.dir/flags.make
 CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_client.cpp.o: ../client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_client.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_client.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_client.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_client.cpp.o -c /Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_client.cpp
 
 CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_client.cpp.i: cmake_force
@@ -72,7 +118,7 @@ CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/
 
 CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_mainwindow.cpp.o: CMakeFiles/Tintero.dir/flags.make
 CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_mainwindow.cpp.o: ../client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_mainwindow.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_mainwindow.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_mainwindow.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_mainwindow.cpp.o -c /Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_mainwindow.cpp
 
 CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_mainwindow.cpp.i: cmake_force
@@ -85,7 +131,7 @@ CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/
 
 CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/qrc_resources.cpp.o: CMakeFiles/Tintero.dir/flags.make
 CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/qrc_resources.cpp.o: ../client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/qrc_resources.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/qrc_resources.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/qrc_resources.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/qrc_resources.cpp.o -c /Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/qrc_resources.cpp
 
 CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/qrc_resources.cpp.i: cmake_force
@@ -98,7 +144,7 @@ CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/
 
 CMakeFiles/Tintero.dir/client/Tintero/client.cpp.o: CMakeFiles/Tintero.dir/flags.make
 CMakeFiles/Tintero.dir/client/Tintero/client.cpp.o: ../client/Tintero/client.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Tintero.dir/client/Tintero/client.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Tintero.dir/client/Tintero/client.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Tintero.dir/client/Tintero/client.cpp.o -c /Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/client.cpp
 
 CMakeFiles/Tintero.dir/client/Tintero/client.cpp.i: cmake_force
@@ -111,7 +157,7 @@ CMakeFiles/Tintero.dir/client/Tintero/client.cpp.s: cmake_force
 
 CMakeFiles/Tintero.dir/client/Tintero/main.cpp.o: CMakeFiles/Tintero.dir/flags.make
 CMakeFiles/Tintero.dir/client/Tintero/main.cpp.o: ../client/Tintero/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Tintero.dir/client/Tintero/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Tintero.dir/client/Tintero/main.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Tintero.dir/client/Tintero/main.cpp.o -c /Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/main.cpp
 
 CMakeFiles/Tintero.dir/client/Tintero/main.cpp.i: cmake_force
@@ -124,7 +170,7 @@ CMakeFiles/Tintero.dir/client/Tintero/main.cpp.s: cmake_force
 
 CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.o: CMakeFiles/Tintero.dir/flags.make
 CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.o: ../client/Tintero/mainwindow.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.o -c /Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/mainwindow.cpp
 
 CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.i: cmake_force
@@ -135,6 +181,32 @@ CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/mainwindow.cpp -o CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.s
 
+CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.o: CMakeFiles/Tintero.dir/flags.make
+CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.o: Tintero_autogen/mocs_compilation.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.o -c /Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero_autogen/mocs_compilation.cpp
+
+CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero_autogen/mocs_compilation.cpp > CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.i
+
+CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero_autogen/mocs_compilation.cpp -o CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.s
+
+CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.o: CMakeFiles/Tintero.dir/flags.make
+CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.o: Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.o -c /Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp
+
+CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp > CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.i
+
+CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp -o CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.s
+
 # Object files for target Tintero
 Tintero_OBJECTS = \
 "CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_client.cpp.o" \
@@ -142,7 +214,9 @@ Tintero_OBJECTS = \
 "CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/qrc_resources.cpp.o" \
 "CMakeFiles/Tintero.dir/client/Tintero/client.cpp.o" \
 "CMakeFiles/Tintero.dir/client/Tintero/main.cpp.o" \
-"CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.o"
+"CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.o" \
+"CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.o" \
+"CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.o"
 
 # External object files for target Tintero
 Tintero_EXTERNAL_OBJECTS =
@@ -153,9 +227,15 @@ Tintero: CMakeFiles/Tintero.dir/client/build-Tintero-Desktop_Qt_5_14_1_clang_64b
 Tintero: CMakeFiles/Tintero.dir/client/Tintero/client.cpp.o
 Tintero: CMakeFiles/Tintero.dir/client/Tintero/main.cpp.o
 Tintero: CMakeFiles/Tintero.dir/client/Tintero/mainwindow.cpp.o
+Tintero: CMakeFiles/Tintero.dir/Tintero_autogen/mocs_compilation.cpp.o
+Tintero: CMakeFiles/Tintero.dir/Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp.o
 Tintero: CMakeFiles/Tintero.dir/build.make
+Tintero: /Users/giuliodg/Qt/5.14.1/clang_64/lib/QtWidgets.framework/QtWidgets
+Tintero: /Users/giuliodg/Qt/5.14.1/clang_64/lib/QtSql.framework/QtSql
+Tintero: /Users/giuliodg/Qt/5.14.1/clang_64/lib/QtGui.framework/QtGui
+Tintero: /Users/giuliodg/Qt/5.14.1/clang_64/lib/QtCore.framework/QtCore
 Tintero: CMakeFiles/Tintero.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable Tintero"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable Tintero"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Tintero.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -167,7 +247,7 @@ CMakeFiles/Tintero.dir/clean:
 	$(CMAKE_COMMAND) -P CMakeFiles/Tintero.dir/cmake_clean.cmake
 .PHONY : CMakeFiles/Tintero.dir/clean
 
-CMakeFiles/Tintero.dir/depend:
+CMakeFiles/Tintero.dir/depend: Tintero_autogen/LW3ZN3QLPZ/qrc_resources.cpp
 	cd /Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/giuliodg/Documents/GitHub/Tintero /Users/giuliodg/Documents/GitHub/Tintero /Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug /Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug /Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles/Tintero.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/Tintero.dir/depend
 
