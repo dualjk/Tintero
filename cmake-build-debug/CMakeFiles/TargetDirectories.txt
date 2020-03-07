@@ -1,0 +1,3 @@
+/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/CMakeFiles/Tintero.dir

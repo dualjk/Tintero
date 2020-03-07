@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Tintero"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Tintero">
+				<Option output="/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/."/>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/client"/>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug"/>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero"/>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/server"/>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/Tintero"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 Tintero"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Tintero/fast">
+				<Option output="/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Tintero" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/."/>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/client"/>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug"/>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero"/>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/server"/>
+					<Add directory="/Users/giuliodg/Documents/GitHub/Tintero/Tintero"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 Tintero/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/giuliodg/Documents/GitHub/Tintero/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/README.md">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/Tintero/Tintero.pro.user">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/client.cpp">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/client.h">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/client.ui">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/main.cpp">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/mainwindow.cpp">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/mainwindow.h">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/mainwindow.ui">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_client.cpp">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_mainwindow.cpp">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/moc_predefs.h">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/qrc_resources.cpp">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/ui_client.h">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/client/build-Tintero-Desktop_Qt_5_14_1_clang_64bit-Debug/ui_mainwindow.h">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/server/server folder">
+			<Option target="Tintero"/>
+		</Unit>
+		<Unit filename="/Users/giuliodg/Documents/GitHub/Tintero/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

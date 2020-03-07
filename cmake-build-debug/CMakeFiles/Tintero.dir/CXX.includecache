@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/client.h
+QMainWindow
+-
+
+/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/main.cpp
+mainwindow.h
+/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/mainwindow.h
+QApplication
+-
+
+/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/mainwindow.h
+QMainWindow
+-
+client.h
+/Users/giuliodg/Documents/GitHub/Tintero/client/Tintero/client.h
+
