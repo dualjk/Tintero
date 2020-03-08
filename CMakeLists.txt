@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(Tintero)
 
-
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(CMAKE_CXX_STANDARD 14)
@@ -49,5 +47,4 @@ add_executable(Tintero
         Tintero/Tintero.pro.user
         README.md)
 
-TARGET_LINK_LIBRARIES(Tintero ${QT_LIBRARIES})
 target_link_libraries(Tintero Qt5::Widgets Qt5::Sql)
