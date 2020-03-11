@@ -86,7 +86,7 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
 	* se usiamo la stessa strategia, capire come possiamo farlo visualizzare su textEdit -> temo di no 
 
 
-#Lato comunicazione tra processi
+# Lato comunicazione tra processi
 + come implementare le quattro operazioni principali (cito da conclave)
     * **Local Insert**: User inserts character into their local text editor and sends the operation to all other users.
     * **Local Delete**: User deletes character from their local editor and sends the operation to all other users.
@@ -94,7 +94,7 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
     * **Remote Delete**: User receives a delete operation from another user and deletes it from their local editor.
 
 
-##Proposte di implementazione
+## Proposte di implementazione
 1. **programmino stupido che scriva su textEdit una QString già inizializzata** -> fatto, funziona 
 2. **programmino stupido che riesca ad inviare e a ricevere un QChar da un altro programmino stupido**
 3. **programmino stupido che riesca a generare un documento di testo arricchito (html?)**
