@@ -9,7 +9,8 @@ Client::Client(QWidget *parent)
     , hostCombo(new QComboBox)
     , portLineEdit(new QLineEdit)
     , getFortuneButton(new QPushButton(tr("Get Fortune")))
-    , messageLineEdit(new QLineEdit)
+    , usernameLineEdit(new QLineEdit)
+    , pswLineEdit(new QLineEdit)
     , tcpSocket(new QTcpSocket(this))
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -39,13 +40,17 @@ Client::Client(QWidget *parent)
     }
 
     portLineEdit->setValidator(new QIntValidator(1, 65535, this));
+    /*Comando per oscurare la password durante l'inserimento*/
+    pswLineEdit->setEchoMode(QLineEdit::Password);
 
     auto hostLabel = new QLabel(tr("&Server name:"));
     hostLabel->setBuddy(hostCombo);
     auto portLabel = new QLabel(tr("&Server port:"));
     portLabel->setBuddy(portLineEdit);
-    auto messageLabel = new QLabel(tr("&write message:"));
-    messageLabel->setBuddy(messageLineEdit);
+    auto usernameLabel = new QLabel(tr("&Username:"));
+    usernameLabel->setBuddy(usernameLineEdit);
+    auto pswLabel = new QLabel(tr("Password:"));
+    usernameLabel->setBuddy(pswLineEdit);
 
 
     statusLabel = new QLabel(tr("This examples requires that you run the "
@@ -99,10 +104,12 @@ Client::Client(QWidget *parent)
     mainLayout->addWidget(hostCombo, 0, 1);
     mainLayout->addWidget(portLabel, 1, 0);
     mainLayout->addWidget(portLineEdit, 1, 1);
-    mainLayout->addWidget(messageLabel,2,0);
-    mainLayout->addWidget(messageLineEdit,2,1);
-    mainLayout->addWidget(statusLabel, 3, 0, 1, 3);
-    mainLayout->addWidget(buttonBox, 4, 0, 1, 3);
+    mainLayout->addWidget(usernameLabel,2,0);
+    mainLayout->addWidget(usernameLineEdit,2,1);
+    mainLayout->addWidget(pswLabel,3,0);
+    mainLayout->addWidget(pswLineEdit,3,1);
+    mainLayout->addWidget(statusLabel, 4, 0, 1, 4);
+    mainLayout->addWidget(buttonBox, 5, 0, 1, 5);
 
     setWindowTitle(QGuiApplication::applicationDisplayName());
     portLineEdit->setFocus();
@@ -146,14 +153,9 @@ void Client::requestNewFortune()
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_10);
 
-
-
-    out << messageLineEdit->text() + "sucami la melanzana";
-//! [4] //! [7]
-
-    //! [7] //! [8]
-
+    out << usernameLineEdit->text() + ";" + pswLineEdit->text();
     tcpSocket->write(block);
+
 
 }
 //! [6]

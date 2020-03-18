@@ -41,8 +41,8 @@ private:
 
     QNetworkSession *networkSession = nullptr;
 
-
-    QLineEdit *messageLineEdit = nullptr;
+    QLineEdit *pswLineEdit = nullptr;
+    QLineEdit *usernameLineEdit = nullptr;
 };
 //! [0]
 

@@ -164,8 +164,11 @@ void Server::receive(){
         if (!in.commitTransaction())
             return;
 
-        statusLabel->setText(nextFortune);
-        qDebug() << nextFortune;
+        QStringList credentials = nextFortune.split(';', QString::SkipEmptyParts);
+
+        statusLabel->setText("Username: " + credentials.at(0) + "\nPassword: " + credentials.at(1));
+
+        connect(clientConnection, &QIODevice::readyRead, this, &Server::receive);
         Server::clientConnection->disconnectFromHost();
 
 }
