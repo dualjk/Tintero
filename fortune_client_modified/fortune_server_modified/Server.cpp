@@ -43,7 +43,8 @@ Server::Server(QWidget *parent)
              << tr("You might have mail.")
              << tr("You cannot kill time without injuring eternity.")
              << tr("Computers are not intelligent. They only think they are.");
-    //! [2]
+
+
     auto quitButton = new QPushButton(tr("Quit"));
     quitButton->setAutoDefault(false);
     connect(quitButton, &QAbstractButton::clicked, this, &QWidget::close);
@@ -78,6 +79,8 @@ Server::Server(QWidget *parent)
     mainLayout->addLayout(buttonLayout);
 
     setWindowTitle(QGuiApplication::applicationDisplayName());
+
+
 }
 
 void Server::sessionOpened()

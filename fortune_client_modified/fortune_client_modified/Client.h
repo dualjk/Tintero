@@ -4,6 +4,7 @@
 #include <QDataStream>
 #include <QDialog>
 #include <QTcpSocket>
+#include <QPixmap>
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
@@ -43,6 +44,9 @@ private:
 
     QLineEdit *pswLineEdit = nullptr;
     QLineEdit *usernameLineEdit = nullptr;
+    QLabel *picLabel = nullptr;
+    QLabel *appLabel = nullptr;
+
 };
 //! [0]
 

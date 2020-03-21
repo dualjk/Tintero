@@ -9,9 +9,11 @@ Client::Client(QWidget *parent)
     , hostCombo(new QComboBox)
     , portLineEdit(new QLineEdit)
     , getFortuneButton(new QPushButton(tr("Get Fortune")))
-    , usernameLineEdit(new QLineEdit)
-    , pswLineEdit(new QLineEdit)
     , tcpSocket(new QTcpSocket(this))
+    , pswLineEdit(new QLineEdit)
+    , usernameLineEdit(new QLineEdit)
+
+
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 //! [0]
@@ -54,7 +56,13 @@ Client::Client(QWidget *parent)
 
 
     statusLabel = new QLabel(tr("This examples requires that you run the "
-                                "Fortune Server example as well."));
+                                "<s>Fortune Server</s> Tintero Server example as well."));
+
+    picLabel = new QLabel(tr(""));
+    appLabel = new QLabel(tr("<b>Tintero Client</b>: esplora con noi il magico mondo del c++\n"
+                             "Speriamo di prendere 30."));
+    QPixmap pix("/Users/giuliodg/fortune_client_modified/img/ink.png");
+    picLabel->setPixmap(pix.scaled(128,128, Qt::KeepAspectRatio));
 
     getFortuneButton->setDefault(true);
     getFortuneButton->setEnabled(false);
@@ -100,16 +108,19 @@ Client::Client(QWidget *parent)
     } else {
         mainLayout = new QGridLayout(this);
     }
-    mainLayout->addWidget(hostLabel, 0, 0);
-    mainLayout->addWidget(hostCombo, 0, 1);
-    mainLayout->addWidget(portLabel, 1, 0);
-    mainLayout->addWidget(portLineEdit, 1, 1);
-    mainLayout->addWidget(usernameLabel,2,0);
-    mainLayout->addWidget(usernameLineEdit,2,1);
-    mainLayout->addWidget(pswLabel,3,0);
-    mainLayout->addWidget(pswLineEdit,3,1);
-    mainLayout->addWidget(statusLabel, 4, 0, 1, 4);
-    mainLayout->addWidget(buttonBox, 5, 0, 1, 5);
+    mainLayout->addWidget(picLabel, 0, 0);
+    mainLayout->setAlignment(picLabel, Qt::AlignHCenter);
+    mainLayout->addWidget(appLabel, 0, 1);
+    mainLayout->addWidget(hostLabel, 1, 0);
+    mainLayout->addWidget(hostCombo, 1, 1);
+    mainLayout->addWidget(portLabel, 2, 0);
+    mainLayout->addWidget(portLineEdit,2, 1);
+    mainLayout->addWidget(usernameLabel,3,0);
+    mainLayout->addWidget(usernameLineEdit,3,1);
+    mainLayout->addWidget(pswLabel,4,0);
+    mainLayout->addWidget(pswLineEdit,4,1);
+    mainLayout->addWidget(statusLabel, 5, 0, 1, 5);
+    mainLayout->addWidget(buttonBox, 6, 0, 1, 6);
 
     setWindowTitle(QGuiApplication::applicationDisplayName());
     portLineEdit->setFocus();
@@ -207,7 +218,7 @@ void Client::displayError(QAbstractSocket::SocketError socketError)
                                     "settings are correct."));
         break;
     default:
-        QMessageBox::information(this, tr("Fortune Client"),
+        QMessageBox::information(this, tr("<s>Fortune Client</s> Tintero Client"),
                                  tr("The following error occurred: %1.")
                                  .arg(tcpSocket->errorString()));
     }
