@@ -4,6 +4,7 @@
 #include <QDataStream>
 #include <QDialog>
 #include <QTcpSocket>
+#include <QtWidgets>
 #include <QPixmap>
 
 QT_BEGIN_NAMESPACE
@@ -29,23 +30,59 @@ private slots:
     void displayError(QAbstractSocket::SocketError socketError);
     void enableGetFortuneButton();
     void sessionOpened();
+    void newUser();
+    void backToLoginPage();
+    void signUp();
 
 private:
+
+    QGridLayout *secondLayout = nullptr;
+    QGridLayout *mainLayout = nullptr;
+
+    /* Elementi grafici per la pagina di login */
     QComboBox *hostCombo = nullptr;
     QLineEdit *portLineEdit = nullptr;
     QLabel *statusLabel = nullptr;
     QPushButton *getFortuneButton = nullptr;
-
     QTcpSocket *tcpSocket = nullptr;
     QDataStream in;
     QString currentFortune;
-
     QNetworkSession *networkSession = nullptr;
-
     QLineEdit *pswLineEdit = nullptr;
     QLineEdit *usernameLineEdit = nullptr;
     QLabel *picLabel = nullptr;
     QLabel *appLabel = nullptr;
+    QPushButton *newUserButton = nullptr;
+    QStackedWidget *stackedWidget = nullptr;
+
+
+    QLabel *hostLabel = nullptr;
+    QLabel *portLabel = nullptr;
+
+
+
+    /* Elementi grafici per la pagina di registrazione */
+    QLabel *usernameForRegLabel = nullptr;
+    QLineEdit *usernameForRegLineEdit = nullptr;
+    QLabel *pswForRegLabel = nullptr;
+    QLineEdit *pswForRegLineEdit = nullptr;
+    QLabel *pswRepeatLabel = nullptr;
+    QLineEdit *pswRepeatLineEdit = nullptr;
+    QLabel *picRegLabel = nullptr;
+    QLabel *appRegLabel = nullptr;
+    QPushButton *backButton = nullptr;
+    QPushButton *signUpButton = nullptr;
+
+
+    QComboBox *hostRegCombo = nullptr;
+    QLineEdit *portRegLineEdit = nullptr;
+
+
+
+
+
+
+
 
 };
 //! [0]

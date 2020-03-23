@@ -4,7 +4,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    QApplication::setApplicationDisplayName(Client::tr("Fortune Client"));
+    QApplication::setApplicationDisplayName(Client::tr("Tintero Client"));
     Client client;
     client.show();
     return app.exec();

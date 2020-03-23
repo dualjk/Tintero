@@ -169,7 +169,22 @@ void Server::receive(){
 
         QStringList credentials = nextFortune.split(';', QString::SkipEmptyParts);
 
-        statusLabel->setText("Username: " + credentials.at(0) + "\nPassword: " + credentials.at(1));
+
+        QString c = credentials.at(0);
+        switch (c.toInt()) {
+            case 0:
+                statusLabel->setText("A pirate from our has returned! Hoorray!\nUsername: " +
+                                     credentials.at(1) + "\nPassword: " + credentials.at(2));
+            break;
+
+            case 1:
+                statusLabel->setText("A new pirate wants to join our crey! Cheers!\nUsername: " +
+                                     credentials.at(1) + "\nPassword: " + credentials.at(2));
+            break;
+
+
+        }
+
 
         connect(clientConnection, &QIODevice::readyRead, this, &Server::receive);
         Server::clientConnection->disconnectFromHost();

@@ -8,3 +8,6 @@ SOURCES       = client.cpp \
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/network/fortuneclient
 INSTALLS += target
+
+DISTFILES += \
+    img/ink.png

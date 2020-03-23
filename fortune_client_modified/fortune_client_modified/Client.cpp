@@ -8,7 +8,8 @@ Client::Client(QWidget *parent)
     : QDialog(parent)
     , hostCombo(new QComboBox)
     , portLineEdit(new QLineEdit)
-    , getFortuneButton(new QPushButton(tr("Get Fortune")))
+    , getFortuneButton(new QPushButton(tr("Login!")))
+    , newUserButton(new QPushButton(tr("Not a member? Join us here")))
     , tcpSocket(new QTcpSocket(this))
     , pswLineEdit(new QLineEdit)
     , usernameLineEdit(new QLineEdit)
@@ -42,12 +43,13 @@ Client::Client(QWidget *parent)
     }
 
     portLineEdit->setValidator(new QIntValidator(1, 65535, this));
+
     /*Comando per oscurare la password durante l'inserimento*/
     pswLineEdit->setEchoMode(QLineEdit::Password);
 
-    auto hostLabel = new QLabel(tr("&Server name:"));
+    hostLabel = new QLabel(tr("&Server name:"));
     hostLabel->setBuddy(hostCombo);
-    auto portLabel = new QLabel(tr("&Server port:"));
+    portLabel = new QLabel(tr("&Server port:"));
     portLabel->setBuddy(portLineEdit);
     auto usernameLabel = new QLabel(tr("&Username:"));
     usernameLabel->setBuddy(usernameLineEdit);
@@ -63,6 +65,15 @@ Client::Client(QWidget *parent)
                              "Speriamo di prendere 30."));
     QPixmap pix("/Users/giuliodg/fortune_client_modified/img/ink.png");
     picLabel->setPixmap(pix.scaled(128,128, Qt::KeepAspectRatio));
+
+    picRegLabel = new QLabel(tr(""));
+    appRegLabel = new QLabel(tr("<b>Tintero Client</b>: esplora con noi il magico mondo del c++\n"
+                             "Speriamo di prendere 30."));
+    QPixmap pixReg("/Users/giuliodg/fortune_client_modified/img/ink.png");
+    picRegLabel->setPixmap(pixReg.scaled(128,128, Qt::KeepAspectRatio));
+
+
+
 
     getFortuneButton->setDefault(true);
     getFortuneButton->setEnabled(false);
@@ -83,18 +94,20 @@ Client::Client(QWidget *parent)
             this, &Client::enableGetFortuneButton);
     connect(getFortuneButton, &QAbstractButton::clicked,
             this, &Client::requestNewFortune);
+    connect(newUserButton, &QAbstractButton::clicked,
+            this, &Client::newUser);
     connect(quitButton, &QAbstractButton::clicked, this, &QWidget::close);
-//! [2] //! [3]
-    //+connect(tcpSocket, &QIODevice::readyRead, this, &Client::readFortune);
-//! [2] //! [4]
+
     connect(tcpSocket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
 //! [3]
             this, &Client::displayError);
 //! [4]
 
 
-    QGridLayout *mainLayout = nullptr;
-    if (QGuiApplication::styleHints()->showIsFullScreen() || QGuiApplication::styleHints()->showIsMaximized()) {
+
+    QWidget *login = new QWidget();
+    mainLayout = new QGridLayout(login);
+/*    if (QGuiApplication::styleHints()->showIsFullScreen() || QGuiApplication::styleHints()->showIsMaximized()) {
         auto outerVerticalLayout = new QVBoxLayout(this);
         outerVerticalLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding));
         auto outerHorizontalLayout = new QHBoxLayout;
@@ -107,9 +120,11 @@ Client::Client(QWidget *parent)
         outerVerticalLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding));
     } else {
         mainLayout = new QGridLayout(this);
-    }
+    }*/
+
+
+
     mainLayout->addWidget(picLabel, 0, 0);
-    mainLayout->setAlignment(picLabel, Qt::AlignHCenter);
     mainLayout->addWidget(appLabel, 0, 1);
     mainLayout->addWidget(hostLabel, 1, 0);
     mainLayout->addWidget(hostCombo, 1, 1);
@@ -119,8 +134,79 @@ Client::Client(QWidget *parent)
     mainLayout->addWidget(usernameLineEdit,3,1);
     mainLayout->addWidget(pswLabel,4,0);
     mainLayout->addWidget(pswLineEdit,4,1);
-    mainLayout->addWidget(statusLabel, 5, 0, 1, 5);
-    mainLayout->addWidget(buttonBox, 6, 0, 1, 6);
+    mainLayout->addWidget(newUserButton, 5, 0);
+    mainLayout->addWidget(statusLabel, 6, 0, 1, 6);
+    mainLayout->addWidget(buttonBox, 7, 0, 1, 7);
+
+
+    // da qui inizia la seconda pagina
+    QWidget *reg = new QWidget();
+    secondLayout = new QGridLayout(reg);
+
+
+    usernameForRegLabel = new QLabel(tr("&Username: "));
+    usernameForRegLineEdit =  new QLineEdit;
+    usernameForRegLabel->setBuddy(usernameForRegLineEdit);
+
+    pswForRegLabel = new QLabel(tr("&Password: "));
+    pswForRegLineEdit = new QLineEdit;
+    pswForRegLabel->setBuddy(usernameForRegLineEdit);
+
+    pswRepeatLabel = new QLabel(tr("&Repeat your password:"));
+    pswRepeatLineEdit = new QLineEdit();
+    pswRepeatLabel->setBuddy(pswRepeatLineEdit);
+
+    backButton = new QPushButton(tr("Back"));
+    backButton->setDefault(true);
+    backButton->setEnabled(true);
+
+    auto quitRegButton = new QPushButton(tr("Quit"));
+    auto buttonRegBox = new QDialogButtonBox;
+    buttonRegBox->addButton(backButton, QDialogButtonBox::ActionRole);
+    buttonRegBox->addButton(quitRegButton, QDialogButtonBox::RejectRole);
+    signUpButton = new QPushButton(tr("Join the crew"));
+    signUpButton->setEnabled(false);
+
+
+    secondLayout->addWidget(picRegLabel, 0, 0);
+    secondLayout->addWidget(appRegLabel, 0, 1);
+
+    secondLayout->addWidget(usernameForRegLabel,3,0);
+    secondLayout->addWidget(usernameForRegLineEdit,3,1);
+    secondLayout->addWidget(pswForRegLabel,4,0);
+    secondLayout->addWidget(pswForRegLineEdit,4,1);
+    secondLayout->addWidget(pswRepeatLabel, 5, 0);
+    secondLayout->addWidget(pswRepeatLineEdit, 5, 1);
+    secondLayout->addWidget(signUpButton, 6, 0);
+    secondLayout->addWidget(buttonRegBox, 7, 0, 1, 7);
+
+    pswForRegLineEdit->setEchoMode(QLineEdit::Password);
+    pswRepeatLineEdit->setEchoMode(QLineEdit::Password);
+
+
+    connect(quitRegButton, &QAbstractButton::clicked, this, &QWidget::close);
+    connect(backButton, &QAbstractButton::clicked,
+            this, &Client::backToLoginPage);
+    connect(signUpButton, &QAbstractButton::clicked,
+            this, &Client::signUp);
+
+
+
+
+
+
+    stackedWidget = new QStackedWidget();
+
+    stackedWidget->addWidget(login);
+    stackedWidget->addWidget(reg);
+
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->addWidget(stackedWidget);
+    setLayout(layout);
+
+
+
+
 
     setWindowTitle(QGuiApplication::applicationDisplayName());
     portLineEdit->setFocus();
@@ -164,7 +250,7 @@ void Client::requestNewFortune()
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_10);
 
-    out << usernameLineEdit->text() + ";" + pswLineEdit->text();
+    out << "0;"+usernameLineEdit->text() + ";" + pswLineEdit->text();
     tcpSocket->write(block);
 
 
@@ -233,6 +319,10 @@ void Client::enableGetFortuneButton()
                                  !hostCombo->currentText().isEmpty() &&
                                  !portLineEdit->text().isEmpty());
 
+    signUpButton->setEnabled((!networkSession || networkSession->isOpen()) &&
+                                 !hostCombo->currentText().isEmpty() &&
+                                 !portLineEdit->text().isEmpty());
+
 }
 
 void Client::sessionOpened()
@@ -254,6 +344,53 @@ void Client::sessionOpened()
                             "Fortune Server example as well."));
 
     enableGetFortuneButton();
+}
+
+
+void Client::newUser(){
+
+    secondLayout->addWidget(hostLabel, 1, 0);
+    secondLayout->addWidget(hostCombo, 1, 1);
+    secondLayout->addWidget(portLabel, 2, 0);
+    secondLayout->addWidget(portLineEdit,2, 1);
+
+    stackedWidget->setCurrentIndex(1);
+
+}
+
+
+void Client::backToLoginPage(){
+
+    mainLayout->addWidget(hostLabel, 1, 0);
+    mainLayout->addWidget(hostCombo, 1, 1);
+    mainLayout->addWidget(portLabel, 2, 0);
+    mainLayout->addWidget(portLineEdit,2, 1);
+
+    stackedWidget->setCurrentIndex(0);
+}
+
+
+void Client::signUp() {
+    if(pswForRegLineEdit->text() == pswRepeatLineEdit->text()) {
+        tcpSocket->abort();
+    //! [7]
+        tcpSocket->connectToHost(hostCombo->currentText(),
+                                 portLineEdit->text().toInt());
+    //! [7]
+        QByteArray block;
+        QDataStream out(&block, QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_5_10);
+
+        out << "1;" + usernameForRegLineEdit->text() + ";" + pswForRegLineEdit->text();
+        tcpSocket->write(block);
+
+
+
+    }
+    else {
+
+        qDebug()<<"non bravo";
+    }
 }
 
 
