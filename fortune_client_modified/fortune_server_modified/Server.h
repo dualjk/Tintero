@@ -34,7 +34,10 @@ private slots:
 
     void DatabaseConnect();
     bool OnSearchClicked(QString username, QString password);
-    void DatabasePopulate();
+    bool DatabasePopulate(QString username, QString password);
+    bool UsernameCheckExistance(QString username);
+
+
 private:
     QLabel *statusLabel = nullptr;
     QTcpServer *tcpServer = nullptr;

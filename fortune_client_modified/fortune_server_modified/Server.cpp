@@ -187,8 +187,18 @@ void Server::receive(){
             break;
 
             case 1: /* sign up */
+            if(Server::UsernameCheckExistance(credentials.at(1))){
+
+                Server::DatabasePopulate(credentials.at(1), credentials.at(2));
                 statusLabel->setText("A new pirate wants to join our crey! Cheers!\nUsername: " +
                                      credentials.at(1) + "\nPassword: " + credentials.at(2));
+
+            }
+            else{
+                /* username già esistente */
+                qDebug()<<"Username già esistente, per favore implementami bene. Mai per comando.";
+            }
+
             break;
 
 
@@ -240,10 +250,39 @@ bool Server::OnSearchClicked(QString username, QString password)
 
 }
 
-void Server::DatabasePopulate()
-{
+bool Server::DatabasePopulate(QString username, QString password) {
     QSqlQuery query;
+    query.prepare("INSERT INTO user(username, password, avatar) VALUES(?, ?, null)");
+    query.addBindValue(username);
+    query.addBindValue(password);
 
-    if(!query.exec("INSERT INTO people(name) VALUES('Eddie Guerrero')"))
+    if(!query.exec()) {
         qWarning() << "MainWindow::DatabasePopulate - ERROR: " << query.lastError().text();
+        return false;
+    }
+    else {
+
+        return true;
+
+    }
 }
+
+
+bool Server::UsernameCheckExistance(QString username){
+    QSqlQuery query;
+    query.prepare("select id from user where username=? ;");
+    query.addBindValue(username);
+
+    if(!query.exec())
+        qWarning() << " - ERROR: Server::UsernameCheckExistance " << query.lastError().text();
+
+    if(query.first()) {
+        qDebug()<< query.value(0).toString();
+        return false;
+    }
+    else {
+        qDebug() << "person not found";
+        return true;
+    }
+}
+
