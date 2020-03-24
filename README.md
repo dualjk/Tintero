@@ -100,3 +100,11 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
 3. **programmino stupido che riesca a generare un documento di testo arricchito (html?)**
 4. **programmino molto stupido che legga un documento arricchito e lo faccia stampare da un textEdit**
 5. **programmino stupido che restituisca TRUE se username e password sono presenti in un db (acquisizione username e psw, scrittura della query, scrittura/lettura del db)** -> fatto, non funziona ma si può migliorare
+
+### **TODO (AGGIORNATO AL 24/3/2020)**
+
++ AUTENTICAZIONE (REGISTRAZIONE, LOGIN)
+ 	* path relativo database
+ 	* path relativo icona
+ 	* upload avatar utente
+ 	* cifratura della password
