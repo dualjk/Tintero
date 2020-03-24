@@ -2,6 +2,7 @@
 #include <QtNetwork>
 #include <QtCore>
 
+
 #include "Server.h"
 
 Server::Server(QWidget *parent)
@@ -80,6 +81,8 @@ Server::Server(QWidget *parent)
 
     setWindowTitle(QGuiApplication::applicationDisplayName());
 
+
+    Server::DatabaseConnect();
 
 }
 
@@ -170,14 +173,20 @@ void Server::receive(){
         QStringList credentials = nextFortune.split(';', QString::SkipEmptyParts);
 
 
+
         QString c = credentials.at(0);
         switch (c.toInt()) {
-            case 0:
-                statusLabel->setText("A pirate from our has returned! Hoorray!\nUsername: " +
+            case 0: /* login */
+                if(OnSearchClicked(credentials.at(1), credentials.at(2))){
+                    statusLabel->setText("A pirate from our crew has returned! Hoorray!\nUsername: " +
                                      credentials.at(1) + "\nPassword: " + credentials.at(2));
+                }
+                else {
+                    statusLabel->setText("Pirate does not remembah its password: too much rum drunk, bad pirate!");
+                }
             break;
 
-            case 1:
+            case 1: /* sign up */
                 statusLabel->setText("A new pirate wants to join our crey! Cheers!\nUsername: " +
                                      credentials.at(1) + "\nPassword: " + credentials.at(2));
             break;
@@ -190,4 +199,51 @@ void Server::receive(){
         Server::clientConnection->disconnectFromHost();
 
 }
-//! [8]
+
+void Server::DatabaseConnect() {
+    const QString DRIVER("QSQLITE");
+
+    if(QSqlDatabase::isDriverAvailable(DRIVER))
+    {
+        db = QSqlDatabase::addDatabase(DRIVER);
+        db.setDatabaseName("/Users/giuliodg/fortune_server_modified/database/users.db");
+
+        if(!db.open())
+            qWarning() << "MainWindow::DatabaseConnect - ERROR: " << db.lastError().text();
+    }
+    else
+        qWarning() << "MainWindow::DatabaseConnect - ERROR: no driver " << DRIVER << " available";
+}
+
+
+bool Server::OnSearchClicked(QString username, QString password)
+{
+    QSqlQuery query;
+    query.prepare("SELECT id FROM user WHERE username=? AND password=?;");
+    query.addBindValue(username);
+    query.addBindValue(password);
+
+    if(!query.exec())
+        qWarning() << "MainWindow::OnSearchClicked - ERROR: " << query.lastError().text();
+
+    if(query.first()) {
+        qDebug()<< query.value(0).toString();
+        return true;
+    }
+    else {
+        qDebug() << "person not found";
+        return false;
+    }
+
+
+
+
+}
+
+void Server::DatabasePopulate()
+{
+    QSqlQuery query;
+
+    if(!query.exec("INSERT INTO people(name) VALUES('Eddie Guerrero')"))
+        qWarning() << "MainWindow::DatabasePopulate - ERROR: " << query.lastError().text();
+}

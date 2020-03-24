@@ -7,6 +7,11 @@
 #include <QDataStream>
 #include <QTcpSocket>
 
+#include <QSqlDatabase>
+#include <QSqlDriver>
+#include <QSqlError>
+#include <QSqlQuery>
+
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -27,6 +32,9 @@ private slots:
     void sendFortune();
     void receive();
 
+    void DatabaseConnect();
+    bool OnSearchClicked(QString username, QString password);
+    void DatabasePopulate();
 private:
     QLabel *statusLabel = nullptr;
     QTcpServer *tcpServer = nullptr;
@@ -34,6 +42,7 @@ private:
     QNetworkSession *networkSession = nullptr;
     QDataStream in;
     QTcpSocket *clientConnection=nullptr;
+    QSqlDatabase db;
 
 };
 //! [0]
