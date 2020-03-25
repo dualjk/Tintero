@@ -19,6 +19,8 @@ SOURCES += \
     main.cpp \
     Server.cpp
 
+RESOURCES += server.qrc
+
 HEADERS += \
     Server.h
 
@@ -27,5 +29,3 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES += \
-    database/users.db

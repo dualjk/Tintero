@@ -1,5 +1,6 @@
 #include <QtWidgets>
 #include <QtNetwork>
+#include <QDir>
 
 #include "Client.h"
 
@@ -59,7 +60,7 @@ Client::Client(QWidget *parent)
     statusLabel = new QLabel(tr("This examples requires that you run the "
                                 "<s>Fortune Server</s> Tintero Server example as well."));
 
-    QString tmp_picPath = QDir::homePath()+"/fortune_client_modified/img/ink.png";
+    QString tmp_picPath = ":/img/ink.png";
     picLabel = new QLabel(tr(""));
     appLabel = new QLabel(tr("<b>Tintero Client</b>: esplora con noi il magico mondo del c++\n"
                              "Speriamo di prendere 30."));
@@ -71,6 +72,7 @@ Client::Client(QWidget *parent)
                              "Speriamo di prendere 30."));
     QPixmap pixReg(tmp_picPath);
     picRegLabel->setPixmap(pixReg.scaled(128,128, Qt::KeepAspectRatio));
+
 
 
 
