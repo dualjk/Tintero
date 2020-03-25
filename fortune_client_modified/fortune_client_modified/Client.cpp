@@ -56,20 +56,20 @@ Client::Client(QWidget *parent)
     auto pswLabel = new QLabel(tr("Password:"));
     usernameLabel->setBuddy(pswLineEdit);
 
-
     statusLabel = new QLabel(tr("This examples requires that you run the "
                                 "<s>Fortune Server</s> Tintero Server example as well."));
 
+    QString tmp_picPath = QDir::homePath()+"/fortune_client_modified/img/ink.png";
     picLabel = new QLabel(tr(""));
     appLabel = new QLabel(tr("<b>Tintero Client</b>: esplora con noi il magico mondo del c++\n"
                              "Speriamo di prendere 30."));
-    QPixmap pix("/Users/giuliodg/fortune_client_modified/img/ink.png");
+    QPixmap pix(tmp_picPath);
     picLabel->setPixmap(pix.scaled(128,128, Qt::KeepAspectRatio));
 
     picRegLabel = new QLabel(tr(""));
     appRegLabel = new QLabel(tr("<b>Tintero Client</b>: esplora con noi il magico mondo del c++\n"
                              "Speriamo di prendere 30."));
-    QPixmap pixReg("/Users/giuliodg/fortune_client_modified/img/ink.png");
+    QPixmap pixReg(tmp_picPath);
     picRegLabel->setPixmap(pixReg.scaled(128,128, Qt::KeepAspectRatio));
 
 

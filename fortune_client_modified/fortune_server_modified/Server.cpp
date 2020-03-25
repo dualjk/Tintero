@@ -216,7 +216,7 @@ void Server::DatabaseConnect() {
     if(QSqlDatabase::isDriverAvailable(DRIVER))
     {
         db = QSqlDatabase::addDatabase(DRIVER);
-        db.setDatabaseName("/Users/giuliodg/fortune_server_modified/database/users.db");
+        db.setDatabaseName(QDir::homePath()+"/fortune_server_modified/database/users.db");
 
         if(!db.open())
             qWarning() << "MainWindow::DatabaseConnect - ERROR: " << db.lastError().text();
