@@ -104,7 +104,9 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
 ### **TODO (AGGIORNATO AL 24/3/2020)**
 
 + AUTENTICAZIONE (REGISTRAZIONE, LOGIN)
- 	* path relativo database -> forse fatto
+ 	* path relativo database -> fatto
  	* path relativo icona -> forse fatto
  	* upload avatar utente
  	* cifratura della password
+ 	* implementare metodo per la gestione della password non combaciante
+ 	* inviare dal server al client messaggi per "avvenuta-azione"

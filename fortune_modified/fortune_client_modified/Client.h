@@ -33,6 +33,7 @@ private slots:
     void newUser();
     void backToLoginPage();
     void signUp();
+    void avatar();
 
 private:
 
@@ -77,7 +78,9 @@ private:
     QComboBox *hostRegCombo = nullptr;
     QLineEdit *portRegLineEdit = nullptr;
 
-
+    QPushButton *uploadAvatarButton = nullptr;
+    QLineEdit *avatarPathLineEdit=nullptr;
+    QLabel *avatarLabel=nullptr;
 
 
 

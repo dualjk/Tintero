@@ -169,6 +169,11 @@ Client::Client(QWidget *parent)
     signUpButton = new QPushButton(tr("Join the crew"));
     signUpButton->setEnabled(false);
 
+    avatarLabel = new QLabel(tr("Avatar, pirate!"));
+    avatarPathLineEdit = new QLineEdit();
+    uploadAvatarButton=new QPushButton(tr("Browse"));
+
+
 
     secondLayout->addWidget(picRegLabel, 0, 0);
     secondLayout->addWidget(appRegLabel, 0, 1);
@@ -179,8 +184,13 @@ Client::Client(QWidget *parent)
     secondLayout->addWidget(pswForRegLineEdit,4,1);
     secondLayout->addWidget(pswRepeatLabel, 5, 0);
     secondLayout->addWidget(pswRepeatLineEdit, 5, 1);
-    secondLayout->addWidget(signUpButton, 6, 0);
-    secondLayout->addWidget(buttonRegBox, 7, 0, 1, 7);
+    secondLayout->addWidget(avatarLabel, 7,0);
+    secondLayout->addWidget(avatarPathLineEdit, 7, 1);
+    secondLayout->addWidget(uploadAvatarButton, 7, 2);
+
+    secondLayout->addWidget(signUpButton, 8,1);
+
+    secondLayout->addWidget(buttonRegBox, 9, 0, 1, 9);
 
     pswForRegLineEdit->setEchoMode(QLineEdit::Password);
     pswRepeatLineEdit->setEchoMode(QLineEdit::Password);
@@ -191,6 +201,8 @@ Client::Client(QWidget *parent)
             this, &Client::backToLoginPage);
     connect(signUpButton, &QAbstractButton::clicked,
             this, &Client::signUp);
+    connect(uploadAvatarButton, &QAbstractButton::clicked,
+            this, &Client::avatar);
 
 
 
@@ -397,3 +409,9 @@ void Client::signUp() {
 
 
 
+void Client::avatar() {
+    QString s1 = QFileDialog::getOpenFileName(this, "Open a file", "directoryToOpen",
+            "Images (*.png *.xpm *.jpg)");
+    avatarPathLineEdit->setText(s1);
+    qDebug() << s1;
+}
