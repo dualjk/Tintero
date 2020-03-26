@@ -34,8 +34,10 @@ private slots:
 
     void DatabaseConnect();
     bool OnSearchClicked(QString username, QString password);
-    bool DatabasePopulate(QString username, QString password);
+    bool DatabasePopulate(QString username, QString password, QPixmap avatar);
     bool UsernameCheckExistance(QString username);
+    QPixmap pixmapFrom(const QJsonValue &val);
+    QPixmap getAvatarFromDB(QString username, QString password);
 
 
 private:
@@ -46,6 +48,7 @@ private:
     QDataStream in;
     QTcpSocket *clientConnection=nullptr;
     QSqlDatabase db;
+    QLabel *piclabel = nullptr;
 
 };
 //! [0]

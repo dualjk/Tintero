@@ -76,7 +76,9 @@ Server::Server(QWidget *parent)
         mainLayout = new QVBoxLayout(this);
     }
 
+    piclabel = new QLabel();
     mainLayout->addWidget(statusLabel);
+    mainLayout->addWidget(piclabel);
     mainLayout->addLayout(buttonLayout);
 
     setWindowTitle(QGuiApplication::applicationDisplayName());
@@ -162,24 +164,29 @@ void Server::sendFortune()
 
 void Server::receive(){
 
-        in.startTransaction();
+    in.startTransaction();
 
-        QString nextFortune;
-        in >> nextFortune;
+    QString nextFortune;
+    in >> nextFortune;
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(nextFortune.toLatin1());
+    QJsonArray jsonArray = jsonResponse.array();
+
+    if(!jsonArray.isEmpty())
+    {
+        QJsonObject jsonObject = jsonArray.first().toObject();
 
         if (!in.commitTransaction())
             return;
 
-        QStringList credentials = nextFortune.split(';', QString::SkipEmptyParts);
-
-
-
-        QString c = credentials.at(0);
-        switch (c.toInt()) {
+        int c = jsonObject.value("action").toInt();
+        switch (c) {
             case 0: /* login */
-                if(OnSearchClicked(credentials.at(1), credentials.at(2))){
+                if(OnSearchClicked(jsonObject.value("username").toString(), jsonObject.value("password").toString())){
                     statusLabel->setText("A pirate from our crew has returned! Hoorray!\nUsername: " +
-                                     credentials.at(1) + "\nPassword: " + credentials.at(2));
+                                     jsonObject.value("username").toString() + "\nPassword: " +
+                                         jsonObject.value("password").toString());
+                    piclabel->setPixmap((getAvatarFromDB(jsonObject.value("username").toString(),
+                                                                           jsonObject.value("password").toString())));
                 }
                 else {
                     statusLabel->setText("Pirate does not remembah its password: too much rum drunk, bad pirate!");
@@ -187,11 +194,16 @@ void Server::receive(){
             break;
 
             case 1: /* sign up */
-            if(Server::UsernameCheckExistance(credentials.at(1))){
+            if(Server::UsernameCheckExistance(jsonObject.value("username").toString())){
 
-                Server::DatabasePopulate(credentials.at(1), credentials.at(2));
+                Server::DatabasePopulate(jsonObject.value("username").toString(),
+                                         jsonObject.value("password").toString(),
+                                         pixmapFrom(jsonObject.value("avatar")));
                 statusLabel->setText("A new pirate wants to join our crey! Cheers!\nUsername: " +
-                                     credentials.at(1) + "\nPassword: " + credentials.at(2));
+                                     jsonObject.value("username").toString()
+                                     + "\nPassword: " + jsonObject.value("password").toString());
+                piclabel->setPixmap(pixmapFrom(jsonObject.value("avatar")));
+
 
             }
             else{
@@ -207,6 +219,7 @@ void Server::receive(){
 
         connect(clientConnection, &QIODevice::readyRead, this, &Server::receive);
         Server::clientConnection->disconnectFromHost();
+    }
 
 }
 
@@ -244,17 +257,40 @@ bool Server::OnSearchClicked(QString username, QString password)
         qDebug() << "person not found";
         return false;
     }
-
-
-
-
 }
 
-bool Server::DatabasePopulate(QString username, QString password) {
+
+QPixmap Server::getAvatarFromDB(QString username, QString password)
+{
     QSqlQuery query;
-    query.prepare("INSERT INTO user(username, password, avatar) VALUES(?, ?, null)");
+    query.prepare("SELECT avatar FROM user WHERE username=? AND password=?;");
     query.addBindValue(username);
     query.addBindValue(password);
+
+    if(!query.exec())
+        qWarning() << "MainWindow::OnSearchClicked - ERROR: " << query.lastError().text();
+
+    if(query.first()) {
+            QByteArray outByteArray = query.value( 0 ).toByteArray();
+            QPixmap outPixmap = QPixmap();
+            outPixmap.loadFromData( outByteArray );
+            return outPixmap;
+    }
+}
+
+
+
+bool Server::DatabasePopulate(QString username, QString password, QPixmap avatar) {
+    QSqlQuery query;
+    QByteArray inByteArray;
+        QBuffer inBuffer( &inByteArray );
+        inBuffer.open( QIODevice::WriteOnly );
+        avatar.save( &inBuffer, "PNG" );
+
+    query.prepare("INSERT INTO user(username, password, avatar) VALUES(?, ?, ?)");
+    query.addBindValue(username);
+    query.addBindValue(password);
+    query.addBindValue(inByteArray);
 
     if(!query.exec()) {
         qWarning() << "MainWindow::DatabasePopulate - ERROR: " << query.lastError().text();
@@ -286,3 +322,10 @@ bool Server::UsernameCheckExistance(QString username){
     }
 }
 
+
+QPixmap Server::pixmapFrom(const QJsonValue &val) {
+  auto const encoded = val.toString().toLatin1();
+  QPixmap p;
+  p.loadFromData(QByteArray::fromBase64(encoded), "PNG");
+  return p;
+}

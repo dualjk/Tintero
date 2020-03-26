@@ -34,6 +34,7 @@ private slots:
     void backToLoginPage();
     void signUp();
     void avatar();
+    QJsonValue jsonValFromPixmap(const QPixmap &p);
 
 private:
 

@@ -1,6 +1,10 @@
 #include <QtWidgets>
 #include <QtNetwork>
 #include <QDir>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonDocument>
+
 
 #include "Client.h"
 
@@ -260,14 +264,23 @@ void Client::requestNewFortune()
     tcpSocket->connectToHost(hostCombo->currentText(),
                              portLineEdit->text().toInt());
 //! [7]
+    QJsonObject authentication{
+        {"action", 0},
+        {"username", usernameLineEdit->text()},
+        {"password", pswLineEdit->text()}
+    };
+
+    QJsonArray jsarray {authentication};
+    QJsonDocument jsDoc(jsarray);
+
+    QString jsString = QString::fromLatin1(jsDoc.toJson());
+
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_10);
 
-    out << "0;"+usernameLineEdit->text() + ";" + pswLineEdit->text();
+    out << jsString;
     tcpSocket->write(block);
-
-
 }
 //! [6]
 
@@ -390,15 +403,27 @@ void Client::signUp() {
     //! [7]
         tcpSocket->connectToHost(hostCombo->currentText(),
                                  portLineEdit->text().toInt());
-    //! [7]
+
+        auto pix = QPixmap(avatarPathLineEdit->text());
+
+        QJsonObject authentication{
+            {"action", 1},
+            {"username", usernameForRegLineEdit->text()},
+            {"password", pswForRegLineEdit->text()},
+            {"avatar", jsonValFromPixmap(pix)}
+        };
+
+        QJsonArray jsarray {authentication};
+        QJsonDocument jsDoc(jsarray);
+
+        QString jsString = QString::fromLatin1(jsDoc.toJson());
+
         QByteArray block;
         QDataStream out(&block, QIODevice::WriteOnly);
         out.setVersion(QDataStream::Qt_5_10);
 
-        out << "1;" + usernameForRegLineEdit->text() + ";" + pswForRegLineEdit->text();
+        out << jsString;
         tcpSocket->write(block);
-
-
 
     }
     else {
@@ -414,4 +439,13 @@ void Client::avatar() {
             "Images (*.png *.xpm *.jpg)");
     avatarPathLineEdit->setText(s1);
     qDebug() << s1;
+}
+
+
+QJsonValue Client::jsonValFromPixmap(const QPixmap &p) {
+  QBuffer buffer;
+  buffer.open(QIODevice::WriteOnly);
+  p.save(&buffer, "PNG");
+  auto const encoded = buffer.data().toBase64();
+  return {QLatin1String(encoded)};
 }
