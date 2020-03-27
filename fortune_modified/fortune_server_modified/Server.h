@@ -6,11 +6,18 @@
 #include <QVector>
 #include <QDataStream>
 #include <QTcpSocket>
+#include <QPixmap>
 
 #include <QSqlDatabase>
 #include <QSqlDriver>
 #include <QSqlError>
 #include <QSqlQuery>
+
+#include <QJsonDocument>
+#include <QJsonValue>
+#include <QJsonArray>
+#include <QJsonObject>
+
 
 
 QT_BEGIN_NAMESPACE
@@ -38,7 +45,9 @@ private slots:
     bool UsernameCheckExistance(QString username);
     QPixmap pixmapFrom(const QJsonValue &val);
     QPixmap getAvatarFromDB(QString username, QString password);
+    QJsonValue jsonValFromPixmap(const QPixmap &p);
 
+    void sendJsonFromServer(const QJsonObject &obj);
 
 private:
     QLabel *statusLabel = nullptr;

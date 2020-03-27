@@ -6,6 +6,10 @@
 #include <QTcpSocket>
 #include <QtWidgets>
 #include <QPixmap>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonDocument>
+
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
@@ -25,8 +29,11 @@ public:
     explicit Client(QWidget *parent = nullptr);
 
 private slots:
-    void requestNewFortune();
-    void readFortune();
+    void logIn();
+    QJsonObject readJson();
+    void readJsonSignUp();
+    void readJsonLogIn();
+
     void displayError(QAbstractSocket::SocketError socketError);
     void enableGetFortuneButton();
     void sessionOpened();
@@ -35,6 +42,7 @@ private slots:
     void signUp();
     void avatar();
     QJsonValue jsonValFromPixmap(const QPixmap &p);
+    void sendJson(QJsonObject obj);
 
 private:
 
@@ -82,6 +90,8 @@ private:
     QPushButton *uploadAvatarButton = nullptr;
     QLineEdit *avatarPathLineEdit=nullptr;
     QLabel *avatarLabel=nullptr;
+
+    bool firstConnection = true;
 
 
 

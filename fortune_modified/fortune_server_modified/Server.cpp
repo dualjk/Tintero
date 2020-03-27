@@ -2,7 +2,6 @@
 #include <QtNetwork>
 #include <QtCore>
 
-
 #include "Server.h"
 
 Server::Server(QWidget *parent)
@@ -179,35 +178,58 @@ void Server::receive(){
             return;
 
         int c = jsonObject.value("action").toInt();
+        QString username = jsonObject.value("username").toString();
+        QString password = jsonObject.value("password").toString();
         switch (c) {
             case 0: /* login */
-                if(OnSearchClicked(jsonObject.value("username").toString(), jsonObject.value("password").toString())){
+                if(OnSearchClicked(username, password)){
                     statusLabel->setText("A pirate from our crew has returned! Hoorray!\nUsername: " +
-                                     jsonObject.value("username").toString() + "\nPassword: " +
-                                         jsonObject.value("password").toString());
-                    piclabel->setPixmap((getAvatarFromDB(jsonObject.value("username").toString(),
-                                                                           jsonObject.value("password").toString())));
+                                     username + "\nPassword: " +
+                                         password);
+                    auto avatar = (getAvatarFromDB(username,password));
+                    piclabel->setPixmap(avatar);
+
+                    QJsonObject loginSuccessful{
+                        {"action", 1},
+                        {"username", username},
+                        {"avatar", jsonValFromPixmap(avatar)}
+                    };
+                    sendJsonFromServer(loginSuccessful);
+
                 }
                 else {
+                    QJsonObject loginFailed{
+                        {"action", 0}
+                    };
+                    sendJsonFromServer(loginFailed);
+
                     statusLabel->setText("Pirate does not remembah its password: too much rum drunk, bad pirate!");
                 }
             break;
 
             case 1: /* sign up */
-            if(Server::UsernameCheckExistance(jsonObject.value("username").toString())){
-
-                Server::DatabasePopulate(jsonObject.value("username").toString(),
-                                         jsonObject.value("password").toString(),
-                                         pixmapFrom(jsonObject.value("avatar")));
+            if(Server::UsernameCheckExistance(username)){
+                QPixmap avatar=pixmapFrom(jsonObject.value("avatar"));
+                Server::DatabasePopulate(username,
+                                         password,
+                                         avatar);
                 statusLabel->setText("A new pirate wants to join our crey! Cheers!\nUsername: " +
-                                     jsonObject.value("username").toString()
-                                     + "\nPassword: " + jsonObject.value("password").toString());
-                piclabel->setPixmap(pixmapFrom(jsonObject.value("avatar")));
+                                     username
+                                     + "\nPassword: " + password);
+                piclabel->setPixmap(avatar);
 
+                QJsonObject signUpSuccessful{
+                    {"action", 1}
+                };
+                sendJsonFromServer(signUpSuccessful);
 
             }
             else{
                 /* username già esistente */
+                QJsonObject signUpFailed{
+                    {"action", 0}
+                };
+                sendJsonFromServer(signUpFailed);
                 qDebug()<<"Username già esistente, per favore implementami bene. Mai per comando.";
             }
 
@@ -272,7 +294,7 @@ QPixmap Server::getAvatarFromDB(QString username, QString password)
 
     if(query.first()) {
             QByteArray outByteArray = query.value( 0 ).toByteArray();
-            QPixmap outPixmap = QPixmap();
+            auto outPixmap = QPixmap();
             outPixmap.loadFromData( outByteArray );
             return outPixmap;
     }
@@ -328,4 +350,30 @@ QPixmap Server::pixmapFrom(const QJsonValue &val) {
   QPixmap p;
   p.loadFromData(QByteArray::fromBase64(encoded), "PNG");
   return p;
+}
+
+
+
+void Server::sendJsonFromServer(const QJsonObject &obj) {
+    QJsonArray jsarray {obj};
+    QJsonDocument jsDoc(jsarray);
+
+    QString jsString = QString::fromLatin1(jsDoc.toJson());
+
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_10);
+
+    out << jsString;
+    clientConnection->write(block);
+
+    return;
+}
+
+QJsonValue Server::jsonValFromPixmap(const QPixmap &p) {
+  QBuffer buffer;
+  buffer.open(QIODevice::WriteOnly);
+  p.save(&buffer, "PNG");
+  auto const encoded = buffer.data().toBase64();
+  return {QLatin1String(encoded)};
 }

@@ -96,19 +96,20 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
 
 ## Proposte di implementazione
 1. **programmino stupido che scriva su textEdit una QString già inizializzata** -> fatto, funziona 
-2. **programmino stupido che riesca ad inviare e a ricevere un QChar da un altro programmino stupido**
+2. **programmino stupido che riesca ad inviare e a ricevere un QChar da un altro programmino stupido** -> fatto
 3. **programmino stupido che riesca a generare un documento di testo arricchito (html?)**
 4. **programmino molto stupido che legga un documento arricchito e lo faccia stampare da un textEdit**
-5. **programmino stupido che restituisca TRUE se username e password sono presenti in un db (acquisizione username e psw, scrittura della query, scrittura/lettura del db)** -> fatto, non funziona ma si può migliorare
+5. **programmino stupido che restituisca TRUE se username e password sono presenti in un db (acquisizione username e psw, scrittura della query, scrittura/lettura del db)** -> fatto e sembra un sayan
 
-### **TODO (AGGIORNATO AL 26/3/2020)**
+### **TODO (AGGIORNATO AL 27/3/2020)**
 
 + AUTENTICAZIONE (REGISTRAZIONE, LOGIN)
  	* path relativo database -> non fatto
  	* path relativo icona -> fatto
  	* upload avatar utente -> fatto
  	* cifratura della password
- 	* gestione utente non esistente
- 	* implementare metodo per la gestione della password non combaciante
- 	* inviare dal server al client messaggi per "avvenuta-azione"
- 	* terza pagina per mostrare le informazioni dell'utente loggato
+ 	* gestione utente non esistente -> fatto
+ 	* implementare metodo per la gestione della password non combaciante -> fatto
+ 	* inviare dal server al client messaggi per "avvenuta-azione" -> fatto
+ 	* terza pagina per mostrare le informazioni dell'utente loggato -> wip
+ 	* DOCUMENTAZIONE ASSOLUTAMENTE PERCHè NON SI CAPISCE UNA MINCHIA

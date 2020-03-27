@@ -1,9 +1,6 @@
 #include <QtWidgets>
 #include <QtNetwork>
 #include <QDir>
-#include <QJsonObject>
-#include <QJsonValue>
-#include <QJsonDocument>
 
 
 #include "Client.h"
@@ -99,7 +96,7 @@ Client::Client(QWidget *parent)
     connect(portLineEdit, &QLineEdit::textChanged,
             this, &Client::enableGetFortuneButton);
     connect(getFortuneButton, &QAbstractButton::clicked,
-            this, &Client::requestNewFortune);
+            this, &Client::logIn);
     connect(newUserButton, &QAbstractButton::clicked,
             this, &Client::newUser);
     connect(quitButton, &QAbstractButton::clicked, this, &QWidget::close);
@@ -251,68 +248,90 @@ Client::Client(QWidget *parent)
         statusLabel->setText(tr("Opening network session."));
         networkSession->open();
     }
-//! [5]
 }
-//! [5]
 
-//! [6]
-void Client::requestNewFortune()
+
+void Client::logIn()
 {
     getFortuneButton->setEnabled(false);
-    tcpSocket->abort();
-//! [7]
-    tcpSocket->connectToHost(hostCombo->currentText(),
-                             portLineEdit->text().toInt());
-//! [7]
+
     QJsonObject authentication{
         {"action", 0},
         {"username", usernameLineEdit->text()},
         {"password", pswLineEdit->text()}
     };
 
-    QJsonArray jsarray {authentication};
-    QJsonDocument jsDoc(jsarray);
+    firstConnection=true;
+    sendJson(authentication);
+    disconnect(tcpSocket, &QIODevice::readyRead, 0, 0);
+    connect(tcpSocket, &QIODevice::readyRead, this, &Client::readJsonLogIn);
 
-    QString jsString = QString::fromLatin1(jsDoc.toJson());
 
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_10);
-
-    out << jsString;
-    tcpSocket->write(block);
 }
-//! [6]
 
-//! [8]
-void Client::readFortune()
+QJsonObject Client::readJson()
 {
-//    in.startTransaction();
+    in.startTransaction();
 
-//    QString nextFortune;
-//    in >> nextFortune;
-
-//    if (!in.commitTransaction())
-//        return;
-
-//    if (nextFortune == currentFortune) {
-//        QTimer::singleShot(0, this, &Client::requestNewFortune);
-//        return;
-//    }
-
-//    currentFortune = nextFortune;
-//    statusLabel->setText(currentFortune);
-//    getFortuneButton->setEnabled(true);
+    QString nextFortune;
+    in >> nextFortune;
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(nextFortune.toLatin1());
+    QJsonArray jsonArray = jsonResponse.array();
 
 
+    if (!in.commitTransaction()){
+        QJsonObject jsonObjectEmpty{
 
-    //qua mando le cose indietro
+        };
+
+        return jsonObjectEmpty;
+    }
+
+    if(!jsonArray.isEmpty())
+    {
+        QJsonObject jsonObject = jsonArray.first().toObject();
+        return jsonObject;
+    }
+}
+
+void Client::readJsonSignUp(){
+    QJsonObject jsonObject = readJson();
+    int c = jsonObject.value("action").toInt();
+
+    switch (c) {
+        case 0:
+            appRegLabel->setText("<b>Tintero Client:</b> username già in utilizzo, cambialo animale bestia");
+        break;
+
+        case 1:
+            backToLoginPage();
+            appLabel->setText("<b>Tintero Client:</b> registrazione andata a buon fine");
+        break;
+
+    }
 
 
 }
-//! [8]
 
-//! [13]
+void Client::readJsonLogIn(){
+
+    QJsonObject jsonObject = readJson();
+    int c = jsonObject.value("action").toInt();
+
+    switch (c) {
+        case 0:
+            appLabel->setText("<b>Tintero Client:</b> username o password errati");
+        break;
+
+        case 1:
+            /* da implementare le pagina */
+            appLabel->setText("<b>Tintero Client:</b> benvenuto caro");
+        break;
+
+    }
+
+}
+
 void Client::displayError(QAbstractSocket::SocketError socketError)
 {
     switch (socketError) {
@@ -399,11 +418,6 @@ void Client::backToLoginPage(){
 
 void Client::signUp() {
     if(pswForRegLineEdit->text() == pswRepeatLineEdit->text()) {
-        tcpSocket->abort();
-    //! [7]
-        tcpSocket->connectToHost(hostCombo->currentText(),
-                                 portLineEdit->text().toInt());
-
         auto pix = QPixmap(avatarPathLineEdit->text());
 
         QJsonObject authentication{
@@ -413,22 +427,13 @@ void Client::signUp() {
             {"avatar", jsonValFromPixmap(pix)}
         };
 
-        QJsonArray jsarray {authentication};
-        QJsonDocument jsDoc(jsarray);
-
-        QString jsString = QString::fromLatin1(jsDoc.toJson());
-
-        QByteArray block;
-        QDataStream out(&block, QIODevice::WriteOnly);
-        out.setVersion(QDataStream::Qt_5_10);
-
-        out << jsString;
-        tcpSocket->write(block);
-
+        firstConnection=true;
+        sendJson(authentication);
+        disconnect(tcpSocket, &QIODevice::readyRead, 0, 0);
+        connect(tcpSocket, &QIODevice::readyRead, this, &Client::readJsonSignUp);
     }
     else {
-
-        qDebug()<<"non bravo";
+        appRegLabel->setText("<b>Tintero Client:</b> le due password non coincidono, riprova");
     }
 }
 
@@ -448,4 +453,27 @@ QJsonValue Client::jsonValFromPixmap(const QPixmap &p) {
   p.save(&buffer, "PNG");
   auto const encoded = buffer.data().toBase64();
   return {QLatin1String(encoded)};
+}
+
+void Client::sendJson(QJsonObject obj) {
+
+    if(firstConnection) {
+    tcpSocket->abort();
+    tcpSocket->connectToHost(hostCombo->currentText(),
+                             portLineEdit->text().toInt());
+
+    firstConnection=false;
+    }
+
+    QJsonArray jsarray {obj};
+    QJsonDocument jsDoc(jsarray);
+
+    QString jsString = QString::fromLatin1(jsDoc.toJson());
+
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_10);
+
+    out << jsString;
+    tcpSocket->write(block);
 }
