@@ -48,6 +48,7 @@ private slots:
     QJsonValue jsonValFromPixmap(const QPixmap &p);
 
     void sendJsonFromServer(const QJsonObject &obj);
+    QString GetRandomString() const;
 
 private:
     QLabel *statusLabel = nullptr;

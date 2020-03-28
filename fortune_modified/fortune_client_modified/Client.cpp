@@ -418,7 +418,7 @@ void Client::backToLoginPage(){
 
 void Client::signUp() {
     if(pswForRegLineEdit->text() == pswRepeatLineEdit->text()) {
-        auto pix = QPixmap(avatarPathLineEdit->text());
+        auto pix = QPixmap(avatarPathLineEdit->text()).scaled(300, 300, Qt::KeepAspectRatio, Qt::FastTransformation);
 
         QJsonObject authentication{
             {"action", 1},

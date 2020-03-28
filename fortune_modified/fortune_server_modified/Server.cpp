@@ -251,7 +251,7 @@ void Server::DatabaseConnect() {
     if(QSqlDatabase::isDriverAvailable(DRIVER))
     {
         db = QSqlDatabase::addDatabase(DRIVER);
-        db.setDatabaseName(QDir::homePath()+"/fortune_server_modified/database/users.db");
+        db.setDatabaseName("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/database/users.db");
 
         if(!db.open())
             qWarning() << "MainWindow::DatabaseConnect - ERROR: " << db.lastError().text();
@@ -263,10 +263,22 @@ void Server::DatabaseConnect() {
 
 bool Server::OnSearchClicked(QString username, QString password)
 {
+    QString sale;
+    QSqlQuery query_sale;
+    query_sale.prepare("SELECT sale FROM user WHERE username=?;");
+    query_sale.addBindValue(username);
+    if(!query_sale.exec())
+        qWarning() << "MainWindow::OnSearchClicked - ERROR Query Sale: " << query_sale.lastError().text();
+    if(query_sale.first()) {
+        sale = query_sale.value(0).toString();
+    }
+
     QSqlQuery query;
     query.prepare("SELECT id FROM user WHERE username=? AND password=?;");
     query.addBindValue(username);
-    query.addBindValue(password);
+    QString passwordHashed = QCryptographicHash::hash((password+sale).toUtf8(), QCryptographicHash::Sha256);
+    qDebug()<<passwordHashed;
+    query.addBindValue(passwordHashed);
 
     if(!query.exec())
         qWarning() << "MainWindow::OnSearchClicked - ERROR: " << query.lastError().text();
@@ -285,9 +297,9 @@ bool Server::OnSearchClicked(QString username, QString password)
 QPixmap Server::getAvatarFromDB(QString username, QString password)
 {
     QSqlQuery query;
-    query.prepare("SELECT avatar FROM user WHERE username=? AND password=?;");
+    query.prepare("SELECT avatar FROM user WHERE username=?;");
     query.addBindValue(username);
-    query.addBindValue(password);
+    //query.addBindValue(password);
 
     if(!query.exec())
         qWarning() << "MainWindow::OnSearchClicked - ERROR: " << query.lastError().text();
@@ -309,10 +321,18 @@ bool Server::DatabasePopulate(QString username, QString password, QPixmap avatar
         inBuffer.open( QIODevice::WriteOnly );
         avatar.save( &inBuffer, "PNG" );
 
-    query.prepare("INSERT INTO user(username, password, avatar) VALUES(?, ?, ?)");
+    QString sale = GetRandomString();
+    QString passwordHashed = QCryptographicHash::hash((password+sale).toUtf8(), QCryptographicHash::Sha256) ;
+
+    qDebug()<<passwordHashed;
+
+
+    query.prepare("INSERT INTO user(username, password, sale, avatar) VALUES(?, ?, ?, ?)");
     query.addBindValue(username);
-    query.addBindValue(password);
+    query.addBindValue(passwordHashed);
+    query.addBindValue(sale);
     query.addBindValue(inByteArray);
+
 
     if(!query.exec()) {
         qWarning() << "MainWindow::DatabasePopulate - ERROR: " << query.lastError().text();
@@ -376,4 +396,20 @@ QJsonValue Server::jsonValFromPixmap(const QPixmap &p) {
   p.save(&buffer, "PNG");
   auto const encoded = buffer.data().toBase64();
   return {QLatin1String(encoded)};
+}
+
+
+QString Server::GetRandomString() const
+{
+   const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+   const int randomStringLength = 12; // assuming you want random strings of 12 characters
+
+   QString randomString;
+   for(int i=0; i<randomStringLength; ++i)
+   {
+       int index = qrand() % possibleCharacters.length();
+       QChar nextChar = possibleCharacters.at(index);
+       randomString.append(nextChar);
+   }
+   return randomString;
 }

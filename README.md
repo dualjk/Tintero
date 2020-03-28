@@ -107,9 +107,10 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
  	* path relativo database -> non fatto
  	* path relativo icona -> fatto
  	* upload avatar utente -> fatto
- 	* cifratura della password
+ 	* cifratura della password -> fatto
  	* gestione utente non esistente -> fatto
  	* implementare metodo per la gestione della password non combaciante -> fatto
  	* inviare dal server al client messaggi per "avvenuta-azione" -> fatto
  	* terza pagina per mostrare le informazioni dell'utente loggato -> wip
+ 	* gestire alcune problematiche legate all'immagine 
  	* DOCUMENTAZIONE ASSOLUTAMENTE PERCHè NON SI CAPISCE UNA MINCHIA
