@@ -101,6 +101,7 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
 4. **programmino molto stupido che legga un documento arricchito e lo faccia stampare da un textEdit**
 5. **programmino stupido che restituisca TRUE se username e password sono presenti in un db (acquisizione username e psw, scrittura della query, scrittura/lettura del db)** -> fatto e sembra un sayan
 
+<<<<<<< HEAD
 ### **TODO (AGGIORNATO AL 27/3/2020)**
 
 + AUTENTICAZIONE (REGISTRAZIONE, LOGIN)
@@ -114,3 +115,14 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
  	* terza pagina per mostrare le informazioni dell'utente loggato -> wip
  	* gestire alcune problematiche legate all'immagine 
  	* DOCUMENTAZIONE ASSOLUTAMENTE PERCHè NON SI CAPISCE UNA MINCHIA
+=======
+### **TODO (AGGIORNATO AL 24/3/2020)**
+
++ AUTENTICAZIONE (REGISTRAZIONE, LOGIN)
+ 	* path relativo database -> fatto
+ 	* path relativo icona -> forse fatto
+ 	* upload avatar utente
+ 	* cifratura della password
+ 	* implementare metodo per la gestione della password non combaciante
+ 	* inviare dal server al client messaggi per "avvenuta-azione"
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)

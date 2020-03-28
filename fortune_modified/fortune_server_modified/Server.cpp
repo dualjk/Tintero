@@ -75,9 +75,7 @@ Server::Server(QWidget *parent)
         mainLayout = new QVBoxLayout(this);
     }
 
-    piclabel = new QLabel();
     mainLayout->addWidget(statusLabel);
-    mainLayout->addWidget(piclabel);
     mainLayout->addLayout(buttonLayout);
 
     setWindowTitle(QGuiApplication::applicationDisplayName());
@@ -163,20 +161,15 @@ void Server::sendFortune()
 
 void Server::receive(){
 
-    in.startTransaction();
+        in.startTransaction();
 
-    QString nextFortune;
-    in >> nextFortune;
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(nextFortune.toLatin1());
-    QJsonArray jsonArray = jsonResponse.array();
-
-    if(!jsonArray.isEmpty())
-    {
-        QJsonObject jsonObject = jsonArray.first().toObject();
+        QString nextFortune;
+        in >> nextFortune;
 
         if (!in.commitTransaction())
             return;
 
+<<<<<<< HEAD
         int c = jsonObject.value("action").toInt();
         QString username = jsonObject.value("username").toString();
         QString password = jsonObject.value("password").toString();
@@ -196,6 +189,18 @@ void Server::receive(){
                     };
                     sendJsonFromServer(loginSuccessful);
 
+=======
+        QStringList credentials = nextFortune.split(';', QString::SkipEmptyParts);
+
+
+
+        QString c = credentials.at(0);
+        switch (c.toInt()) {
+            case 0: /* login */
+                if(OnSearchClicked(credentials.at(1), credentials.at(2))){
+                    statusLabel->setText("A pirate from our crew has returned! Hoorray!\nUsername: " +
+                                     credentials.at(1) + "\nPassword: " + credentials.at(2));
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)
                 }
                 else {
                     QJsonObject loginFailed{
@@ -208,6 +213,7 @@ void Server::receive(){
             break;
 
             case 1: /* sign up */
+<<<<<<< HEAD
             if(Server::UsernameCheckExistance(username)){
                 QPixmap avatar=pixmapFrom(jsonObject.value("avatar"));
                 Server::DatabasePopulate(username,
@@ -222,6 +228,13 @@ void Server::receive(){
                     {"action", 1}
                 };
                 sendJsonFromServer(signUpSuccessful);
+=======
+            if(Server::UsernameCheckExistance(credentials.at(1))){
+
+                Server::DatabasePopulate(credentials.at(1), credentials.at(2));
+                statusLabel->setText("A new pirate wants to join our crey! Cheers!\nUsername: " +
+                                     credentials.at(1) + "\nPassword: " + credentials.at(2));
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)
 
             }
             else{
@@ -241,7 +254,6 @@ void Server::receive(){
 
         connect(clientConnection, &QIODevice::readyRead, this, &Server::receive);
         Server::clientConnection->disconnectFromHost();
-    }
 
 }
 
@@ -291,31 +303,33 @@ bool Server::OnSearchClicked(QString username, QString password)
         qDebug() << "person not found";
         return false;
     }
-}
 
 
+<<<<<<< HEAD
 QPixmap Server::getAvatarFromDB(QString username, QString password)
 {
     QSqlQuery query;
     query.prepare("SELECT avatar FROM user WHERE username=?;");
     query.addBindValue(username);
     //query.addBindValue(password);
+=======
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)
 
-    if(!query.exec())
-        qWarning() << "MainWindow::OnSearchClicked - ERROR: " << query.lastError().text();
 
+<<<<<<< HEAD
     if(query.first()) {
             QByteArray outByteArray = query.value( 0 ).toByteArray();
             auto outPixmap = QPixmap();
             outPixmap.loadFromData( outByteArray );
             return outPixmap;
     }
+=======
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)
 }
 
-
-
-bool Server::DatabasePopulate(QString username, QString password, QPixmap avatar) {
+bool Server::DatabasePopulate(QString username, QString password) {
     QSqlQuery query;
+<<<<<<< HEAD
     QByteArray inByteArray;
         QBuffer inBuffer( &inByteArray );
         inBuffer.open( QIODevice::WriteOnly );
@@ -332,6 +346,11 @@ bool Server::DatabasePopulate(QString username, QString password, QPixmap avatar
     query.addBindValue(passwordHashed);
     query.addBindValue(sale);
     query.addBindValue(inByteArray);
+=======
+    query.prepare("INSERT INTO user(username, password, avatar) VALUES(?, ?, null)");
+    query.addBindValue(username);
+    query.addBindValue(password);
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)
 
 
     if(!query.exec()) {
@@ -364,6 +383,7 @@ bool Server::UsernameCheckExistance(QString username){
     }
 }
 
+<<<<<<< HEAD
 
 QPixmap Server::pixmapFrom(const QJsonValue &val) {
   auto const encoded = val.toString().toLatin1();
@@ -413,3 +433,5 @@ QString Server::GetRandomString() const
    }
    return randomString;
 }
+=======
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)

@@ -41,11 +41,14 @@ private slots:
 
     void DatabaseConnect();
     bool OnSearchClicked(QString username, QString password);
-    bool DatabasePopulate(QString username, QString password, QPixmap avatar);
+    bool DatabasePopulate(QString username, QString password);
     bool UsernameCheckExistance(QString username);
+<<<<<<< HEAD
     QPixmap pixmapFrom(const QJsonValue &val);
     QPixmap getAvatarFromDB(QString username, QString password);
     QJsonValue jsonValFromPixmap(const QPixmap &p);
+=======
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)
 
     void sendJsonFromServer(const QJsonObject &obj);
     QString GetRandomString() const;
@@ -58,7 +61,6 @@ private:
     QDataStream in;
     QTcpSocket *clientConnection=nullptr;
     QSqlDatabase db;
-    QLabel *piclabel = nullptr;
 
 };
 //! [0]

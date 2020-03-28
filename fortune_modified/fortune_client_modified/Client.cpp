@@ -1,7 +1,10 @@
 #include <QtWidgets>
 #include <QtNetwork>
 #include <QDir>
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)
 
 #include "Client.h"
 
@@ -254,6 +257,7 @@ Client::Client(QWidget *parent)
 void Client::logIn()
 {
     getFortuneButton->setEnabled(false);
+<<<<<<< HEAD
 
     QJsonObject authentication{
         {"action", 0},
@@ -265,6 +269,19 @@ void Client::logIn()
     sendJson(authentication);
     disconnect(tcpSocket, &QIODevice::readyRead, 0, 0);
     connect(tcpSocket, &QIODevice::readyRead, this, &Client::readJsonLogIn);
+=======
+    tcpSocket->abort();
+//! [7]
+    tcpSocket->connectToHost(hostCombo->currentText(),
+                             portLineEdit->text().toInt());
+//! [7]
+    QByteArray block;
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_10);
+
+    out << "0;"+usernameLineEdit->text() + ";" + pswLineEdit->text();
+    tcpSocket->write(block);
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)
 
 
 }
@@ -418,6 +435,7 @@ void Client::backToLoginPage(){
 
 void Client::signUp() {
     if(pswForRegLineEdit->text() == pswRepeatLineEdit->text()) {
+<<<<<<< HEAD
         auto pix = QPixmap(avatarPathLineEdit->text()).scaled(300, 300, Qt::KeepAspectRatio, Qt::FastTransformation);
 
         QJsonObject authentication{
@@ -431,6 +449,22 @@ void Client::signUp() {
         sendJson(authentication);
         disconnect(tcpSocket, &QIODevice::readyRead, 0, 0);
         connect(tcpSocket, &QIODevice::readyRead, this, &Client::readJsonSignUp);
+=======
+        tcpSocket->abort();
+    //! [7]
+        tcpSocket->connectToHost(hostCombo->currentText(),
+                                 portLineEdit->text().toInt());
+    //! [7]
+        QByteArray block;
+        QDataStream out(&block, QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_5_10);
+
+        out << "1;" + usernameForRegLineEdit->text() + ";" + pswForRegLineEdit->text();
+        tcpSocket->write(block);
+
+
+
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)
     }
     else {
         appRegLabel->setText("<b>Tintero Client:</b> le due password non coincidono, riprova");
@@ -445,6 +479,7 @@ void Client::avatar() {
     avatarPathLineEdit->setText(s1);
     qDebug() << s1;
 }
+<<<<<<< HEAD
 
 
 QJsonValue Client::jsonValFromPixmap(const QPixmap &p) {
@@ -477,3 +512,5 @@ void Client::sendJson(QJsonObject obj) {
     out << jsString;
     tcpSocket->write(block);
 }
+=======
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)

@@ -41,8 +41,11 @@ private slots:
     void backToLoginPage();
     void signUp();
     void avatar();
+<<<<<<< HEAD
     QJsonValue jsonValFromPixmap(const QPixmap &p);
     void sendJson(QJsonObject obj);
+=======
+>>>>>>> parent of 7a61e7d... Aggiunto supporto a Json (login, sign up, avatar)
 
 private:
 
