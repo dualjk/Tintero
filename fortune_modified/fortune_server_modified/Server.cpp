@@ -183,16 +183,15 @@ void Server::receive(){
         switch (c) {
             case 0: /* login */
                 if(OnSearchClicked(username, password)){
+                    int avatar = (getAvatarFromDB(username,password));
                     statusLabel->setText("A pirate from our crew has returned! Hoorray!\nUsername: " +
                                      username + "\nPassword: " +
-                                         password);
-                    auto avatar = (getAvatarFromDB(username,password));
-                    piclabel->setPixmap(avatar);
+                                         password + "\nAvatar scelto: "+QString::number(avatar));
 
                     QJsonObject loginSuccessful{
                         {"action", 1},
                         {"username", username},
-                        {"avatar", jsonValFromPixmap(avatar)}
+                        {"avatar", avatar}
                     };
                     sendJsonFromServer(loginSuccessful);
 
@@ -209,14 +208,14 @@ void Server::receive(){
 
             case 1: /* sign up */
             if(Server::UsernameCheckExistance(username)){
-                QPixmap avatar=pixmapFrom(jsonObject.value("avatar"));
+                int avatar=jsonObject.value("avatar").toInt();
                 Server::DatabasePopulate(username,
                                          password,
                                          avatar);
                 statusLabel->setText("A new pirate wants to join our crey! Cheers!\nUsername: " +
                                      username
-                                     + "\nPassword: " + password);
-                piclabel->setPixmap(avatar);
+                                     + "\nPassword: " + password + "\nAvatar scelto: " + QString::number(avatar));
+
 
                 QJsonObject signUpSuccessful{
                     {"action", 1}
@@ -294,7 +293,7 @@ bool Server::OnSearchClicked(QString username, QString password)
 }
 
 
-QPixmap Server::getAvatarFromDB(QString username, QString password)
+int Server::getAvatarFromDB(QString username, QString password)
 {
     QSqlQuery query;
     query.prepare("SELECT avatar FROM user WHERE username=?;");
@@ -305,22 +304,14 @@ QPixmap Server::getAvatarFromDB(QString username, QString password)
         qWarning() << "MainWindow::OnSearchClicked - ERROR: " << query.lastError().text();
 
     if(query.first()) {
-            QByteArray outByteArray = query.value( 0 ).toByteArray();
-            auto outPixmap = QPixmap();
-            outPixmap.loadFromData( outByteArray );
-            return outPixmap;
+            return query.value(0).toInt();
     }
 }
 
 
 
-bool Server::DatabasePopulate(QString username, QString password, QPixmap avatar) {
+bool Server::DatabasePopulate(QString username, QString password, int avatar) {
     QSqlQuery query;
-    QByteArray inByteArray;
-        QBuffer inBuffer( &inByteArray );
-        inBuffer.open( QIODevice::WriteOnly );
-        avatar.save( &inBuffer, "PNG" );
-
     QString sale = GetRandomString();
     QString passwordHashed = QCryptographicHash::hash((password+sale).toUtf8(), QCryptographicHash::Sha256) ;
 
@@ -331,7 +322,7 @@ bool Server::DatabasePopulate(QString username, QString password, QPixmap avatar
     query.addBindValue(username);
     query.addBindValue(passwordHashed);
     query.addBindValue(sale);
-    query.addBindValue(inByteArray);
+    query.addBindValue(avatar);
 
 
     if(!query.exec()) {

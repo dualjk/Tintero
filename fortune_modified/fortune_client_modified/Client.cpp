@@ -127,6 +127,11 @@ Client::Client(QWidget *parent)
 
 
 
+    for(int i=0; i<12; i++) {
+        pixmapVector.append(QPixmap(":/img/"+QString::number(i+1)+".png"));
+    }
+
+
     mainLayout->addWidget(picLabel, 0, 0);
     mainLayout->addWidget(appLabel, 0, 1);
     mainLayout->addWidget(hostLabel, 1, 0);
@@ -186,7 +191,7 @@ Client::Client(QWidget *parent)
     secondLayout->addWidget(pswRepeatLabel, 5, 0);
     secondLayout->addWidget(pswRepeatLineEdit, 5, 1);
     secondLayout->addWidget(avatarLabel, 7,0);
-    secondLayout->addWidget(avatarPathLineEdit, 7, 1);
+    //secondLayout->addWidget(avatarPathLineEdit, 7, 1);
     secondLayout->addWidget(uploadAvatarButton, 7, 2);
 
     secondLayout->addWidget(signUpButton, 8,1);
@@ -325,7 +330,8 @@ void Client::readJsonLogIn(){
 
         case 1:
             /* da implementare le pagina */
-            appLabel->setText("<b>Tintero Client:</b> benvenuto caro");
+            appLabel->setText("<b>Tintero Client:</b> benvenuto "+jsonObject.value("username").toString() +
+                              ", avatar: " + QString::number( jsonObject.value("avatar").toInt()));
         break;
 
     }
@@ -424,7 +430,7 @@ void Client::signUp() {
             {"action", 1},
             {"username", usernameForRegLineEdit->text()},
             {"password", pswForRegLineEdit->text()},
-            {"avatar", jsonValFromPixmap(pix)}
+            {"avatar", numAvatar}
         };
 
         firstConnection=true;
@@ -440,10 +446,27 @@ void Client::signUp() {
 
 
 void Client::avatar() {
-    QString s1 = QFileDialog::getOpenFileName(this, "Open a file", "directoryToOpen",
-            "Images (*.png *.xpm *.jpg)");
-    avatarPathLineEdit->setText(s1);
-    qDebug() << s1;
+
+
+
+
+
+    QVector<ClickableLabel*> labels;
+
+
+    wdg = new QWidget;
+    QGridLayout *layout = new QGridLayout(wdg);
+
+    for(int i = 0; i < 12; i++)
+    {
+        labels.append(new ClickableLabel);
+        labels[i]->setValue(i);
+        labels[i]->setPixmap(pixmapVector[i].scaled(64, 64, Qt::KeepAspectRatio));
+        layout->addWidget(labels[i], i/3, i%3);
+        connect(labels[i], &ClickableLabel::clicked, this, &Client::labelClicked);
+    }
+
+    wdg->show();
 }
 
 
@@ -476,4 +499,17 @@ void Client::sendJson(QJsonObject obj) {
 
     out << jsString;
     tcpSocket->write(block);
+}
+
+
+void Client::labelClicked(){
+    ClickableLabel *label = (ClickableLabel*)sender();
+    emit selectedAvatar(label->getValue());
+
+}
+
+void Client::selectedAvatar(int avatar){
+    numAvatar = avatar;
+    avatarLabel->setPixmap(pixmapVector.at(avatar).scaled(100,100, Qt::KeepAspectRatio));
+    wdg->hide();
 }

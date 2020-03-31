@@ -10,6 +10,8 @@
 #include <QJsonValue>
 #include <QJsonDocument>
 
+#include<clickablelabel.h>
+
 
 QT_BEGIN_NAMESPACE
 class QComboBox;
@@ -43,6 +45,8 @@ private slots:
     void avatar();
     QJsonValue jsonValFromPixmap(const QPixmap &p);
     void sendJson(QJsonObject obj);
+    void labelClicked();
+    void selectedAvatar(int avatar);
 
 private:
 
@@ -69,6 +73,7 @@ private:
     QLabel *hostLabel = nullptr;
     QLabel *portLabel = nullptr;
 
+    QVector<QPixmap> pixmapVector;
 
 
     /* Elementi grafici per la pagina di registrazione */
@@ -92,6 +97,9 @@ private:
     QLabel *avatarLabel=nullptr;
 
     bool firstConnection = true;
+    QWidget *wdg = nullptr;
+
+    int numAvatar;
 
 
 
