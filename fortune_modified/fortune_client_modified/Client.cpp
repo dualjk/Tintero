@@ -128,7 +128,7 @@ Client::Client(QWidget *parent)
 
 
     for(int i=0; i<12; i++) {
-        pixmapVector.append(QPixmap(":/img/"+QString::number(i+1)+".png"));
+        pixmapVector.append(QPixmap(":/img/avatar/"+QString::number(i+1)+".png"));
     }
 
 
@@ -202,6 +202,20 @@ Client::Client(QWidget *parent)
     pswRepeatLineEdit->setEchoMode(QLineEdit::Password);
 
 
+
+
+    QWidget *main = new QWidget();
+    thirdLayout = new QGridLayout(main);
+    avatarUser = new QLabel();
+    usernameLabelMain = new QLabel();
+    thirdLayout->addWidget(avatarUser, 0,0);
+    thirdLayout->addWidget(usernameLabelMain, 1,0);
+
+
+
+
+
+
     connect(quitRegButton, &QAbstractButton::clicked, this, &QWidget::close);
     connect(backButton, &QAbstractButton::clicked,
             this, &Client::backToLoginPage);
@@ -219,6 +233,7 @@ Client::Client(QWidget *parent)
 
     stackedWidget->addWidget(login);
     stackedWidget->addWidget(reg);
+    stackedWidget->addWidget(main);
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->addWidget(stackedWidget);
@@ -330,8 +345,11 @@ void Client::readJsonLogIn(){
 
         case 1:
             /* da implementare le pagina */
+            numAvatar=jsonObject.value("avatar").toInt();
             appLabel->setText("<b>Tintero Client:</b> benvenuto "+jsonObject.value("username").toString() +
                               ", avatar: " + QString::number( jsonObject.value("avatar").toInt()));
+            toMainPage(jsonObject.value("username").toString());
+
         break;
 
     }
@@ -421,11 +439,18 @@ void Client::backToLoginPage(){
     stackedWidget->setCurrentIndex(0);
 }
 
+void Client::toMainPage(QString username){
+    qDebug()<<numAvatar;
+
+    usernameLabelMain->setText(username);
+    avatarUser->setPixmap(pixmapVector[numAvatar]);
+    stackedWidget->setCurrentIndex(2);
+
+}
+
 
 void Client::signUp() {
     if(pswForRegLineEdit->text() == pswRepeatLineEdit->text()) {
-        auto pix = QPixmap(avatarPathLineEdit->text()).scaled(300, 300, Qt::KeepAspectRatio, Qt::FastTransformation);
-
         QJsonObject authentication{
             {"action", 1},
             {"username", usernameForRegLineEdit->text()},
@@ -446,11 +471,6 @@ void Client::signUp() {
 
 
 void Client::avatar() {
-
-
-
-
-
     QVector<ClickableLabel*> labels;
 
 
@@ -461,7 +481,7 @@ void Client::avatar() {
     {
         labels.append(new ClickableLabel);
         labels[i]->setValue(i);
-        labels[i]->setPixmap(pixmapVector[i].scaled(64, 64, Qt::KeepAspectRatio));
+        labels[i]->setPixmap(pixmapVector.at(i).scaled(64, 64, Qt::KeepAspectRatio));
         layout->addWidget(labels[i], i/3, i%3);
         connect(labels[i], &ClickableLabel::clicked, this, &Client::labelClicked);
     }

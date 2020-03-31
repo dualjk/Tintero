@@ -10,7 +10,8 @@
 #include <QJsonValue>
 #include <QJsonDocument>
 
-#include<clickablelabel.h>
+#include <borderlayout.h>
+#include <clickablelabel.h>
 
 
 QT_BEGIN_NAMESPACE
@@ -47,11 +48,13 @@ private slots:
     void sendJson(QJsonObject obj);
     void labelClicked();
     void selectedAvatar(int avatar);
+    void toMainPage(QString username);
 
 private:
 
-    QGridLayout *secondLayout = nullptr;
     QGridLayout *mainLayout = nullptr;
+    QGridLayout *secondLayout = nullptr;
+    QGridLayout *thirdLayout = nullptr;
 
     /* Elementi grafici per la pagina di login */
     QComboBox *hostCombo = nullptr;
@@ -101,6 +104,8 @@ private:
 
     int numAvatar;
 
+    QLabel *avatarUser=nullptr;
+    QLabel *usernameLabelMain=nullptr;
 
 
 

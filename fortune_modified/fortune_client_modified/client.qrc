@@ -1,18 +1,18 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/">
 <file>img/ink.png</file>
-<file>img/1.png</file>
-<file>img/2.png</file>
-<file>img/3.png</file>
-<file>img/4.png</file>
-<file>img/5.png</file>
-<file>img/6.png</file>
-<file>img/7.png</file>
-<file>img/8.png</file>
-<file>img/9.png</file>
-<file>img/10.png</file>
-<file>img/11.png</file>
-<file>img/12.png</file>
+<file>img/avatar/1.png</file>
+<file>img/avatar/2.png</file>
+<file>img/avatar/3.png</file>
+<file>img/avatar/4.png</file>
+<file>img/avatar/5.png</file>
+<file>img/avatar/6.png</file>
+<file>img/avatar/7.png</file>
+<file>img/avatar/8.png</file>
+<file>img/avatar/9.png</file>
+<file>img/avatar/10.png</file>
+<file>img/avatar/11.png</file>
+<file>img/avatar/12.png</file>
 
 
 
