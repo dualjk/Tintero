@@ -10,8 +10,8 @@
 #include <QJsonValue>
 #include <QJsonDocument>
 
-#include <borderlayout.h>
 #include <clickablelabel.h>
+#include <mainpage.h>
 
 
 QT_BEGIN_NAMESPACE
@@ -54,7 +54,6 @@ private:
 
     QGridLayout *mainLayout = nullptr;
     QGridLayout *secondLayout = nullptr;
-    QGridLayout *thirdLayout = nullptr;
 
     /* Elementi grafici per la pagina di login */
     QComboBox *hostCombo = nullptr;

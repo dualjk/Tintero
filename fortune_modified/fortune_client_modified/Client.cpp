@@ -1,6 +1,8 @@
 #include <QtWidgets>
 #include <QtNetwork>
 #include <QDir>
+#include <QTextBrowser>
+
 
 
 #include "Client.h"
@@ -204,12 +206,26 @@ Client::Client(QWidget *parent)
 
 
 
-    QWidget *main = new QWidget();
-    thirdLayout = new QGridLayout(main);
+    //QWidget *main = new QWidget();
+
+    //Window *main = new Window();
+    /*thirdLayout = new BorderLayout(main);
+
+    QTextBrowser *centralWidget = new QTextBrowser;
+    centralWidget->setPlainText(tr("Central widget"));
+
+
     avatarUser = new QLabel();
     usernameLabelMain = new QLabel();
-    thirdLayout->addWidget(avatarUser, 0,0);
-    thirdLayout->addWidget(usernameLabelMain, 1,0);
+    avatarUser->setFrameStyle(QFrame::Box | QFrame::Raised);
+    usernameLabelMain->setFrameStyle(QFrame::Box | QFrame::Raised);
+
+    thirdLayout->addWidget(centralWidget, BorderLayout::Center);
+    thirdLayout->addWidget(avatarUser, BorderLayout::West);
+    thirdLayout->addWidget(usernameLabelMain, BorderLayout::East);
+    */
+
+
 
 
 
@@ -233,11 +249,12 @@ Client::Client(QWidget *parent)
 
     stackedWidget->addWidget(login);
     stackedWidget->addWidget(reg);
-    stackedWidget->addWidget(main);
+    //stackedWidget->addWidget(main);
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->addWidget(stackedWidget);
     setLayout(layout);
+
 
 
 
@@ -442,9 +459,40 @@ void Client::backToLoginPage(){
 void Client::toMainPage(QString username){
     qDebug()<<numAvatar;
 
-    usernameLabelMain->setText(username);
-    avatarUser->setPixmap(pixmapVector[numAvatar]);
-    stackedWidget->setCurrentIndex(2);
+    QMainWindow *main = new QMainWindow();
+    Ui_MainWindow mainpage;
+    mainpage.setupUi(main);
+    mainpage.setUsernameLabel(username);
+    mainpage.setAvatarLabel(pixmapVector.at(numAvatar).scaled(128,128, Qt::KeepAspectRatio));
+    main->show();
+
+
+    QDialog::hide();
+
+
+    /*QMainWindow main;
+    auto hsplitter = new QSplitter(Qt::Horizontal);
+    auto vsplitter = new QSplitter(Qt::Vertical);
+
+    auto label1 = new QLabel();
+    auto label2 = new QLabel("<b><p align='center'>"+username+"</b></p>");
+    auto textedit = new QTextEdit();
+    auto label3 = new QLabel();
+    label3->setPixmap(pixmapVector.value(numAvatar));
+    hsplitter->addWidget(vsplitter);
+    hsplitter->addWidget(label1);
+    hsplitter->addWidget(textedit);
+    vsplitter->addWidget(label2);
+    vsplitter->addWidget(label3);
+
+    hsplitter->show();*/
+
+    //main.setCentralWidget(hsplitter);
+
+
+    /*usernameLabelMain->setText(username);
+    avatarUser->setPixmap(pixmapVector[numAvatar]);*/
+    //stackedWidget->setCurrentIndex(2);
 
 }
 
