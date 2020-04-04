@@ -463,7 +463,7 @@ void Client::toMainPage(QString username){
     Ui_MainWindow mainpage;
     mainpage.setupUi(main);
     mainpage.setUsernameLabel(username);
-    mainpage.setAvatarLabel(pixmapVector.at(numAvatar).scaled(128,128, Qt::KeepAspectRatio));
+    mainpage.setAvatarLabel(pixmapVector.at(numAvatar).scaled(128,128, Qt::KeepAspectRatio,Qt::SmoothTransformation));
     main->show();
 
 
@@ -578,6 +578,6 @@ void Client::labelClicked(){
 
 void Client::selectedAvatar(int avatar){
     numAvatar = avatar;
-    avatarLabel->setPixmap(pixmapVector.at(avatar).scaled(100,100, Qt::KeepAspectRatio));
+    avatarLabel->setPixmap(pixmapVector.at(avatar).scaled(100,100, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     wdg->hide();
 }

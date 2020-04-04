@@ -2,9 +2,12 @@ QT += network widgets
 requires(qtConfig(combobox))
 
 HEADERS       = client.h \
+    clickableframe.h \
     clickablelabel.h \
-    mainpage.h
+    mainpage.h \
+    titleDocument.h
 SOURCES       = client.cpp \
+                clickableframe.cpp \
                 clickablelabel.cpp \
                 main.cpp \
                 mainpage.cpp
