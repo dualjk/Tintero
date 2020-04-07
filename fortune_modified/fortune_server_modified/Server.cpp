@@ -235,7 +235,10 @@ void Server::receive(){
             break;
 
             case 2:
-                qDebug()<<jsonObject.value("user").toString()+" "+jsonObject.value("docTitle").toString();
+                QString userDoc = jsonObject.value("user").toString();
+                QString docname = jsonObject.value("docTitle").toString();
+                QString debugdoc = " l'utente " +userDoc + " ha creato il file " + docname;
+                qDebug()<< debugdoc;
             break;
 
 
@@ -244,7 +247,7 @@ void Server::receive(){
 
 
         connect(clientConnection, &QIODevice::readyRead, this, &Server::receive);
-        Server::clientConnection->disconnectFromHost();
+        //Server::clientConnection->disconnectFromHost();    la disconnessione va gestita lato client
     }
 
 }
@@ -255,7 +258,8 @@ void Server::DatabaseConnect() {
     if(QSqlDatabase::isDriverAvailable(DRIVER))
     {
         db = QSqlDatabase::addDatabase(DRIVER);
-        db.setDatabaseName("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/database/users.db");
+        db.setDatabaseName("F:/Git/Tintero/fortune_modified/fortune_server_modified/database/users.db");    //Giulio
+        //db.setDatabaseName("F:/Git/Tintero/fortune_modified/fortune_server_modified/database/users.db");  //Salvo
 
         if(!db.open())
             qWarning() << "MainWindow::DatabaseConnect - ERROR: " << db.lastError().text();
