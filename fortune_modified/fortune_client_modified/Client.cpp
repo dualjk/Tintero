@@ -457,8 +457,7 @@ void Client::backToLoginPage(){
 void Client::toMainPage(QString username){
     qDebug()<<numAvatar;
 
-    page *p = new page(this);
-    p->setUsernameLabel(username);
+    page *p = new page(this, username);
     p->setAvatar(pixmapVector.at(numAvatar).scaled(128,128, Qt::KeepAspectRatio,Qt::SmoothTransformation));
     p->setGridLayout();
     p->show();

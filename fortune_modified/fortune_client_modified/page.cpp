@@ -1,11 +1,14 @@
 #include "page.h"
 #include "ui_page.h"
 
-page::page(QWidget *parent) :
+
+page::page(QWidget *parent, QString username) :
     QMainWindow(parent),
-    ui(new Ui::page)
+    ui(new Ui::page),
+    username(username)
 {
     ui->setupUi(this);
+    setUsernameLabel();
 }
 
 page::~page()
@@ -14,12 +17,13 @@ page::~page()
 }
 
 void page::setAvatar(QPixmap p) {
+
     ui->avatarLabel->setPixmap(p);
     ui->avatarLabel->setAlignment(Qt::AlignCenter);
 }
 
-void page::setUsernameLabel(QString a) {
-    ui->usernameLabel->setText(a);
+void page::setUsernameLabel() {
+    ui->usernameLabel->setText(username);
     ui->usernameLabel->setAlignment(Qt::AlignCenter);
 }
 
@@ -65,7 +69,6 @@ void page::setGridLayout(){
         containerVector[i]->setLayout(new QVBoxLayout);
         containerVector[i]->layout()->addWidget(labels[i]);
         containerVector[i]->layout()->addWidget(docLabels[i]);
-        containerVector[i]->setStyleSheet("background-color: yellow");
         ui->docsGridLayout->addWidget(containerVector[i], i/3, i%3);
     }
 
@@ -77,9 +80,31 @@ void page::setGridLayout(){
 }
 
 void page::newDocumentSetup(){
-    DocTitleDialog d;
-    if(d.exec() !=  QDialog::Accepted)
+    DocTitleDialog *d = new DocTitleDialog(this);
+    if(d->exec() !=  QDialog::Accepted)
         return;
-    qDebug() << d.getDocumentTitle();
+
+    TextEdit *t=textEditStart();
+    t->fileNew();
+    t->show();
+
+    this->hide();
+
+    qDebug() << d->getDocumentTitle();
+
+
+}
+
+TextEdit* page::textEditStart(){
+    TextEdit *t = new TextEdit(this);
+
+    const QRect availableGeometry = t->screen()->availableGeometry();
+    t->resize(availableGeometry.width() / 2, (availableGeometry.height() * 2) / 3);
+    t->move((availableGeometry.width() - t->width()) / 2,
+            (availableGeometry.height() - t->height()) / 2);
+
+    //t->load(QLatin1String(":/example.html"));
+    //t->fileNew();
+    return t;
 
 }
