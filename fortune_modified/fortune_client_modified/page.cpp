@@ -2,10 +2,11 @@
 #include "ui_page.h"
 
 
-page::page(QWidget *parent, QString username) :
+page::page(QWidget *parent, Transmission* t, QString username) :
     QMainWindow(parent),
     ui(new Ui::page),
-    username(username)
+    username(username),
+    t(t)
 {
     ui->setupUi(this);
     setUsernameLabel();
@@ -84,9 +85,17 @@ void page::newDocumentSetup(){
     if(d->exec() !=  QDialog::Accepted)
         return;
 
-    TextEdit *t=textEditStart();
-    t->fileNew();
-    t->show();
+    QJsonObject title{
+        {"action", 2},
+        {"user", username},
+        {"docTitle", d->getDocumentTitle()}
+    };
+
+    this->t->sendJson(title, "", -1); //questo e' molto brutto ma dovrebbe funzionare
+    TextEdit *te=textEditStart();
+    te->fileNew();
+    te->show();
+
 
     this->hide();
 
@@ -96,15 +105,18 @@ void page::newDocumentSetup(){
 }
 
 TextEdit* page::textEditStart(){
-    TextEdit *t = new TextEdit(this);
+    TextEdit *te = new TextEdit(this);
 
-    const QRect availableGeometry = t->screen()->availableGeometry();
-    t->resize(availableGeometry.width() / 2, (availableGeometry.height() * 2) / 3);
-    t->move((availableGeometry.width() - t->width()) / 2,
-            (availableGeometry.height() - t->height()) / 2);
+    const QRect availableGeometry = te->screen()->availableGeometry();
+    te->resize(availableGeometry.width() / 2, (availableGeometry.height() * 2) / 3);
+    te->move((availableGeometry.width() - te->width()) / 2,
+            (availableGeometry.height() - te->height()) / 2);
+
+
+
 
     //t->load(QLatin1String(":/example.html"));
     //t->fileNew();
-    return t;
+    return te;
 
 }

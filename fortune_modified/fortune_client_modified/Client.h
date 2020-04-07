@@ -11,6 +11,7 @@
 #include <QJsonDocument>
 
 #include <clickablelabel.h>
+#include "transmission.h"
 #include <page.h>
 
 
@@ -33,7 +34,7 @@ public:
 
 private slots:
     void logIn();
-    QJsonObject readJson();
+    //QJsonObject readJson();
     void readJsonSignUp();
     void readJsonLogIn();
 
@@ -45,13 +46,14 @@ private slots:
     void signUp();
     void avatar();
     QJsonValue jsonValFromPixmap(const QPixmap &p);
-    void sendJson(QJsonObject obj);
+    //void sendJson(QJsonObject obj);
     void labelClicked();
     void selectedAvatar(int avatar);
     void toMainPage(QString username);
 
 private:
 
+    Transmission *t = nullptr;
     QGridLayout *mainLayout = nullptr;
     QGridLayout *secondLayout = nullptr;
 
@@ -60,8 +62,8 @@ private:
     QLineEdit *portLineEdit = nullptr;
     QLabel *statusLabel = nullptr;
     QPushButton *getFortuneButton = nullptr;
-    QTcpSocket *tcpSocket = nullptr;
-    QDataStream in;
+    //QTcpSocket *tcpSocket = nullptr;
+    //QDataStream in;
     QString currentFortune;
     QNetworkSession *networkSession = nullptr;
     QLineEdit *pswLineEdit = nullptr;

@@ -5,6 +5,7 @@
 #include <QtWidgets>
 
 #include "textedit.h"
+#include "transmission.h"
 #include <doctitledialog.h>
 
 namespace Ui {
@@ -16,7 +17,7 @@ class page : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit page(QWidget *parent = nullptr, QString username = nullptr);
+    explicit page(QWidget *parent = nullptr, Transmission* t=nullptr, QString username = nullptr);
     ~page();
 
     void setAvatar(QPixmap p);
@@ -30,6 +31,7 @@ public:
 private:
     Ui::page *ui;
     QString username;
+    Transmission* t;
 };
 
 #endif // PAGE_H

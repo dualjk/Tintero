@@ -234,6 +234,11 @@ void Server::receive(){
 
             break;
 
+            case 2:
+                qDebug()<<jsonObject.value("user").toString()+" "+jsonObject.value("docTitle").toString();
+            break;
+
+
 
         }
 

@@ -1,9 +1,6 @@
 #include <QtNetwork>
 #include <QDir>
 #include <QTextBrowser>
-
-
-
 #include "Client.h"
 
 //! [0]
@@ -12,14 +9,14 @@ Client::Client(QWidget *parent)
     , hostCombo(new QComboBox)
     , portLineEdit(new QLineEdit)
     , getFortuneButton(new QPushButton(tr("Login!")))
-    , tcpSocket(new QTcpSocket(this))
+//    , t->getTcpSocket()(new Qt->getTcpSocket()(this))
     , pswLineEdit(new QLineEdit)
     , usernameLineEdit(new QLineEdit)
     , newUserButton(new QPushButton(tr("Not a member? Join us here")))
 
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-//! [0]
+
     hostCombo->setEditable(true);
     // find out name of this machine
     QString name = QHostInfo::localHostName();
@@ -86,10 +83,11 @@ Client::Client(QWidget *parent)
     buttonBox->addButton(getFortuneButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
 
-//! [1]
-    in.setDevice(tcpSocket);
-    in.setVersion(QDataStream::Qt_4_0);
-//! [1]
+    /*dichiarazione di transmission*/
+
+//    in.setDevice(t->getTcpSocket());
+//    in.setVersion(QDataStream::Qt_4_0);
+    t = new Transmission(this);
 
     connect(hostCombo, &QComboBox::editTextChanged,
             this, &Client::enableGetFortuneButton);
@@ -101,30 +99,13 @@ Client::Client(QWidget *parent)
             this, &Client::newUser);
     connect(quitButton, &QAbstractButton::clicked, this, &QWidget::close);
 
-    connect(tcpSocket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-//! [3]
+    connect(t->getTcpSocket(), QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
             this, &Client::displayError);
-//! [4]
 
 
 
     QWidget *login = new QWidget();
     mainLayout = new QGridLayout(login);
-/*    if (QGuiApplication::styleHints()->showIsFullScreen() || QGuiApplication::styleHints()->showIsMaximized()) {
-        auto outerVerticalLayout = new QVBoxLayout(this);
-        outerVerticalLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding));
-        auto outerHorizontalLayout = new QHBoxLayout;
-        outerHorizontalLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Ignored));
-        auto groupBox = new QGroupBox(QGuiApplication::applicationDisplayName());
-        mainLayout = new QGridLayout(groupBox);
-        outerHorizontalLayout->addWidget(groupBox);
-        outerHorizontalLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Ignored));
-        outerVerticalLayout->addLayout(outerHorizontalLayout);
-        outerVerticalLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding));
-    } else {
-        mainLayout = new QGridLayout(this);
-    }*/
-
 
 
     for(int i=0; i<12; i++) {
@@ -191,44 +172,12 @@ Client::Client(QWidget *parent)
     secondLayout->addWidget(pswRepeatLabel, 5, 0);
     secondLayout->addWidget(pswRepeatLineEdit, 5, 1);
     secondLayout->addWidget(avatarLabel, 7,0);
-    //secondLayout->addWidget(avatarPathLineEdit, 7, 1);
     secondLayout->addWidget(uploadAvatarButton, 7, 2);
-
     secondLayout->addWidget(signUpButton, 8,1);
-
     secondLayout->addWidget(buttonRegBox, 9, 0, 1, 9);
 
     pswForRegLineEdit->setEchoMode(QLineEdit::Password);
     pswRepeatLineEdit->setEchoMode(QLineEdit::Password);
-
-
-
-
-    //QWidget *main = new QWidget();
-
-    //Window *main = new Window();
-    /*thirdLayout = new BorderLayout(main);
-
-    QTextBrowser *centralWidget = new QTextBrowser;
-    centralWidget->setPlainText(tr("Central widget"));
-
-
-    avatarUser = new QLabel();
-    usernameLabelMain = new QLabel();
-    avatarUser->setFrameStyle(QFrame::Box | QFrame::Raised);
-    usernameLabelMain->setFrameStyle(QFrame::Box | QFrame::Raised);
-
-    thirdLayout->addWidget(centralWidget, BorderLayout::Center);
-    thirdLayout->addWidget(avatarUser, BorderLayout::West);
-    thirdLayout->addWidget(usernameLabelMain, BorderLayout::East);
-    */
-
-
-
-
-
-
-
 
     connect(quitRegButton, &QAbstractButton::clicked, this, &QWidget::close);
     connect(backButton, &QAbstractButton::clicked,
@@ -238,25 +187,14 @@ Client::Client(QWidget *parent)
     connect(uploadAvatarButton, &QAbstractButton::clicked,
             this, &Client::avatar);
 
-
-
-
-
-
     stackedWidget = new QStackedWidget();
 
     stackedWidget->addWidget(login);
     stackedWidget->addWidget(reg);
-    //stackedWidget->addWidget(main);
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->addWidget(stackedWidget);
     setLayout(layout);
-
-
-
-
-
 
     setWindowTitle(QGuiApplication::applicationDisplayName());
     portLineEdit->setFocus();
@@ -296,41 +234,40 @@ void Client::logIn()
         {"password", pswLineEdit->text()}
     };
 
-    firstConnection=true;
-    sendJson(authentication);
-    disconnect(tcpSocket, &QIODevice::readyRead, 0, 0);
-    connect(tcpSocket, &QIODevice::readyRead, this, &Client::readJsonLogIn);
+    t->sendJson(authentication,hostCombo->currentText(), portLineEdit->text().toInt());
+    disconnect(t->getTcpSocket(), &QIODevice::readyRead, 0, 0);
+    connect(t->getTcpSocket(), &QIODevice::readyRead, this, &Client::readJsonLogIn);
 
 
 }
 
-QJsonObject Client::readJson()
-{
-    in.startTransaction();
+//QJsonObject Client::readJson()
+//{
+//    in.startTransaction();
 
-    QString nextFortune;
-    in >> nextFortune;
-    QJsonDocument jsonResponse = QJsonDocument::fromJson(nextFortune.toLatin1());
-    QJsonArray jsonArray = jsonResponse.array();
+//    QString nextFortune;
+//    in >> nextFortune;
+//    QJsonDocument jsonResponse = QJsonDocument::fromJson(nextFortune.toLatin1());
+//    QJsonArray jsonArray = jsonResponse.array();
 
 
-    if (!in.commitTransaction()){
-        QJsonObject jsonObjectEmpty{
+//    if (!in.commitTransaction()){
+//        QJsonObject jsonObjectEmpty{
 
-        };
+//        };
 
-        return jsonObjectEmpty;
-    }
+//        return jsonObjectEmpty;
+//    }
 
-    if(!jsonArray.isEmpty())
-    {
-        QJsonObject jsonObject = jsonArray.first().toObject();
-        return jsonObject;
-    }
-}
+//    if(!jsonArray.isEmpty())
+//    {
+//        QJsonObject jsonObject = jsonArray.first().toObject();
+//        return jsonObject;
+//    }
+//}
 
 void Client::readJsonSignUp(){
-    QJsonObject jsonObject = readJson();
+    QJsonObject jsonObject = t->readJson();
     int c = jsonObject.value("action").toInt();
 
     switch (c) {
@@ -350,7 +287,7 @@ void Client::readJsonSignUp(){
 
 void Client::readJsonLogIn(){
 
-    QJsonObject jsonObject = readJson();
+    QJsonObject jsonObject = t->readJson();
     int c = jsonObject.value("action").toInt();
 
     switch (c) {
@@ -391,7 +328,7 @@ void Client::displayError(QAbstractSocket::SocketError socketError)
     default:
         QMessageBox::information(this, tr("<s>Fortune Client</s> Tintero Client"),
                                  tr("The following error occurred: %1.")
-                                 .arg(tcpSocket->errorString()));
+                                 .arg(t->getTcpSocket()->errorString()));
     }
 
     getFortuneButton->setEnabled(true);
@@ -457,7 +394,7 @@ void Client::backToLoginPage(){
 void Client::toMainPage(QString username){
     qDebug()<<numAvatar;
 
-    page *p = new page(this, username);
+    page *p = new page(this, t, username);
     p->setAvatar(pixmapVector.at(numAvatar).scaled(128,128, Qt::KeepAspectRatio,Qt::SmoothTransformation));
     p->setGridLayout();
     p->show();
@@ -475,10 +412,11 @@ void Client::signUp() {
             {"avatar", numAvatar}
         };
 
-        firstConnection=true;
-        sendJson(authentication);
-        disconnect(tcpSocket, &QIODevice::readyRead, 0, 0);
-        connect(tcpSocket, &QIODevice::readyRead, this, &Client::readJsonSignUp);
+
+        t->sendJson(authentication, hostCombo->currentText(), portLineEdit->text().toInt());
+
+        disconnect(t->getTcpSocket(), &QIODevice::readyRead, 0, 0);
+        connect(t->getTcpSocket(), &QIODevice::readyRead, this, &Client::readJsonSignUp);
     }
     else {
         appRegLabel->setText("<b>Tintero Client:</b> le due password non coincidono, riprova");
@@ -515,28 +453,28 @@ QJsonValue Client::jsonValFromPixmap(const QPixmap &p) {
   return {QLatin1String(encoded)};
 }
 
-void Client::sendJson(QJsonObject obj) {
+//void Client::sendJson(QJsonObject obj) {
 
-    if(firstConnection) {
-    tcpSocket->abort();
-    tcpSocket->connectToHost(hostCombo->currentText(),
-                             portLineEdit->text().toInt());
+//    if(firstConnection) {
+//    t->getTcpSocket()->abort();
+//    t->getTcpSocket()->connectToHost(hostCombo->currentText(),
+//                             portLineEdit->text().toInt());
 
-    firstConnection=false;
-    }
+//    firstConnection=false;
+//    }
 
-    QJsonArray jsarray {obj};
-    QJsonDocument jsDoc(jsarray);
+//    QJsonArray jsarray {obj};
+//    QJsonDocument jsDoc(jsarray);
 
-    QString jsString = QString::fromLatin1(jsDoc.toJson());
+//    QString jsString = QString::fromLatin1(jsDoc.toJson());
 
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_10);
+//    QByteArray block;
+//    QDataStream out(&block, QIODevice::WriteOnly);
+//    out.setVersion(QDataStream::Qt_5_10);
 
-    out << jsString;
-    tcpSocket->write(block);
-}
+//    out << jsString;
+//    t->getTcpSocket()->write(block);
+//}
 
 
 void Client::labelClicked(){

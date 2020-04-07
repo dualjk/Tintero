@@ -11,14 +11,16 @@ HEADERS       = client.h \
     doctitledialog.h \
     page.h \
     textedit.h \
-    titleDocument.h
+    titleDocument.h \
+    transmission.h
 SOURCES       = client.cpp \
                 clickableframe.cpp \
                 clickablelabel.cpp \
                 doctitledialog.cpp \
                 main.cpp \
                 page.cpp \
-                textedit.cpp
+                textedit.cpp \
+                transmission.cpp
 
 RESOURCES += client.qrc
 
