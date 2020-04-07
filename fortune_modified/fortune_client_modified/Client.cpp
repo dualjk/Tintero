@@ -1,4 +1,3 @@
-#include <QtWidgets>
 #include <QtNetwork>
 #include <QDir>
 #include <QTextBrowser>
@@ -13,11 +12,10 @@ Client::Client(QWidget *parent)
     , hostCombo(new QComboBox)
     , portLineEdit(new QLineEdit)
     , getFortuneButton(new QPushButton(tr("Login!")))
-    , newUserButton(new QPushButton(tr("Not a member? Join us here")))
     , tcpSocket(new QTcpSocket(this))
     , pswLineEdit(new QLineEdit)
     , usernameLineEdit(new QLineEdit)
-
+    , newUserButton(new QPushButton(tr("Not a member? Join us here")))
 
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -459,40 +457,12 @@ void Client::backToLoginPage(){
 void Client::toMainPage(QString username){
     qDebug()<<numAvatar;
 
-    QMainWindow *main = new QMainWindow();
-    Ui_MainWindow mainpage;
-    mainpage.setupUi(main);
-    mainpage.setUsernameLabel(username);
-    mainpage.setAvatarLabel(pixmapVector.at(numAvatar).scaled(128,128, Qt::KeepAspectRatio,Qt::SmoothTransformation));
-    main->show();
-
-
+    page *p = new page(this);
+    p->setUsernameLabel(username);
+    p->setAvatar(pixmapVector.at(numAvatar).scaled(128,128, Qt::KeepAspectRatio,Qt::SmoothTransformation));
+    p->setGridLayout();
+    p->show();
     QDialog::hide();
-
-
-    /*QMainWindow main;
-    auto hsplitter = new QSplitter(Qt::Horizontal);
-    auto vsplitter = new QSplitter(Qt::Vertical);
-
-    auto label1 = new QLabel();
-    auto label2 = new QLabel("<b><p align='center'>"+username+"</b></p>");
-    auto textedit = new QTextEdit();
-    auto label3 = new QLabel();
-    label3->setPixmap(pixmapVector.value(numAvatar));
-    hsplitter->addWidget(vsplitter);
-    hsplitter->addWidget(label1);
-    hsplitter->addWidget(textedit);
-    vsplitter->addWidget(label2);
-    vsplitter->addWidget(label3);
-
-    hsplitter->show();*/
-
-    //main.setCentralWidget(hsplitter);
-
-
-    /*usernameLabelMain->setText(username);
-    avatarUser->setPixmap(pixmapVector[numAvatar]);*/
-    //stackedWidget->setCurrentIndex(2);
 
 }
 

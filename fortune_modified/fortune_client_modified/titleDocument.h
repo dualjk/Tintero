@@ -10,9 +10,7 @@
 #define DIALOG_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets>
 #include <QObject>
 
 QT_BEGIN_NAMESPACE
@@ -33,6 +31,10 @@ public:
         buttonBox->setGeometry(QRect(30, 240, 341, 32));
         buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+        QLabel *titleLabel = new QLabel(Dialog);
+        titleLabel->setText("Title: ");
+        QLineEdit *titleLineEdit = new QLineEdit(Dialog);
+
 
         retranslateUi(Dialog);
         QObject::connect(buttonBox, SIGNAL(accepted()), Dialog, SLOT(accept()));

@@ -11,7 +11,7 @@
 #include <QJsonDocument>
 
 #include <clickablelabel.h>
-#include <mainpage.h>
+#include <page.h>
 
 
 QT_BEGIN_NAMESPACE
