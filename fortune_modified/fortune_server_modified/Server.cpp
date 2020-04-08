@@ -283,6 +283,7 @@ void Server::DatabaseConnect() {
         db = QSqlDatabase::addDatabase(DRIVER);
         db.setDatabaseName("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/database/users.db");    //Giulio
         //db.setDatabaseName("F:/Git/Tintero/fortune_modified/fortune_server_modified/database/users.db");  //Salvo
+        //db.setDatabaseName("D:/PDS_project/Tintero/fortune_modified/fortune_server_modified/database/users.db"); //Vale
 
         if(!db.open())
             qWarning() << "MainWindow::DatabaseConnect - ERROR: " << db.lastError().text();
