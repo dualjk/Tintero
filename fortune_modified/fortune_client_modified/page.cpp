@@ -94,6 +94,7 @@ void page::newDocumentSetup(){
     this->t->sendJson(title, "", -1); //questo e' molto brutto ma dovrebbe funzionare
     TextEdit *te=textEditStart();
     te->fileNew();
+    te->setCurrentFileName(d->getDocumentTitle());
     te->show();
 
 

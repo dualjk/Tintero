@@ -47,8 +47,12 @@ private slots:
     int getAvatarFromDB(QString username, QString password);
     QJsonValue jsonValFromPixmap(const QPixmap &p);
 
-    void sendJsonFromServer(const QJsonObject &obj);
+    void sendJsonFromServer(QJsonArray &jsarray);
     QString GetRandomString() const;
+
+    bool DocumentInsertion(QString username, QString document);
+    bool DocumentRandomTitleCheckExistance(QString document);
+    void DocumentRetrievingByUser(QString user, QJsonArray &array);
 
 private:
     QLabel *statusLabel = nullptr;

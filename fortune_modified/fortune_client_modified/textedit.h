@@ -74,8 +74,13 @@ public:
 
     bool load(const QString &f);
 
+
+
 public slots:
     void fileNew();
+    void setCurrentFileName(const QString &fileName);
+
+
 
 protected:
     void closeEvent(QCloseEvent *e) override;
@@ -112,7 +117,6 @@ private:
     void setupEditActions();
     void setupTextActions();
     bool maybeSave();
-    void setCurrentFileName(const QString &fileName);
     void modifyIndentation(int amount);
 
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);

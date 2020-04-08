@@ -1,6 +1,7 @@
 #include <QtWidgets>
 #include <QtNetwork>
 #include <QtCore>
+#include <QSqlRecord>
 
 #include "Server.h"
 
@@ -180,6 +181,11 @@ void Server::receive(){
         int c = jsonObject.value("action").toInt();
         QString username = jsonObject.value("username").toString();
         QString password = jsonObject.value("password").toString();
+
+        //creazione obj
+
+        QJsonArray jsarray;
+
         switch (c) {
             case 0: /* login */
                 if(OnSearchClicked(username, password)){
@@ -193,14 +199,16 @@ void Server::receive(){
                         {"username", username},
                         {"avatar", avatar}
                     };
-                    sendJsonFromServer(loginSuccessful);
+                    jsarray.push_back(loginSuccessful);
+                    DocumentRetrievingByUser(username, jsarray);
+
 
                 }
                 else {
                     QJsonObject loginFailed{
                         {"action", 0}
                     };
-                    sendJsonFromServer(loginFailed);
+                    jsarray.push_back(loginFailed);
 
                     statusLabel->setText("Pirate does not remembah its password: too much rum drunk, bad pirate!");
                 }
@@ -220,16 +228,15 @@ void Server::receive(){
                 QJsonObject signUpSuccessful{
                     {"action", 1}
                 };
-                sendJsonFromServer(signUpSuccessful);
-
+                jsarray.push_back(signUpSuccessful);
             }
             else{
                 /* username già esistente */
                 QJsonObject signUpFailed{
                     {"action", 0}
                 };
-                sendJsonFromServer(signUpFailed);
-                qDebug()<<"Username già esistente, per favore implementami bene. Mai per comando.";
+                    jsarray.push_back(signUpFailed);
+                    qDebug()<<"Username già esistente, per favore implementami bene. Mai per comando.";
             }
 
             break;
@@ -238,6 +245,19 @@ void Server::receive(){
                 QString userDoc = jsonObject.value("user").toString();
                 QString docname = jsonObject.value("docTitle").toString();
                 QString debugdoc = " l'utente " +userDoc + " ha creato il file " + docname;
+                if(DocumentInsertion(userDoc, docname)){
+                    QJsonObject createDocSuccess{
+                        {"action", 1}
+                    };
+                        jsarray.push_back(createDocSuccess);
+                }
+                else {
+                    QJsonObject createDocFailed{
+                        {"action", 0}
+                    };
+                        jsarray.push_back(createDocFailed);
+                }
+
                 qDebug()<< debugdoc;
             break;
 
@@ -245,6 +265,9 @@ void Server::receive(){
 
         }
 
+        //creazione array
+        //sendjsonfromserver
+        sendJsonFromServer(jsarray);
 
         connect(clientConnection, &QIODevice::readyRead, this, &Server::receive);
         //Server::clientConnection->disconnectFromHost();    la disconnessione va gestita lato client
@@ -258,7 +281,7 @@ void Server::DatabaseConnect() {
     if(QSqlDatabase::isDriverAvailable(DRIVER))
     {
         db = QSqlDatabase::addDatabase(DRIVER);
-        db.setDatabaseName("F:/Git/Tintero/fortune_modified/fortune_server_modified/database/users.db");    //Giulio
+        db.setDatabaseName("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/database/users.db");    //Giulio
         //db.setDatabaseName("F:/Git/Tintero/fortune_modified/fortune_server_modified/database/users.db");  //Salvo
 
         if(!db.open())
@@ -345,7 +368,6 @@ bool Server::DatabasePopulate(QString username, QString password, int avatar) {
     }
 }
 
-
 bool Server::UsernameCheckExistance(QString username){
     QSqlQuery query;
     query.prepare("select id from user where username=? ;");
@@ -374,8 +396,7 @@ QPixmap Server::pixmapFrom(const QJsonValue &val) {
 
 
 
-void Server::sendJsonFromServer(const QJsonObject &obj) {
-    QJsonArray jsarray {obj};
+void Server::sendJsonFromServer(QJsonArray &jsarray) {
     QJsonDocument jsDoc(jsarray);
 
     QString jsString = QString::fromLatin1(jsDoc.toJson());
@@ -413,3 +434,78 @@ QString Server::GetRandomString() const
    }
    return randomString;
 }
+
+
+
+bool Server::DocumentInsertion(QString username, QString document) {
+    QSqlQuery query;
+    QString titleDocRnd;
+    do
+        titleDocRnd = GetRandomString();
+    while (!DocumentRandomTitleCheckExistance(titleDocRnd));
+
+    query.prepare("INSERT INTO documents(user, document_rnd_title, document_original_title, owner) "
+                  "VALUES(?, ?, ?, ?)");
+    query.addBindValue(username);
+    query.addBindValue(titleDocRnd);
+    query.addBindValue(document);
+    query.addBindValue(username);
+
+    if(!query.exec()) {
+        qWarning() << "MainWindow::DocumentInsertion - ERROR: " << query.lastError().text();
+        return false;
+    }
+    else {
+
+        return true;
+
+    }
+}
+
+
+bool Server::DocumentRandomTitleCheckExistance(QString document){
+    QSqlQuery query;
+    query.prepare("select document_rnd_title from documents where document_rnd_title=? ;");
+    query.addBindValue(document);
+
+    if(!query.exec())
+        qWarning() << " - ERROR: Server::DocumentRndTitleCheckExistance " << query.lastError().text();
+
+    if(query.first()) {
+//        qDebug()<< query.value(0).toString();
+        return false;
+    }
+    else {
+//        qDebug() << "DocumentRndTitle not found";
+        return true;
+    }
+}
+
+
+void Server::DocumentRetrievingByUser(QString user, QJsonArray &array){
+
+    QSqlQuery query;
+    query.prepare("select document_original_title, owner from documents where user=? order by last_access desc");
+    query.addBindValue(user);
+
+    query.setForwardOnly(true);
+    if (!query.exec()){
+        QJsonObject error{{"error", -1}};
+        return;
+    }
+
+    while(query.next()) {
+    QJsonObject recordObject;
+
+        for(int x=0; x < query.record().count(); x++) {
+         recordObject.insert( query.record().fieldName(x), QJsonValue::fromVariant(query.value(x)) );
+         qDebug()<<query.record().fieldName(x) + " " + query.value(x).toString();
+
+        }
+     array.push_back(recordObject);
+    }
+    return;
+
+}
+
+

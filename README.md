@@ -101,7 +101,7 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
 4. **programmino molto stupido che legga un documento arricchito e lo faccia stampare da un textEdit**
 5. **programmino stupido che restituisca TRUE se username e password sono presenti in un db (acquisizione username e psw, scrittura della query, scrittura/lettura del db)** -> fatto e sembra un sayan
 
-### **TODO (AGGIORNATO AL 4/4/2020)**
+### **TODO (AGGIORNATO AL 8/4/2020)**
 
 + AUTENTICAZIONE (REGISTRAZIONE, LOGIN)
  	* **path relativo database** -> non fatto
@@ -115,8 +115,8 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
  	* **gestire alcune problematiche legate all'immagine** -> aggirato
  	* **DOCUMENTAZIONE ASSOLUTAMENTE PERCHè NON SI CAPISCE UNA MINCHIA**
  	* **Area documenti scrollabile** -> bruttina ma fatto
- 	* **Database con i documenti**
+ 	* **Database con i documenti** -> fatto
  	* **Inviare al client la lista coi documenti dopo login**
  	* **Stampare la lista dei documenti**
  	* **Label sotto le icone dei documenti** -> fatto
-
+ 	* **Implementare controllo univocità nome documento da parte dello stesso utente (u1 non può creare due file chiamati entrambi "d1")**
