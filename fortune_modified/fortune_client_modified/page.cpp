@@ -1,6 +1,7 @@
 #include "page.h"
 #include "ui_page.h"
 
+#include <QStandardItemModel>
 
 
 page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>* documentVector) :
@@ -13,13 +14,20 @@ page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>
     ui->setupUi(this);
     setUsernameLabel();
 
+    ui->recentTableWidget->setColumnCount(2);
+    ui->recentTableWidget->setRowCount(documentVector->size());
+
+    ui->recentTableWidget->setHorizontalHeaderItem(0, new QTableWidgetItem("Title"));
+    ui->recentTableWidget->setHorizontalHeaderItem(1, new QTableWidgetItem("Owner"));
 
     for(int i=0; i<documentVector->size(); i++) {
+        QTableWidgetItem *title = new QTableWidgetItem(documentVector->value(i).getTitle());
+        ui->recentTableWidget->setItem(i,0, title);
+        QTableWidgetItem *owner = new QTableWidgetItem(documentVector->value(i).getOwner());
+        ui->recentTableWidget->setItem(i,1, owner);
         qDebug() << documentVector->value(i).getOwner() + " " + documentVector->value(i).getTitle();
-        //qDebug() << documentVector
-                    //value(i).getTitle() + " has been created by " + documentVector.value(i).getOwner();
-        //this->ui->recentListView->item
     }
+
 }
 
 page::~page()
@@ -57,14 +65,20 @@ void page::setGridLayout(){
     QVector<QLabel*> labels;
     labels.append(new QLabel);
 
-    QVector<QLabel*> docLabels;
-    docLabels.append(new QLabel);
+    QVector<QLabel*> ownerLabels;
+    ownerLabels.append(new QLabel);
+
+    QVector<QPushButton*> docButtons;
+    docButtons.append(new QPushButton);
 
     QVector<QFrame*> containerVector;
     containerVector.append(new QFrame);
     ui->scrollArea->setEnabled(true);
 
-    for(int i = 1; i < 30; i++)
+    std::sort(documentVector->begin(), documentVector->end(),
+              [](Document a, Document b){ return a.getTitle() < b.getTitle();}); //ho scritto la lambda function a first-try
+
+    for(int i = 1; i <= documentVector->size(); i++)
     {
         containerVector.append(new QFrame);
 
@@ -72,13 +86,18 @@ void page::setGridLayout(){
         labels[i]->setPixmap(QPixmap(":/img/icons/blank.png").scaled(64,64, Qt::KeepAspectRatio, Qt::SmoothTransformation));
         labels[i]->setAlignment(Qt::AlignCenter);
 
-        docLabels.append(new QLabel);
-        docLabels[i]->setText("Doc"+QString::number(i));
-        docLabels[i]->setAlignment(Qt::AlignCenter);
+        ownerLabels.append(new QLabel);
+        ownerLabels.at(i)->setText(documentVector->value(i-1).getOwner());
+        ownerLabels.at(i)->setAlignment(Qt::AlignCenter);
+
+        docButtons.append(new QPushButton);
+        docButtons[i]->setText(documentVector->value(i-1).getTitle());
 
         containerVector[i]->setLayout(new QVBoxLayout);
         containerVector[i]->layout()->addWidget(labels[i]);
-        containerVector[i]->layout()->addWidget(docLabels[i]);
+        containerVector[i]->layout()->addWidget(ownerLabels.at(i));
+        containerVector[i]->layout()->addWidget(docButtons[i]);
+
         ui->docsGridLayout->addWidget(containerVector[i], i/3, i%3);
     }
 
