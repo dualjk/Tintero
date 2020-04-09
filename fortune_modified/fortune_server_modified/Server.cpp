@@ -267,8 +267,6 @@ void Server::receive(){
 
         sendJsonFromServer(jsarray);
 
-        connect(clientConnection, &QIODevice::readyRead, this, &Server::receive);
-        //Server::clientConnection->disconnectFromHost();    la disconnessione va gestita lato client
     }
 
 }

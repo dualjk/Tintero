@@ -2,14 +2,24 @@
 #include "ui_page.h"
 
 
-page::page(QWidget *parent, Transmission* t, QString username) :
+
+page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>* documentVector) :
     QMainWindow(parent),
     ui(new Ui::page),
     username(username),
-    t(t)
+    t(t),
+    documentVector(documentVector)
 {
     ui->setupUi(this);
     setUsernameLabel();
+
+
+    for(int i=0; i<documentVector->size(); i++) {
+        qDebug() << documentVector->value(i).getOwner() + " " + documentVector->value(i).getTitle();
+        //qDebug() << documentVector
+                    //value(i).getTitle() + " has been created by " + documentVector.value(i).getOwner();
+        //this->ui->recentListView->item
+    }
 }
 
 page::~page()
@@ -82,7 +92,7 @@ void page::setGridLayout(){
 void page::newDocumentSetup(){
 
     DocTitleDialog *d = new DocTitleDialog(this);
-    if(d->exec() !=  QDialog::Accepted)
+    if((d->exec() !=  QDialog::Accepted) ||d->getDocumentTitle().isEmpty())
         return;
 
     QJsonObject title{
@@ -107,9 +117,6 @@ TextEdit* page::textEditStart(){
     te->move((availableGeometry.width() - te->width()) / 2,
             (availableGeometry.height() - te->height()) / 2);
 
-
-
-
     //t->load(QLatin1String(":/example.html"));
     //t->fileNew();
     return te;
@@ -130,7 +137,10 @@ void page::newDocumentCreate(){
         qDebug() << titleDocument;
     }
     else {
-
+        QMessageBox msgBox(this);
+        msgBox.setText("Titolo documento già in uso.");
+        msgBox.setInformativeText("Inserisci un altro titolo");
+        msgBox.exec();
         qDebug()<<"Nome documento già esistente";
     }
 

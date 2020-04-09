@@ -287,7 +287,8 @@ void Client::readJsonSignUp(){
 
 void Client::readJsonLogIn(){
 
-    QJsonObject jsonObject = t->readJson();
+    QJsonArray jarray = t->readJsonArray();
+    QJsonObject jsonObject = jarray.first().toObject();
     int c = jsonObject.value("action").toInt();
 
     switch (c) {
@@ -300,7 +301,7 @@ void Client::readJsonLogIn(){
             numAvatar=jsonObject.value("avatar").toInt();
             appLabel->setText("<b>Tintero Client:</b> benvenuto "+jsonObject.value("username").toString() +
                               ", avatar: " + QString::number( jsonObject.value("avatar").toInt()));
-            toMainPage(jsonObject.value("username").toString());
+            toMainPage(jsonObject.value("username").toString(), jarray);
 
         break;
 
@@ -391,10 +392,17 @@ void Client::backToLoginPage(){
     stackedWidget->setCurrentIndex(0);
 }
 
-void Client::toMainPage(QString username){
+void Client::toMainPage(QString username, QJsonArray jarray){
     qDebug()<<numAvatar;
 
-    page *p = new page(this, t, username);
+    QVector<Document> *documentList = new QVector<Document>;
+    for(int i=1; i<jarray.size(); i++) {
+        QJsonObject jobj = jarray.at(i).toObject();
+        documentList->append(Document(jobj.value("owner").toString(),
+                                      jobj.value("document_original_title").toString()));
+    }
+
+    page *p = new page(this, t, username, documentList);
     p->setAvatar(pixmapVector.at(numAvatar).scaled(128,128, Qt::KeepAspectRatio,Qt::SmoothTransformation));
     p->setGridLayout();
     p->show();

@@ -9,6 +9,7 @@ HEADERS       = client.h \
     clickableframe.h \
     clickablelabel.h \
     doctitledialog.h \
+    document.h \
     page.h \
     textedit.h \
     titleDocument.h \
@@ -17,6 +18,7 @@ SOURCES       = client.cpp \
                 clickableframe.cpp \
                 clickablelabel.cpp \
                 doctitledialog.cpp \
+                document.cpp \
                 main.cpp \
                 page.cpp \
                 textedit.cpp \

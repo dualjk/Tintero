@@ -10,9 +10,10 @@
 #include <QJsonValue>
 #include <QJsonDocument>
 
-#include <clickablelabel.h>
+#include "clickablelabel.h"
 #include "transmission.h"
-#include <page.h>
+#include "page.h"
+#include "document.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -49,7 +50,7 @@ private slots:
     //void sendJson(QJsonObject obj);
     void labelClicked();
     void selectedAvatar(int avatar);
-    void toMainPage(QString username);
+    void toMainPage(QString username, QJsonArray jarray);
 
 private:
 

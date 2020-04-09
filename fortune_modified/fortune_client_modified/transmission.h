@@ -16,6 +16,7 @@ public:
     QJsonObject readJson();
     void sendJson(QJsonObject obj, QString address, int port);
     QTcpSocket* getTcpSocket();
+    QJsonArray readJsonArray();
 
 private:
     QTcpSocket *tcpSocket = nullptr;

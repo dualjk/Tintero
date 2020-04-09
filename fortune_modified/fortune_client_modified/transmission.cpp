@@ -32,6 +32,31 @@ QJsonObject Transmission::readJson()
     }
 }
 
+QJsonArray Transmission::readJsonArray()
+{
+    in.startTransaction();
+
+    QString nextFortune;
+    in >> nextFortune;
+    QJsonDocument jsonResponse = QJsonDocument::fromJson(nextFortune.toLatin1());
+    QJsonArray jsonArray = jsonResponse.array();
+
+
+    if (!in.commitTransaction()){
+        QJsonObject jsonObjectEmpty{
+
+        };
+        jsonArray.push_back(jsonObjectEmpty);
+        return jsonArray;
+    }
+
+    if(!jsonArray.isEmpty())
+    {
+        return jsonArray;
+    }
+}
+
+
 void Transmission::sendJson(QJsonObject obj, QString address, int port) {
 
     if(firstConnection) {
