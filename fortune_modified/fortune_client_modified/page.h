@@ -25,13 +25,16 @@ public:
     void setGridLayout();
     void newDocumentSetup();
     void newDocumentCreate();
+    bool readJsonNewDocument();
 
     TextEdit* textEditStart();
+
 
 private:
     Ui::page *ui;
     QString username;
     Transmission* t;
+    QString titleDocument;
 };
 
 #endif // PAGE_H

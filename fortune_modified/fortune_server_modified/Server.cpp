@@ -265,8 +265,6 @@ void Server::receive(){
 
         }
 
-        //creazione array
-        //sendjsonfromserver
         sendJsonFromServer(jsarray);
 
         connect(clientConnection, &QIODevice::readyRead, this, &Server::receive);
@@ -441,26 +439,30 @@ QString Server::GetRandomString() const
 bool Server::DocumentInsertion(QString username, QString document) {
     QSqlQuery query;
     QString titleDocRnd;
-    do
-        titleDocRnd = GetRandomString();
-    while (!DocumentRandomTitleCheckExistance(titleDocRnd));
+    if(DocumentOriginalTitleCheckExistance(document)) {
+        do
+            titleDocRnd = GetRandomString();
+        while (!DocumentRandomTitleCheckExistance(titleDocRnd));
 
-    query.prepare("INSERT INTO documents(user, document_rnd_title, document_original_title, owner) "
-                  "VALUES(?, ?, ?, ?)");
-    query.addBindValue(username);
-    query.addBindValue(titleDocRnd);
-    query.addBindValue(document);
-    query.addBindValue(username);
+        query.prepare("INSERT INTO documents(user, document_rnd_title, document_original_title, owner) "
+                      "VALUES(?, ?, ?, ?)");
+        query.addBindValue(username);
+        query.addBindValue(titleDocRnd);
+        query.addBindValue(document);
+        query.addBindValue(username);
 
-    if(!query.exec()) {
-        qWarning() << "MainWindow::DocumentInsertion - ERROR: " << query.lastError().text();
+        if(!query.exec()) {
+            qWarning() << "MainWindow::DocumentInsertion - ERROR: " << query.lastError().text();
+            return false;
+        }
+        else {
+
+            return true;
+
+        }
+    }
+    else
         return false;
-    }
-    else {
-
-        return true;
-
-    }
 }
 
 
@@ -509,4 +511,21 @@ void Server::DocumentRetrievingByUser(QString user, QJsonArray &array){
 
 }
 
+bool Server::DocumentOriginalTitleCheckExistance(QString document){
+    QSqlQuery query;
+    query.prepare("select document_original_title from documents where document_original_title=? ;");
+    query.addBindValue(document);
+
+    if(!query.exec())
+        qWarning() << " - ERROR: Server::DocumentRndTitleCheckExistance " << query.lastError().text();
+
+    if(query.first()) {
+//        qDebug()<< query.value(0).toString();
+        return false;
+    }
+    else {
+//        qDebug() << "DocumentRndTitle not found";
+        return true;
+    }
+}
 

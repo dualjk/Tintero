@@ -56,7 +56,6 @@ void page::setGridLayout(){
 
     for(int i = 1; i < 30; i++)
     {
-
         containerVector.append(new QFrame);
 
         labels.append(new QLabel);
@@ -81,6 +80,7 @@ void page::setGridLayout(){
 }
 
 void page::newDocumentSetup(){
+
     DocTitleDialog *d = new DocTitleDialog(this);
     if(d->exec() !=  QDialog::Accepted)
         return;
@@ -92,16 +92,10 @@ void page::newDocumentSetup(){
     };
 
     this->t->sendJson(title, "", -1); //questo e' molto brutto ma dovrebbe funzionare
-    TextEdit *te=textEditStart();
-    te->fileNew();
-    te->setCurrentFileName(d->getDocumentTitle());
-    te->show();
 
-
-    this->hide();
-
-    qDebug() << d->getDocumentTitle();
-
+    titleDocument = d->getDocumentTitle();
+    disconnect(t->getTcpSocket(), &QIODevice::readyRead, 0, 0);
+    connect(t->getTcpSocket(), &QIODevice::readyRead, this, &page::newDocumentCreate);
 
 }
 
@@ -120,4 +114,43 @@ TextEdit* page::textEditStart(){
     //t->fileNew();
     return te;
 
+}
+
+
+void page::newDocumentCreate(){
+    if(readJsonNewDocument()){
+        TextEdit *te=textEditStart();
+        te->fileNew();
+        te->setCurrentFileName(titleDocument);
+        te->show();
+
+
+        this->hide();
+
+        qDebug() << titleDocument;
+    }
+    else {
+
+        qDebug()<<"Nome documento già esistente";
+    }
+
+
+
+}
+bool page::readJsonNewDocument(){
+
+    QJsonObject jsonObject = t->readJson();
+    int c = jsonObject.value("action").toInt();
+
+    switch (c) {
+        case 0:
+            return false;
+        break;
+
+        case 1:
+            return true;
+        break;
+
+    }
+    return false;
 }

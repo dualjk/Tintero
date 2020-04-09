@@ -52,6 +52,7 @@ private slots:
 
     bool DocumentInsertion(QString username, QString document);
     bool DocumentRandomTitleCheckExistance(QString document);
+    bool DocumentOriginalTitleCheckExistance(QString document);
     void DocumentRetrievingByUser(QString user, QJsonArray &array);
 
 private:

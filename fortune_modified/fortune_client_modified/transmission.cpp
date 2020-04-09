@@ -34,7 +34,6 @@ QJsonObject Transmission::readJson()
 
 void Transmission::sendJson(QJsonObject obj, QString address, int port) {
 
-
     if(firstConnection) {
     tcpSocket->abort();
     tcpSocket->connectToHost(address, port);
