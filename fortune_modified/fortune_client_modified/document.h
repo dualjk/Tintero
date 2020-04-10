@@ -7,13 +7,15 @@ class Document
 {
 
 public:
-    Document(QString owner = "", QString title = "");
+    Document(QString owner = "", QString title = "", QString rndTitle = "");
     const QString getOwner();
     const QString getTitle();
+    const QString getRndTitle();
 
 private:
     QString owner;
     QString title;
+    QString rndTitle;
 
 };
 

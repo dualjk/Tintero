@@ -25,7 +25,8 @@ page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>
         ui->recentTableWidget->setItem(i,0, title);
         QTableWidgetItem *owner = new QTableWidgetItem(documentVector->value(i).getOwner());
         ui->recentTableWidget->setItem(i,1, owner);
-        qDebug() << documentVector->value(i).getOwner() + " " + documentVector->value(i).getTitle();
+        qDebug() << documentVector->value(i).getOwner() + " " + documentVector->value(i).getTitle() + " " +
+                    documentVector->value(i).getRndTitle();
     }
 
 }
@@ -42,7 +43,7 @@ void page::setAvatar(QPixmap p) {
 }
 
 void page::setUsernameLabel() {
-    ui->usernameLabel->setText(username);
+    ui->usernameLabel->setText("Username: <b>"+username+"</b>");
     ui->usernameLabel->setAlignment(Qt::AlignCenter);
 }
 
@@ -68,11 +69,11 @@ void page::setGridLayout(){
     QVector<QLabel*> ownerLabels;
     ownerLabels.append(new QLabel);
 
-    QVector<QPushButton*> docButtons;
-    docButtons.append(new QPushButton);
+    QVector<QLabel*> docButtons;
+    docButtons.append(new QLabel);
 
-    QVector<QFrame*> containerVector;
-    containerVector.append(new QFrame);
+    QVector<ClickableFrame*> containerVector;
+    containerVector.append(new ClickableFrame);
     ui->scrollArea->setEnabled(true);
 
     std::sort(documentVector->begin(), documentVector->end(),
@@ -80,25 +81,38 @@ void page::setGridLayout(){
 
     for(int i = 1; i <= documentVector->size(); i++)
     {
-        containerVector.append(new QFrame);
+        containerVector.append(new ClickableFrame);
+
 
         labels.append(new QLabel);
-        labels[i]->setPixmap(QPixmap(":/img/icons/blank.png").scaled(64,64, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        if(username == documentVector->value(i-1).getOwner()) {
+
+            labels[i]->setPixmap(QPixmap(":/img/icons/blank.png").scaled(64,64,
+                                        Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        }
+        else
+            labels[i]->setPixmap(QPixmap(":/img/icons/blankshared.png").scaled(64,64,
+                                    Qt::KeepAspectRatio, Qt::SmoothTransformation));
         labels[i]->setAlignment(Qt::AlignCenter);
 
         ownerLabels.append(new QLabel);
         ownerLabels.at(i)->setText(documentVector->value(i-1).getOwner());
+
         ownerLabels.at(i)->setAlignment(Qt::AlignCenter);
 
-        docButtons.append(new QPushButton);
+        docButtons.append(new QLabel);
         docButtons[i]->setText(documentVector->value(i-1).getTitle());
+        docButtons.at(i)->setAlignment(Qt::AlignCenter);
 
         containerVector[i]->setLayout(new QVBoxLayout);
         containerVector[i]->layout()->addWidget(labels[i]);
         containerVector[i]->layout()->addWidget(ownerLabels.at(i));
         containerVector[i]->layout()->addWidget(docButtons[i]);
+        containerVector.at(i)->setRandomTitle(documentVector->value(i-1).getRndTitle());
+
 
         ui->docsGridLayout->addWidget(containerVector[i], i/3, i%3);
+        //connect(containerVector.at(i), &ClickableFrame::clicked, this, &page::documentButtonClicked);
     }
 
 
@@ -182,4 +196,18 @@ bool page::readJsonNewDocument(){
 
     }
     return false;
+}
+
+
+void page::documentButtonClicked(){
+    ClickableFrame *f = (ClickableFrame*)sender();
+
+    QJsonObject title{
+        {"action", 3},
+        {"user", username},
+        {"docTitle", f->getRandomTitle()}
+    };
+
+    this->t->sendJson(title, "", -1); //questo e' molto brutto ma dovrebbe funzionare
+
 }

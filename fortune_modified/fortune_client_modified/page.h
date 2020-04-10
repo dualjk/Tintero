@@ -11,6 +11,7 @@
 #include "transmission.h"
 #include "doctitledialog.h"
 #include "document.h"
+#include "clickableframe.h"
 
 namespace Ui {
 class page;
@@ -30,6 +31,7 @@ public:
     void newDocumentSetup();
     void newDocumentCreate();
     bool readJsonNewDocument();
+    void documentButtonClicked();
 
     TextEdit* textEditStart();
 

@@ -1,8 +1,9 @@
 #include "document.h"
 
-Document::Document(QString owner, QString title):
+Document::Document(QString owner, QString title, QString rndTitle):
     owner(owner),
-    title(title)
+    title(title),
+    rndTitle(rndTitle)
 {
 
 }
@@ -14,4 +15,8 @@ const QString Document::getOwner(){
 
 const QString Document::getTitle(){
     return title;
+}
+
+const QString Document::getRndTitle(){
+    return rndTitle;
 }

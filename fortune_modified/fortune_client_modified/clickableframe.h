@@ -11,8 +11,12 @@ class ClickableFrame : public QFrame
 
 public:
     ClickableFrame(QWidget* parent = Q_NULLPTR, Qt::WindowFlags f = Qt::WindowFlags());
+    void setRandomTitle(QString t);
+    QString getRandomTitle();
     ~ClickableFrame();
 
+private:
+    QString rndTitle;
 
 signals:
     void clicked();

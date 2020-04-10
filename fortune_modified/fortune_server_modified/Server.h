@@ -54,6 +54,8 @@ private slots:
     bool DocumentRandomTitleCheckExistance(QString document);
     bool DocumentOriginalTitleCheckExistance(QString document);
     void DocumentRetrievingByUser(QString user, QJsonArray &array);
+    bool DocumentOpening(QString username, QString document);
+
 
 private:
     QLabel *statusLabel = nullptr;

@@ -15,6 +15,8 @@ public:
 
     ~ClickableLabel();
 
+
+
 signals:
     void clicked();
 

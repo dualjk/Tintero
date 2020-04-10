@@ -2,7 +2,7 @@
 
 Progetto di **text editor cooperativo** online, parte del corso "programmazione di sistema" del politecnico di torino, laurea magistrale in ingegneria informatica, a.a. 2018/2019.
 
-Il nome "Tintero" viene dalla parola spagnola che sta per "Calamaio", che ben riprende l'idea di fondo della nostra applicazione, ossia la realizzazione di un editor testo. Suonava bene. 
+Il nome "Tintero" viene dalla parola spagnola che sta per "calamaio", che ben riprende l'idea di fondo della nostra applicazione, ossia la realizzazione di un editor testo. Suonava bene. 
 
 
 ## Architettura
@@ -12,6 +12,7 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
 ## Idee generali
 
 - partire innanzitutto verificando che una connessione client-server funzioni, di qualsiasi tipo essa sia (probabilmente inizieremo a implementare il login)
+- implementare un meccanismo lato server di memorizzazione delle sessioni. Ogni sessione dovrebbe essere caratterizzata da un session ID, che conserva il nome dell'utente e il nome del file che sta modificando. In questo modo dovrebbe essere facilitata e permessa la situazione in cui un utente ha aperto due documenti e li sta modificando contemporaneamente
 
 
 # Use cases
@@ -51,7 +52,7 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
 2. U assengna nome al nuuovo documento -> da discutere, possiamo anche assegnare un identificativo tipo chiave hash al nuovo documento ed evitare il nome, magari U lo può scegliere solo in fase di esportazione
 3. U inizia a scrivere sul nuovo documento
 
-## Modifica del documento (parte frizzantina)
+## Modifica del documento
 ### U aggiunge un carattere
 1. U digita un carattere sulla sua tastiera
 2. il carattere viene inserito localmente
@@ -122,7 +123,7 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
  	* **Stampare la lista dei documenti** -> fatto
  	* **Label sotto le icone dei documenti** -> fatto
  	* **Implementare controllo univocità nome documento da parte dello stesso utente (u1 non può creare due file chiamati entrambi "d1")** -> fatto
- 	* **differenziare file creati dall'utente con file condivisi dagli altri**
+ 	* **differenziare file creati dall'utente con file condivisi dagli altri** -> fatto
  	* **aprire il file dopo aver cliccato il bottone**
  	* **condivisione file (con uri)**
  	* **gestione concorrenza operazioni database**

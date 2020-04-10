@@ -2,6 +2,7 @@
 #include <QtNetwork>
 #include <QtCore>
 #include <QSqlRecord>
+#include <QDir>
 
 #include "Server.h"
 
@@ -187,34 +188,35 @@ void Server::receive(){
         QJsonArray jsarray;
 
         switch (c) {
-            case 0: /* login */
-                if(OnSearchClicked(username, password)){
-                    int avatar = (getAvatarFromDB(username,password));
-                    statusLabel->setText("A pirate from our crew has returned! Hoorray!\nUsername: " +
+        case 0: {/* login */
+            if(OnSearchClicked(username, password)){
+                int avatar = (getAvatarFromDB(username,password));
+                statusLabel->setText("A pirate from our crew has returned! Hoorray!\nUsername: " +
                                      username + "\nPassword: " +
-                                         password + "\nAvatar scelto: "+QString::number(avatar));
+                                     password + "\nAvatar scelto: "+QString::number(avatar));
 
-                    QJsonObject loginSuccessful{
-                        {"action", 1},
-                        {"username", username},
-                        {"avatar", avatar}
-                    };
-                    jsarray.push_back(loginSuccessful);
-                    DocumentRetrievingByUser(username, jsarray);
+                QJsonObject loginSuccessful{
+                    {"action", 1},
+                    {"username", username},
+                    {"avatar", avatar}
+                };
+                jsarray.push_back(loginSuccessful);
+                DocumentRetrievingByUser(username, jsarray);
 
 
-                }
-                else {
-                    QJsonObject loginFailed{
-                        {"action", 0}
-                    };
-                    jsarray.push_back(loginFailed);
+            }
+            else {
+                QJsonObject loginFailed{
+                    {"action", 0}
+                };
+                jsarray.push_back(loginFailed);
 
-                    statusLabel->setText("Pirate does not remembah its password: too much rum drunk, bad pirate!");
-                }
+                statusLabel->setText("Pirate does not remembah its password: too much rum drunk, bad pirate!");
+            }
             break;
+        }
 
-            case 1: /* sign up */
+        case 1: { /* sign up */
             if(Server::UsernameCheckExistance(username)){
                 int avatar=jsonObject.value("avatar").toInt();
                 Server::DatabasePopulate(username,
@@ -235,32 +237,42 @@ void Server::receive(){
                 QJsonObject signUpFailed{
                     {"action", 0}
                 };
-                    jsarray.push_back(signUpFailed);
-                    qDebug()<<"Username già esistente, per favore implementami bene. Mai per comando.";
+                jsarray.push_back(signUpFailed);
+                qDebug()<<"Username già esistente, per favore implementami bene. Mai per comando.";
             }
 
             break;
+        }
 
-            case 2:
-                QString userDoc = jsonObject.value("user").toString();
-                QString docname = jsonObject.value("docTitle").toString();
-                QString debugdoc = " l'utente " +userDoc + " ha creato il file " + docname;
-                if(DocumentInsertion(userDoc, docname)){
-                    QJsonObject createDocSuccess{
-                        {"action", 1}
-                    };
-                        jsarray.push_back(createDocSuccess);
-                }
-                else {
-                    QJsonObject createDocFailed{
-                        {"action", 0}
-                    };
-                        jsarray.push_back(createDocFailed);
-                }
+        case 2: {
+            QString userDoc = jsonObject.value("user").toString();
+            QString docname = jsonObject.value("docTitle").toString();
+            QString debugdoc = " l'utente " +userDoc + " ha creato il file " + docname;
+            if(DocumentInsertion(userDoc, docname)){
+                QJsonObject createDocSuccess{
+                    {"action", 1}
+                };
+                jsarray.push_back(createDocSuccess);
+            }
+            else {
+                QJsonObject createDocFailed{
+                    {"action", 0}
+                };
+                jsarray.push_back(createDocFailed);
+            }
 
-                qDebug()<< debugdoc;
+            qDebug()<< debugdoc;
             break;
+        }
 
+        case 3: {
+            QString userDoc = jsonObject.value("user").toString();
+            QString docname = jsonObject.value("docTitle").toString();
+
+            DocumentOpening(userDoc, docname);
+
+            break;
+        }
 
 
         }
@@ -455,6 +467,13 @@ bool Server::DocumentInsertion(QString username, QString document) {
         }
         else {
 
+            QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
+                       +titleDocRnd+".html");
+            if ( file.open(QIODevice::ReadWrite) )
+            {
+                QTextStream stream( &file );
+                stream << "something" << endl;
+            }
             return true;
 
         }
@@ -486,7 +505,9 @@ bool Server::DocumentRandomTitleCheckExistance(QString document){
 void Server::DocumentRetrievingByUser(QString user, QJsonArray &array){
 
     QSqlQuery query;
-    query.prepare("select document_original_title, owner from documents where user=? order by last_access desc");
+    query.prepare("select document_rnd_title, document_original_title, owner "
+                  "from documents where user=? "
+                  "order by last_access desc");
     query.addBindValue(user);
 
     query.setForwardOnly(true);
@@ -527,3 +548,22 @@ bool Server::DocumentOriginalTitleCheckExistance(QString document){
     }
 }
 
+
+bool Server::DocumentOpening(QString username, QString document) {
+    QSqlQuery query;
+    QString titleDocRnd;
+    query.prepare("select document_original_title from documents where document_rnd_title = ?");
+    query.addBindValue(document);
+
+    if(!query.exec())
+        qWarning() << " - ERROR: Server::DocumentRndTitleCheckExistance " << query.lastError().text();
+
+    if(query.first()) {
+        QString originalTitle = query.value(0).toString();
+        /*qua bisogna aprire il file e mandarlo nel json*/
+        return true;
+    }
+
+    return false;
+
+}

@@ -12,4 +12,13 @@ void ClickableFrame::mousePressEvent(QMouseEvent* event) {
     emit clicked();
 }
 
+void ClickableFrame::setRandomTitle(QString t){
+    this->rndTitle = t;
+}
+
+QString ClickableFrame::getRandomTitle(){
+    return rndTitle;
+}
+
+
 

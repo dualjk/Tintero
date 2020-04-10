@@ -399,7 +399,8 @@ void Client::toMainPage(QString username, QJsonArray jarray){
     for(int i=1; i<jarray.size(); i++) {
         QJsonObject jobj = jarray.at(i).toObject();
         documentList->append(Document(jobj.value("owner").toString(),
-                                      jobj.value("document_original_title").toString()));
+                                      jobj.value("document_original_title").toString(),
+                                      jobj.value("document_rnd_title").toString()));
     }
 
     page *p = new page(this, t, username, documentList);
