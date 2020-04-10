@@ -108,11 +108,11 @@ void page::setGridLayout(){
         containerVector[i]->layout()->addWidget(labels[i]);
         containerVector[i]->layout()->addWidget(ownerLabels.at(i));
         containerVector[i]->layout()->addWidget(docButtons[i]);
-        containerVector.at(i)->setRandomTitle(documentVector->value(i-1).getRndTitle());
+        containerVector.at(i)->setIndex(i-1);
 
 
         ui->docsGridLayout->addWidget(containerVector[i], i/3, i%3);
-        //connect(containerVector.at(i), &ClickableFrame::clicked, this, &page::documentButtonClicked);
+        connect(containerVector.at(i), &ClickableFrame::clicked, this, &page::documentButtonClicked);
     }
 
 
@@ -136,10 +136,9 @@ void page::newDocumentSetup(){
 
     this->t->sendJson(title, "", -1); //questo e' molto brutto ma dovrebbe funzionare
 
-    titleDocument = d->getDocumentTitle();
+    titleDocumentOriginal = d->getDocumentTitle();
     disconnect(t->getTcpSocket(), &QIODevice::readyRead, 0, 0);
     connect(t->getTcpSocket(), &QIODevice::readyRead, this, &page::newDocumentCreate);
-
 }
 
 TextEdit* page::textEditStart(){
@@ -158,16 +157,22 @@ TextEdit* page::textEditStart(){
 
 
 void page::newDocumentCreate(){
-    if(readJsonNewDocument()){
+    QString rndTitle = readJsonNewDocument();
+    if(rndTitle!=nullptr){
+        QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
+                       +rndTitle+".html" );
+        file.open(QIODevice::ReadWrite);
+
         TextEdit *te=textEditStart();
-        te->fileNew();
-        te->setCurrentFileName(titleDocument);
+        te->load("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
+                 +rndTitle+".html");
+        te->setCurrentFileName(titleDocumentOriginal);
         te->show();
 
 
         this->hide();
 
-        qDebug() << titleDocument;
+        qDebug() << titleDocumentOriginal;
     }
     else {
         QMessageBox msgBox(this);
@@ -180,34 +185,70 @@ void page::newDocumentCreate(){
 
 
 }
-bool page::readJsonNewDocument(){
+QString page::readJsonNewDocument(){
 
     QJsonObject jsonObject = t->readJson();
     int c = jsonObject.value("action").toInt();
 
     switch (c) {
         case 0:
-            return false;
+            return nullptr;
         break;
 
         case 1:
-            return true;
+            return jsonObject.value("rndTitle").toString();
         break;
 
     }
-    return false;
+    return nullptr;
 }
 
 
 void page::documentButtonClicked(){
+    qDebug()<<"sono arrivato in documentButtonclicked";
     ClickableFrame *f = (ClickableFrame*)sender();
 
     QJsonObject title{
         {"action", 3},
         {"user", username},
-        {"docTitle", f->getRandomTitle()}
+        {"docTitle", documentVector->value(f->getIndex()).getRndTitle()}
     };
+
+    titleDocumentRnd=documentVector->value(f->getIndex()).getRndTitle();
+    titleDocumentOriginal=documentVector->value(f->getIndex()).getTitle();
+
 
     this->t->sendJson(title, "", -1); //questo e' molto brutto ma dovrebbe funzionare
 
+    disconnect(t->getTcpSocket(), &QIODevice::readyRead, 0, 0);
+    connect(t->getTcpSocket(), &QIODevice::readyRead, this, &page::readFile);
+
+}
+
+
+void page::readFile(){
+    qDebug()<<"sono arrivato in readFile";
+    QByteArray buffer;
+
+    while (t->getTcpSocket()->bytesAvailable() > 0)
+    {
+        buffer.append(t->getTcpSocket()->readAll());
+    }
+
+    qDebug()<<"nome random: "+documentVector->value(indexDocument).getRndTitle();
+    QSaveFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
+                   +titleDocumentRnd+".html" );
+    file.open(QIODevice::WriteOnly);
+    file.write(buffer);
+    // Calling commit() is mandatory, otherwise nothing will be written.
+    file.commit();
+
+    TextEdit *te=textEditStart();
+    te->load("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
+             +titleDocumentRnd+".html");
+    te->setCurrentFileName(titleDocumentOriginal);
+    te->show();
+
+
+    this->hide();
 }

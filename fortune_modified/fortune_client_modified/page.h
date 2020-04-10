@@ -30,18 +30,22 @@ public:
     void setGridLayout();
     void newDocumentSetup();
     void newDocumentCreate();
-    bool readJsonNewDocument();
+    QString readJsonNewDocument();
     void documentButtonClicked();
 
     TextEdit* textEditStart();
+    void readFile();
 
 
 private:
     Ui::page *ui;
     QString username;
     Transmission* t;
-    QString titleDocument;
+    QString titleDocumentOriginal;
+    QString titleDocumentRnd;
     QVector<Document>* documentVector;
+    int indexDocument=-1;
+
 };
 
 #endif // PAGE_H

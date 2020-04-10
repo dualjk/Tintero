@@ -17,6 +17,7 @@
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QFile>
 
 
 
@@ -50,11 +51,12 @@ private slots:
     void sendJsonFromServer(QJsonArray &jsarray);
     QString GetRandomString() const;
 
-    bool DocumentInsertion(QString username, QString document);
+    QString DocumentInsertion(QString username, QString document);
     bool DocumentRandomTitleCheckExistance(QString document);
     bool DocumentOriginalTitleCheckExistance(QString document);
     void DocumentRetrievingByUser(QString user, QJsonArray &array);
-    bool DocumentOpening(QString username, QString document);
+    void DocumentOpening(QString username, QString document);
+    void updateServerProgress();
 
 
 private:
@@ -66,6 +68,10 @@ private:
     QTcpSocket *clientConnection=nullptr;
     QSqlDatabase db;
     QLabel *piclabel = nullptr;
+
+    QFile *file=nullptr;
+    int bytesToWrite = 0;
+    int bytesWritten = 0;
 
 };
 //! [0]

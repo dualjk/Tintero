@@ -6,6 +6,8 @@
 
 #include "Server.h"
 
+static const int PayloadSize = 10 * 1024; // 64 KB
+
 Server::Server(QWidget *parent)
     : QDialog(parent)
     , statusLabel(new QLabel)
@@ -213,6 +215,7 @@ void Server::receive(){
 
                 statusLabel->setText("Pirate does not remembah its password: too much rum drunk, bad pirate!");
             }
+            sendJsonFromServer(jsarray);
             break;
         }
 
@@ -238,9 +241,8 @@ void Server::receive(){
                     {"action", 0}
                 };
                 jsarray.push_back(signUpFailed);
-                qDebug()<<"Username già esistente, per favore implementami bene. Mai per comando.";
             }
-
+            sendJsonFromServer(jsarray);
             break;
         }
 
@@ -248,9 +250,11 @@ void Server::receive(){
             QString userDoc = jsonObject.value("user").toString();
             QString docname = jsonObject.value("docTitle").toString();
             QString debugdoc = " l'utente " +userDoc + " ha creato il file " + docname;
-            if(DocumentInsertion(userDoc, docname)){
+            QString rndTitle = DocumentInsertion(userDoc, docname);
+            if(rndTitle!=nullptr){
                 QJsonObject createDocSuccess{
-                    {"action", 1}
+                    {"action", 1},
+                    {"rndTitle", rndTitle}
                 };
                 jsarray.push_back(createDocSuccess);
             }
@@ -261,7 +265,7 @@ void Server::receive(){
                 jsarray.push_back(createDocFailed);
             }
 
-            qDebug()<< debugdoc;
+            sendJsonFromServer(jsarray);
             break;
         }
 
@@ -276,9 +280,6 @@ void Server::receive(){
 
 
         }
-
-        sendJsonFromServer(jsarray);
-
     }
 
 }
@@ -328,7 +329,6 @@ bool Server::OnSearchClicked(QString username, QString password)
         return true;
     }
     else {
-        qDebug() << "person not found";
         return false;
     }
 }
@@ -446,7 +446,7 @@ QString Server::GetRandomString() const
 
 
 
-bool Server::DocumentInsertion(QString username, QString document) {
+QString Server::DocumentInsertion(QString username, QString document) {
     QSqlQuery query;
     QString titleDocRnd;
     if(DocumentOriginalTitleCheckExistance(document)) {
@@ -463,7 +463,7 @@ bool Server::DocumentInsertion(QString username, QString document) {
 
         if(!query.exec()) {
             qWarning() << "MainWindow::DocumentInsertion - ERROR: " << query.lastError().text();
-            return false;
+            return nullptr;
         }
         else {
 
@@ -474,12 +474,12 @@ bool Server::DocumentInsertion(QString username, QString document) {
                 QTextStream stream( &file );
                 stream << "something" << endl;
             }
-            return true;
+            return titleDocRnd;
 
         }
     }
     else
-        return false;
+        return nullptr;
 }
 
 
@@ -521,8 +521,6 @@ void Server::DocumentRetrievingByUser(QString user, QJsonArray &array){
 
         for(int x=0; x < query.record().count(); x++) {
          recordObject.insert( query.record().fieldName(x), QJsonValue::fromVariant(query.value(x)) );
-         qDebug()<<query.record().fieldName(x) + " " + query.value(x).toString();
-
         }
      array.push_back(recordObject);
     }
@@ -549,21 +547,39 @@ bool Server::DocumentOriginalTitleCheckExistance(QString document){
 }
 
 
-bool Server::DocumentOpening(QString username, QString document) {
-    QSqlQuery query;
-    QString titleDocRnd;
-    query.prepare("select document_original_title from documents where document_rnd_title = ?");
-    query.addBindValue(document);
-
-    if(!query.exec())
-        qWarning() << " - ERROR: Server::DocumentRndTitleCheckExistance " << query.lastError().text();
-
-    if(query.first()) {
-        QString originalTitle = query.value(0).toString();
-        /*qua bisogna aprire il file e mandarlo nel json*/
-        return true;
+void Server::DocumentOpening(QString username, QString document) {
+    connect(clientConnection, &QIODevice::bytesWritten, this, &Server::updateServerProgress);
+    file = new QFile("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
+                     +document+".html");
+    if (!file->open(QIODevice::ReadWrite))
+    {
+        qDebug()<<"Couldn't open the file";
+        return;
     }
+    qDebug()<<"sto per mandare il file " + document + " e l'ho anche aperto mamma mia oh";
+    int TotalBytes = file->size();
+    qDebug()<<"il file ha dimensione "+QString::number(TotalBytes);
 
-    return false;
+    bytesToWrite = TotalBytes - (int)clientConnection->write(file->read(qMin(TotalBytes, PayloadSize)));
+    qDebug()<<"ho inviato "+QString::number(PayloadSize)+" e devo ancora mandare "+ QString::number(bytesToWrite);
+
+    if(bytesToWrite == 0) {
+        disconnect(clientConnection, SIGNAL(bytesWritten(qint64)), 0, 0);
+        qDebug()<<"ho inviato tutto yay!!";
+    }
+    return;
+}
+
+void Server::updateServerProgress() {
+
+    // only write more if not finished and when the Qt write buffer is below a certain size.
+    if (bytesToWrite > 0 && clientConnection->bytesToWrite() <= 4*PayloadSize) {
+        bytesToWrite -= (int)clientConnection->write(file->read(qMin(bytesToWrite, PayloadSize)));
+        qDebug()<<"ho inviato "+QString::number(PayloadSize)+" e devo ancora mandare "+ QString::number(bytesToWrite);
+    }
+    if(bytesToWrite == 0) {
+        disconnect(clientConnection, SIGNAL(bytesWritten(qint64)), 0, 0);
+        qDebug()<<"ho inviato tutto yay!!";
+    }
 
 }

@@ -124,7 +124,7 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
  	* **Label sotto le icone dei documenti** -> fatto
  	* **Implementare controllo univocità nome documento da parte dello stesso utente (u1 non può creare due file chiamati entrambi "d1")** -> fatto
  	* **differenziare file creati dall'utente con file condivisi dagli altri** -> fatto
- 	* **aprire il file dopo aver cliccato il bottone**
+ 	* **aprire il file dopo aver cliccato il bottone** -> fatto
  	* **condivisione file (con uri)**
  	* **gestione concorrenza operazioni database**
  	* **lista client collegati**
