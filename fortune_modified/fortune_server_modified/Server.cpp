@@ -6,7 +6,7 @@
 
 #include "Server.h"
 
-static const int PayloadSize = 10 * 1024; // 64 KB
+static const int PayloadSize = 20 * 1024; // 64 KB
 
 Server::Server(QWidget *parent)
     : QDialog(parent)
@@ -290,8 +290,8 @@ void Server::DatabaseConnect() {
     if(QSqlDatabase::isDriverAvailable(DRIVER))
     {
         db = QSqlDatabase::addDatabase(DRIVER);
-        db.setDatabaseName("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/database/users.db");    //Giulio
-        //db.setDatabaseName("F:/Git/Tintero/fortune_modified/fortune_server_modified/database/users.db");  //Salvo
+        //db.setDatabaseName("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/database/users.db");    //Giulio
+        db.setDatabaseName("F:/Git/Tintero/fortune_modified/fortune_server_modified/database/users.db");  //Salvo
         //db.setDatabaseName("D:/PDS_project/Tintero/fortune_modified/fortune_server_modified/database/users.db"); //Vale
 
         if(!db.open())
@@ -467,8 +467,10 @@ QString Server::DocumentInsertion(QString username, QString document) {
         }
         else {
 
-            QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
-                       +titleDocRnd+".html");
+            /*QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
+                             +titleDocRnd+".html");    //giulio    */
+            QFile file("F:/Git/Tintero/fortune_modified/fortune_server_modified/doc/"
+                                 +titleDocRnd+".html");    //salvo
             if ( file.open(QIODevice::ReadWrite) )
             {
                 QTextStream stream( &file );
@@ -549,8 +551,10 @@ bool Server::DocumentOriginalTitleCheckExistance(QString document){
 
 void Server::DocumentOpening(QString username, QString document) {
     connect(clientConnection, &QIODevice::bytesWritten, this, &Server::updateServerProgress);
-    file = new QFile("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
-                     +document+".html");
+    /*file = new QFile("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
+                     +document+".html");    //giulio    */
+    file = new QFile("F:/Git/Tintero/fortune_modified/fortune_server_modified/doc/"
+                         +document+".html");    //salvo
     if (!file->open(QIODevice::ReadWrite))
     {
         qDebug()<<"Couldn't open the file";

@@ -159,13 +159,20 @@ TextEdit* page::textEditStart(){
 void page::newDocumentCreate(){
     QString rndTitle = readJsonNewDocument();
     if(rndTitle!=nullptr){
-        QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
+        /*QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
                        +rndTitle+".html" );
         file.open(QIODevice::ReadWrite);
 
         TextEdit *te=textEditStart();
         te->load("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                 +rndTitle+".html");
+                 +rndTitle+".html"); //giulio */
+        QFile file("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
+                               +rndTitle+".html" );
+                file.open(QIODevice::ReadWrite);
+
+                TextEdit *te=textEditStart();
+                te->load("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
+                         +rndTitle+".html"); //salvo
         te->setCurrentFileName(titleDocumentOriginal);
         te->show();
 
@@ -235,20 +242,24 @@ void page::readFile(){
         buffer.append(t->getTcpSocket()->readAll());
     }
 
-    qDebug()<<"nome random: "+documentVector->value(indexDocument).getRndTitle();
-    QSaveFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                   +titleDocumentRnd+".html" );
+    qDebug()<<"nome random: "+titleDocumentRnd;
+    /*QSaveFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
+                   +titleDocumentRnd+".html" ); //giulio */
+    QSaveFile file("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
+                   +titleDocumentRnd+".html" ); //salvo
+
     file.open(QIODevice::WriteOnly);
     file.write(buffer);
     // Calling commit() is mandatory, otherwise nothing will be written.
     file.commit();
 
     TextEdit *te=textEditStart();
-    te->load("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
-             +titleDocumentRnd+".html");
+    /*te->load("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
+             +titleDocumentRnd+".html");    //giulio */
+    te->load("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
+             +titleDocumentRnd+".html");    //salvo
     te->setCurrentFileName(titleDocumentOriginal);
     te->show();
-
 
     this->hide();
 }
