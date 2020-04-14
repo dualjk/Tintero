@@ -57,6 +57,7 @@ private slots:
     void DocumentRetrievingByUser(QString user, QJsonArray &array);
     void DocumentOpening(QString username, QString document);
     void updateServerProgress();
+    QByteArray IntToArray(qint64 source);
 
 
 private:

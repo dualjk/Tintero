@@ -3,6 +3,8 @@
 
 #include <QStandardItemModel>
 
+static const int user = 1; //giulio 1 salvo 0
+
 
 page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>* documentVector) :
     QMainWindow(parent),
@@ -159,20 +161,23 @@ TextEdit* page::textEditStart(){
 void page::newDocumentCreate(){
     QString rndTitle = readJsonNewDocument();
     if(rndTitle!=nullptr){
-        /*QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
+#if !user
+        QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
                        +rndTitle+".html" );
         file.open(QIODevice::ReadWrite);
 
         TextEdit *te=textEditStart();
         te->load("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                 +rndTitle+".html"); //giulio */
+                 +rndTitle+".html"); //giulio
+#else
         QFile file("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
                                +rndTitle+".html" );
-                file.open(QIODevice::ReadWrite);
+        file.open(QIODevice::ReadWrite);
 
-                TextEdit *te=textEditStart();
-                te->load("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                         +rndTitle+".html"); //salvo
+        TextEdit *te=textEditStart();
+        te->load("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
+                 +rndTitle+".html"); //salvo
+#endif
         te->setCurrentFileName(titleDocumentOriginal);
         te->show();
 
@@ -235,31 +240,109 @@ void page::documentButtonClicked(){
 
 void page::readFile(){
     qDebug()<<"sono arrivato in readFile";
-    QByteArray buffer;
+//    QByteArray buffer;
 
-    while (t->getTcpSocket()->bytesAvailable() > 0)
-    {
-        buffer.append(t->getTcpSocket()->readAll());
-    }
+//    while (t->getTcpSocket()->bytesAvailable() > 0)
+//    {
+//        buffer.append(t->getTcpSocket()->readAll());
+//    }
+//    QByteArray *buffer = new QByteArray;
 
-    qDebug()<<"nome random: "+titleDocumentRnd;
-    /*QSaveFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                   +titleDocumentRnd+".html" ); //giulio */
+//        qDebug()<<"arrivo qui 0.5";
+//        qDebug()<<"arrivo qui 0.6";
+//    qint64 size = 0;
+//    qDebug()<<"arrivo qui";
+//    while (t->getTcpSocket()->bytesAvailable() > 0)
+//    while (buffer->size() < size || size == 0)
+//    {
+//        buffer->append(t->getTcpSocket()->readAll());
+
+//        qDebug()<<"arrivo qui, byte ricevuti: " +QString::number(buffer->size())+ " di " + QString::number(size);
+
+//            if (size == 0 && buffer->size() >= 8) //if size of data has received completely, then store it on our global variable
+//            {
+//                size = ArrayToInt(buffer->mid(0, 8));
+//                buffer->remove(0, 8);
+
+
+//            }
+//            if (size > 0 && buffer->size() >= size) // If data has received completely, then emit our SIGNAL with the data
+//            {
+//                QByteArray data = buffer->mid(0, size);
+
+//                //size = 0;
+//                emit dataReceived(data);
+//                qDebug()<<"arrivo qui 4";
+//                disconnect(t->getTcpSocket(), &QIODevice::readyRead, 0,0);
+//            }
+//        }
+
+
+//    buffer->remove(0, size);
+//    qDebug()<<"nome random: "+titleDocumentRnd;
+    QByteArray block;
+    int blockSize = 0;
+    QDataStream in(t->getTcpSocket());
+        in.setVersion(QDataStream::Qt_5_5);
+
+        if (blockSize == 0) {
+            // data to read available
+            if ( t->getTcpSocket()->bytesAvailable() <
+                (int)sizeof(quint64) )
+                return;
+            in >> blockSize;
+
+        }
+        if (t->getTcpSocket()->bytesAvailable() < blockSize)
+            return;
+
+        QByteArray nextByte;
+        // read
+        in >> nextByte;
+        nextByte.remove(0,4);
+
+        QByteArray currentByte = nextByte;
+        dataReceived(currentByte);
+
+}
+
+
+
+
+void page::dataReceived(QByteArray data) {
+#if !user
+    QSaveFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
+                   +titleDocumentRnd+".html" ); //giulio
+#else
     QSaveFile file("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
                    +titleDocumentRnd+".html" ); //salvo
+#endif
+
 
     file.open(QIODevice::WriteOnly);
-    file.write(buffer);
-    // Calling commit() is mandatory, otherwise nothing will be written.
-    file.commit();
+    file.write(data);
+    // Calling commit() is mandatory, otsherwise nothing will be written.
+    file.commit();    
 
     TextEdit *te=textEditStart();
-    /*te->load("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
-             +titleDocumentRnd+".html");    //giulio */
+#if !user
+    te->load("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
+             +titleDocumentRnd+".html");    //giulio
+#else
     te->load("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
              +titleDocumentRnd+".html");    //salvo
+#endif
     te->setCurrentFileName(titleDocumentOriginal);
     te->show();
 
     this->hide();
+}
+
+
+qint64 page::ArrayToInt(QByteArray source)
+{
+    qint64 temp;
+    QDataStream data(&source, QIODevice::ReadWrite);
+    data >> temp;
+    return temp;
 }

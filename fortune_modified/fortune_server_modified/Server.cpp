@@ -290,8 +290,8 @@ void Server::DatabaseConnect() {
     if(QSqlDatabase::isDriverAvailable(DRIVER))
     {
         db = QSqlDatabase::addDatabase(DRIVER);
-        //db.setDatabaseName("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/database/users.db");    //Giulio
-        db.setDatabaseName("F:/Git/Tintero/fortune_modified/fortune_server_modified/database/users.db");  //Salvo
+        db.setDatabaseName("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/database/users.db");    //Giulio
+        //db.setDatabaseName("F:/Git/Tintero/fortune_modified/fortune_server_modified/database/users.db");  //Salvo
         //db.setDatabaseName("D:/PDS_project/Tintero/fortune_modified/fortune_server_modified/database/users.db"); //Vale
 
         if(!db.open())
@@ -467,10 +467,10 @@ QString Server::DocumentInsertion(QString username, QString document) {
         }
         else {
 
-            /*QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
-                             +titleDocRnd+".html");    //giulio    */
-            QFile file("F:/Git/Tintero/fortune_modified/fortune_server_modified/doc/"
-                                 +titleDocRnd+".html");    //salvo
+            QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
+                             +titleDocRnd+".html");    //giulio
+//            QFile file("F:/Git/Tintero/fortune_modified/fortune_server_modified/doc/"
+//                                 +titleDocRnd+".html");    //salvo
             if ( file.open(QIODevice::ReadWrite) )
             {
                 QTextStream stream( &file );
@@ -550,29 +550,74 @@ bool Server::DocumentOriginalTitleCheckExistance(QString document){
 
 
 void Server::DocumentOpening(QString username, QString document) {
-    connect(clientConnection, &QIODevice::bytesWritten, this, &Server::updateServerProgress);
-    /*file = new QFile("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
-                     +document+".html");    //giulio    */
-    file = new QFile("F:/Git/Tintero/fortune_modified/fortune_server_modified/doc/"
-                         +document+".html");    //salvo
+    //connect(clientConnection, &QIODevice::bytesWritten, this, &Server::updateServerProgress);
+    file = new QFile("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
+                     +document+".html");    //giulio
+//    file = new QFile("F:/Git/Tintero/fortune_modified/fortune_server_modified/doc/"
+//                         +document+".html");    //salvo
     if (!file->open(QIODevice::ReadWrite))
     {
         qDebug()<<"Couldn't open the file";
         return;
     }
-    qDebug()<<"sto per mandare il file " + document + " e l'ho anche aperto mamma mia oh";
-    int TotalBytes = file->size();
-    qDebug()<<"il file ha dimensione "+QString::number(TotalBytes);
 
-    bytesToWrite = TotalBytes - (int)clientConnection->write(file->read(qMin(TotalBytes, PayloadSize)));
-    qDebug()<<"ho inviato "+QString::number(PayloadSize)+" e devo ancora mandare "+ QString::number(bytesToWrite);
+//    qDebug()<<"sto per mandare il file " + document + " e l'ho anche aperto mamma mia oh";
+//    int TotalBytes = file->size();
+//    qDebug()<<"il file ha dimensione "+QString::number(TotalBytes);
 
-    if(bytesToWrite == 0) {
-        disconnect(clientConnection, SIGNAL(bytesWritten(qint64)), 0, 0);
-        qDebug()<<"ho inviato tutto yay!!";
-    }
+
+//    bytesToWrite = TotalBytes - (int)clientConnection->write(file->read(qMin(TotalBytes, PayloadSize)));
+//    qDebug()<<"ho inviato "+QString::number(PayloadSize)+" e devo ancora mandare "+ QString::number(bytesToWrite);
+
+//    if(bytesToWrite == 0) {
+//        disconnect(clientConnection, SIGNAL(bytesWritten(qint64)), 0, 0);
+//        qDebug()<<"ho inviato tutto yay!!";
+//    }
+
+
+
+
+    /* secondo metodo */
+//    if(clientConnection->state() == QAbstractSocket::ConnectedState)
+//        {
+//            qint64 sentSize = clientConnection->write(IntToArray(file->size())); //write size of data
+//            qDebug()<<"ho inviato la dimensione= "+QString::number(sentSize);
+//            qint64 sentData = clientConnection->write(file->readAll()); //write the data itself
+//            qDebug()<<"ho inviato questi dati= "+QString::number(sentData);
+
+
+//        }
+
+    QByteArray block; // Data that will be sent
+    QDataStream out(&block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_5);
+    out << (quint64)file->size(); // Space for size of data
+    out << file->readAll(); // Actual data
+    //out.device()->seek(0);
+    //out << (quint64)(block.size() - sizeof(quint64));
+
+    // signal
+    connect(clientConnection, SIGNAL(disconnected()),
+        clientConnection, SLOT(deleteLater()));
+    // write the string into the socket
+    clientConnection->write(block);
+    qDebug()<<block.size();
+    // Wait until data are written to the native socket buffer
+    clientConnection->waitForBytesWritten();
     return;
 }
+
+QByteArray Server::IntToArray(qint64 source) //Use qint32 to ensure that the number have 4 bytes
+{
+    //Avoid use of cast, this is the Qt way to serialize objects
+    QByteArray temp;
+    QDataStream data(&temp, QIODevice::ReadWrite);
+    data << source;
+    return temp;
+}
+
+
+
 
 void Server::updateServerProgress() {
 
