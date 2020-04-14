@@ -2,8 +2,7 @@
 #include "ui_page.h"
 
 #include <QStandardItemModel>
-
-static const int user = 1; //giulio 1 salvo 0
+#define user 0      //giulio = 1, salvo = 0
 
 
 page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>* documentVector) :
@@ -161,7 +160,7 @@ TextEdit* page::textEditStart(){
 void page::newDocumentCreate(){
     QString rndTitle = readJsonNewDocument();
     if(rndTitle!=nullptr){
-#if !user
+#if user
         QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
                        +rndTitle+".html" );
         file.open(QIODevice::ReadWrite);
@@ -240,77 +239,46 @@ void page::documentButtonClicked(){
 
 void page::readFile(){
     qDebug()<<"sono arrivato in readFile";
-//    QByteArray buffer;
+    if(firstTry == true){
+        qDebug() << "Prima readyread";
+        blockSize=0;
+        in= new QDataStream(t->getTcpSocket()) ;
+        in->setVersion(QDataStream::Qt_5_5);
+        in->startTransaction();
+    }
+    if (blockSize == 0) {
+        qDebug() << "if di blockSize==0";
+        qDebug() << "ci sono " << t->getTcpSocket()->bytesAvailable() << "bytes disponibili e un totale di  " << total;
+        block.append(t->getTcpSocket()->readAll());
+        qDebug() << "block.size() = " << block.size();
+        blockSize = ArrayToInt(block.mid(0, 8));
+        block.remove(0, 12);
+        qDebug() << "in >> blockSize = " + QString::number(blockSize);
 
-//    while (t->getTcpSocket()->bytesAvailable() > 0)
-//    {
-//        buffer.append(t->getTcpSocket()->readAll());
-//    }
-//    QByteArray *buffer = new QByteArray;
-
-//        qDebug()<<"arrivo qui 0.5";
-//        qDebug()<<"arrivo qui 0.6";
-//    qint64 size = 0;
-//    qDebug()<<"arrivo qui";
-//    while (t->getTcpSocket()->bytesAvailable() > 0)
-//    while (buffer->size() < size || size == 0)
-//    {
-//        buffer->append(t->getTcpSocket()->readAll());
-
-//        qDebug()<<"arrivo qui, byte ricevuti: " +QString::number(buffer->size())+ " di " + QString::number(size);
-
-//            if (size == 0 && buffer->size() >= 8) //if size of data has received completely, then store it on our global variable
-//            {
-//                size = ArrayToInt(buffer->mid(0, 8));
-//                buffer->remove(0, 8);
-
-
-//            }
-//            if (size > 0 && buffer->size() >= size) // If data has received completely, then emit our SIGNAL with the data
-//            {
-//                QByteArray data = buffer->mid(0, size);
-
-//                //size = 0;
-//                emit dataReceived(data);
-//                qDebug()<<"arrivo qui 4";
-//                disconnect(t->getTcpSocket(), &QIODevice::readyRead, 0,0);
-//            }
-//        }
-
-
-//    buffer->remove(0, size);
-//    qDebug()<<"nome random: "+titleDocumentRnd;
-    QByteArray block;
-    int blockSize = 0;
-    QDataStream in(t->getTcpSocket());
-        in.setVersion(QDataStream::Qt_5_5);
-
-        if (blockSize == 0) {
-            // data to read available
-            if ( t->getTcpSocket()->bytesAvailable() <
-                (int)sizeof(quint64) )
-                return;
-            in >> blockSize;
-
-        }
-        if (t->getTcpSocket()->bytesAvailable() < blockSize)
+    }
+    if(total < blockSize){
+        total += t->getTcpSocket()->bytesAvailable();
+        qDebug() << "ci sono " << t->getTcpSocket()->bytesAvailable() << "bytes disponibili e un totale di  " << total;
+        if(firstTry!=true){
+            block.append(t->getTcpSocket()->readAll());
+            qDebug() << "block.size() = " << block.size();
+        } else
+            firstTry=false;
+        if(block.size()<blockSize){
+            qDebug() << "non ho ricevuto ancora tutto";
             return;
-
-        QByteArray nextByte;
-        // read
-        in >> nextByte;
-        nextByte.remove(0,4);
-
-        QByteArray currentByte = nextByte;
-        dataReceived(currentByte);
-
+        }else{
+            qDebug() << "ho ricevuto tutto, block.size() = " << block.size();
+            dataReceived(block);
+        }
+    }
 }
 
 
 
 
 void page::dataReceived(QByteArray data) {
-#if !user
+#if user
     QSaveFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
                    +titleDocumentRnd+".html" ); //giulio
 #else
@@ -325,7 +293,7 @@ void page::dataReceived(QByteArray data) {
     file.commit();    
 
     TextEdit *te=textEditStart();
-#if !user
+#if user
     te->load("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
              +titleDocumentRnd+".html");    //giulio
 #else

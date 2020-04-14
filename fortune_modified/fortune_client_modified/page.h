@@ -51,6 +51,13 @@ private:
     QHash<QTcpSocket*, QByteArray*> buffers; //We need a buffer to store data until block has completely received
     QHash<QTcpSocket*, qint32*> sizes; //We need to store the size to verify if a block has received completely
 
+    QByteArray block;
+    int blockSize;
+    QDataStream *in;
+    bool firstTry=true;
+    int total=0;
+    QString received;
+
 };
 
 #endif // PAGE_H
