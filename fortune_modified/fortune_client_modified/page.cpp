@@ -2,7 +2,7 @@
 #include "ui_page.h"
 
 #include <QStandardItemModel>
-#define user 0      //giulio = 1, salvo = 0
+#define user 1      //giulio = 1, salvo = 0
 
 
 page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>* documentVector) :
@@ -26,8 +26,6 @@ page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>
         ui->recentTableWidget->setItem(i,0, title);
         QTableWidgetItem *owner = new QTableWidgetItem(documentVector->value(i).getOwner());
         ui->recentTableWidget->setItem(i,1, owner);
-        qDebug() << documentVector->value(i).getOwner() + " " + documentVector->value(i).getTitle() + " " +
-                    documentVector->value(i).getRndTitle();
     }
 
 }
@@ -150,8 +148,6 @@ TextEdit* page::textEditStart(){
     te->move((availableGeometry.width() - te->width()) / 2,
             (availableGeometry.height() - te->height()) / 2);
 
-    //t->load(QLatin1String(":/example.html"));
-    //t->fileNew();
     return te;
 
 }
@@ -183,14 +179,12 @@ void page::newDocumentCreate(){
 
         this->hide();
 
-        qDebug() << titleDocumentOriginal;
     }
     else {
         QMessageBox msgBox(this);
         msgBox.setText("Titolo documento già in uso.");
         msgBox.setInformativeText("Inserisci un altro titolo");
         msgBox.exec();
-        qDebug()<<"Nome documento già esistente";
     }
 
 
@@ -216,7 +210,6 @@ QString page::readJsonNewDocument(){
 
 
 void page::documentButtonClicked(){
-    qDebug()<<"sono arrivato in documentButtonclicked";
     ClickableFrame *f = (ClickableFrame*)sender();
 
     QJsonObject title{
@@ -238,37 +231,27 @@ void page::documentButtonClicked(){
 
 
 void page::readFile(){
-    qDebug()<<"sono arrivato in readFile";
     if(firstTry == true){
-        qDebug() << "Prima readyread";
         blockSize=0;
         in= new QDataStream(t->getTcpSocket()) ;
         in->setVersion(QDataStream::Qt_5_5);
         in->startTransaction();
     }
     if (blockSize == 0) {
-        qDebug() << "if di blockSize==0";
-        qDebug() << "ci sono " << t->getTcpSocket()->bytesAvailable() << "bytes disponibili e un totale di  " << total;
         block.append(t->getTcpSocket()->readAll());
-        qDebug() << "block.size() = " << block.size();
         blockSize = ArrayToInt(block.mid(0, 8));
         block.remove(0, 12);
-        qDebug() << "in >> blockSize = " + QString::number(blockSize);
 
     }
     if(total < blockSize){
         total += t->getTcpSocket()->bytesAvailable();
-        qDebug() << "ci sono " << t->getTcpSocket()->bytesAvailable() << "bytes disponibili e un totale di  " << total;
         if(firstTry!=true){
             block.append(t->getTcpSocket()->readAll());
-            qDebug() << "block.size() = " << block.size();
         } else
             firstTry=false;
         if(block.size()<blockSize){
-            qDebug() << "non ho ricevuto ancora tutto";
             return;
         }else{
-            qDebug() << "ho ricevuto tutto, block.size() = " << block.size();
             dataReceived(block);
         }
     }
