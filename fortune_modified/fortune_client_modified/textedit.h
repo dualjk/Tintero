@@ -112,6 +112,8 @@ private slots:
     void about();
     void printPreview(QPrinter *);
 
+    void shareDocument();
+
 private:
     void setupFileActions();
     void setupEditActions();
@@ -151,6 +153,8 @@ private:
     QToolBar *tb;
     QString fileName;
     QTextEdit *textEdit;
+
+    QString fileRandomName;
 };
 
 #endif // TEXTEDIT_H

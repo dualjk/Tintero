@@ -39,6 +39,9 @@ public:
     void dataReceived(QByteArray data);
 
 
+private slots:
+    void on_actionOpen_triggered();
+
 private:
     Ui::page *ui;
     QString username;

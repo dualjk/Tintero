@@ -86,6 +86,7 @@
 #endif
 
 #include "textedit.h"
+#include "uridialog.h"
 
 #ifdef Q_OS_MAC
 const QString rsrcPath = ":/img/mac";
@@ -211,6 +212,12 @@ void TextEdit::setupFileActions()
     a = menu->addAction(exportPdfIcon, tr("&Export PDF..."), this, &TextEdit::filePrintPdf);
     a->setPriority(QAction::LowPriority);
     a->setShortcut(Qt::CTRL + Qt::Key_D);
+    tb->addAction(a);
+
+    const QIcon shareIcon = QIcon::fromTheme("share", QIcon(rsrcPath + "/share.png"));
+    a = menu->addAction(shareIcon, tr("&Share document"), this, &TextEdit::shareDocument);
+    a->setPriority(QAction::LowPriority);
+    a->setShortcut(Qt::CTRL + Qt::Key_Y);
     tb->addAction(a);
 
     menu->addSeparator();
@@ -415,6 +422,7 @@ bool TextEdit::load(const QString &f)
     QFile file(f);
     if (!file.open(QFile::ReadOnly))
         return false;
+    fileRandomName = file.fileName();
 
     QByteArray data = file.readAll();
     QTextCodec *codec = Qt::codecForHtml(data);
@@ -891,5 +899,13 @@ void TextEdit::alignmentChanged(Qt::Alignment a)
         actionAlignRight->setChecked(true);
     else if (a & Qt::AlignJustify)
         actionAlignJustify->setChecked(true);
+}
+
+void TextEdit::shareDocument(){
+    UriDialog d(this);
+    QRegularExpression re("[ \\w-]+?(?=\\.)");
+
+    d.setUri(re.match(fileRandomName).captured(0)+"/"+fileName);
+    d.exec();
 }
 

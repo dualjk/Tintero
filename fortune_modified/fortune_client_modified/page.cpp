@@ -1,8 +1,10 @@
 #include "page.h"
 #include "ui_page.h"
+#include "uridialog.h"
 
 #include <QStandardItemModel>
 #define user 1      //giulio = 1, salvo = 0
+
 
 
 page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>* documentVector) :
@@ -27,6 +29,15 @@ page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>
         QTableWidgetItem *owner = new QTableWidgetItem(documentVector->value(i).getOwner());
         ui->recentTableWidget->setItem(i,1, owner);
     }
+
+#if user
+    QDir dir("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/");
+    dir.removeRecursively();
+#else
+    QDir dir("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/");
+    dir.removeRecursively();
+
+#endif
 
 }
 
@@ -230,6 +241,9 @@ void page::documentButtonClicked(){
 }
 
 
+
+
+
 void page::readFile(){
     if(firstTry == true){
         blockSize=0;
@@ -261,10 +275,19 @@ void page::readFile(){
 
 
 void page::dataReceived(QByteArray data) {
+
+
 #if user
+    if(!QDir("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/").exists())
+        QDir().mkdir("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/");
+
     QSaveFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
                    +titleDocumentRnd+".html" ); //giulio
+
 #else
+    if(!QDir("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/").exists())
+        QDir().mkdir("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/");
+
     QSaveFile file("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
                    +titleDocumentRnd+".html" ); //salvo
 #endif
@@ -296,4 +319,34 @@ qint64 page::ArrayToInt(QByteArray source)
     QDataStream data(&source, QIODevice::ReadWrite);
     data >> temp;
     return temp;
+}
+
+void page::on_actionOpen_triggered()
+{
+    UriDialog d(this);
+    d.setLabel("Insert here a URI address:");
+    if((d.exec() !=  QDialog::Accepted) || d.getUri().isEmpty())
+        return;
+
+    QString uri = d.getUri();
+    QStringList list = uri.split("/");
+    titleDocumentRnd= list.at(1);
+    titleDocumentOriginal= list.at(2);
+
+
+    QJsonObject title{
+        {"action", 4},
+        {"user", username},
+        {"docTitle", titleDocumentRnd}
+    };
+
+
+
+    this->t->sendJson(title, "", -1); //questo e' molto brutto ma dovrebbe funzionare
+
+    /*
+    disconnect(t->getTcpSocket(), &QIODevice::readyRead, 0, 0);
+    connect(t->getTcpSocket(), &QIODevice::readyRead, this, &page::readFile);
+    */
+
 }

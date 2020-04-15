@@ -144,26 +144,9 @@ void Server::sessionOpened()
 //! [4]
 void Server::sendFortune()
 {
-//! [5]
-//    QByteArray block;
-//    QDataStream out(&block, QIODevice::WriteOnly);
-//    out.setVersion(QDataStream::Qt_5_10);
-
-//    out << fortunes[QRandomGenerator::global()->bounded(fortunes.size())];
-////! [4] //! [7]
-
     clientConnection = tcpServer->nextPendingConnection();
     in.setDevice(clientConnection);
     in.setVersion(QDataStream::Qt_4_0);
-//    connect(clientConnection, &QAbstractSocket::disconnected,
-//            clientConnection, &QObject::deleteLater);
-////! [7] //! [8]
-
-//    clientConnection->write(block);
-
-//! [5]
-
-    //qua ricevo il suca del client
     connect(clientConnection, &QIODevice::readyRead, this, &Server::receive);
 
 }
@@ -283,6 +266,11 @@ void Server::receive(){
         }
 
 
+        case 4: {
+            //TODO
+
+        break;
+        }
         }
     }
 

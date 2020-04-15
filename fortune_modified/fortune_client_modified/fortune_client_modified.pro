@@ -13,7 +13,8 @@ HEADERS       = client.h \
     page.h \
     textedit.h \
     titleDocument.h \
-    transmission.h
+    transmission.h \
+    uridialog.h
 SOURCES       = client.cpp \
                 clickableframe.cpp \
                 clickablelabel.cpp \
@@ -22,7 +23,8 @@ SOURCES       = client.cpp \
                 main.cpp \
                 page.cpp \
                 textedit.cpp \
-                transmission.cpp
+                transmission.cpp \
+                uridialog.cpp
 
 RESOURCES += client.qrc
 
@@ -35,5 +37,6 @@ INSTALLS += target
 
 FORMS += \
     doctitledialog.ui \
-    page.ui
+    page.ui \
+    uridialog.ui
 

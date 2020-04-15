@@ -127,7 +127,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
    <property name="text">
-    <string>Open</string>
+    <string>Open URI</string>
    </property>
   </action>
   <action name="actionLogout">

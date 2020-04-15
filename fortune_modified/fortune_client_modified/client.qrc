@@ -33,6 +33,7 @@
 <file>img/mac/filesave.png</file>
 <file>img/mac/format-indent-less.png</file>
 <file>img/mac/format-indent-more.png</file>
+<file>img/mac/share.png</file>
 <file>img/mac/textbold.png</file>
 <file>img/mac/textcenter.png</file>
 <file>img/mac/textitalic.png</file>
@@ -56,6 +57,7 @@
 <file>img/win/filesave.png</file>
 <file>img/win/format-indent-less.png</file>
 <file>img/win/format-indent-more.png</file>
+<file>img/win/share.png</file>
 <file>img/win/textbold.png</file>
 <file>img/win/textcenter.png</file>
 <file>img/win/textitalic.png</file>
