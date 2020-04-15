@@ -7,6 +7,7 @@
 #include "Server.h"
 
 static const int PayloadSize = 20 * 1024; // 64 KB
+static const int port = 50505;
 
 Server::Server(QWidget *parent)
     : QDialog(parent)
@@ -108,16 +109,7 @@ void Server::sessionOpened()
         settings.endGroup();
     }
 
-//! [0] //! [1]
-    tcpServer = new QTcpServer(this);
-    if (!tcpServer->listen()) {
-        QMessageBox::critical(this, tr("Fortune Server"),
-                              tr("Unable to start the server: %1.")
-                              .arg(tcpServer->errorString()));
-        close();
-        return;
-    }
-//! [0]
+
     QString ipAddress;
     QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
     // use the first non-localhost IPv4 address
@@ -131,10 +123,22 @@ void Server::sessionOpened()
     // if we did not find one, use IPv4 localhost
     if (ipAddress.isEmpty())
         ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
+
+    tcpServer = new QTcpServer(this);
+    if (!tcpServer->listen(QHostAddress(ipAddress) , port)) {
+        QMessageBox::critical(this, tr("Fortune Server"),
+                              tr("Unable to start the server: %1.")
+                              .arg(tcpServer->errorString()));
+        close();
+        return;
+    }
+
+
+
     statusLabel->setText(tr("The server is running on\n\nIP: %1\nport: %2\n\n"
                             "Run the Fortune Client example now.")
                          .arg(ipAddress).arg(tcpServer->serverPort()));
-//! [1]
+
 }
 
 //! [4]
@@ -220,11 +224,11 @@ void Server::receive(){
         }
 
         case 1: { /* sign up */
-            if(Server::UsernameCheckExistance(username)){
-                int avatar=jsonObject.value("avatar").toInt();
-                Server::DatabasePopulate(username,
-                                         password,
-                                         avatar);
+            int avatar=jsonObject.value("avatar").toInt();
+            if(Server::DatabasePopulate(username,
+                                        password,
+                                        avatar)){
+
                 statusLabel->setText("A new pirate wants to join our crey! Cheers!\nUsername: " +
                                      username
                                      + "\nPassword: " + password + "\nAvatar scelto: " + QString::number(avatar));
@@ -352,7 +356,20 @@ int Server::getAvatarFromDB(QString username, QString password)
 
 
 bool Server::DatabasePopulate(QString username, QString password, int avatar) {
+    QSqlDatabase::database().transaction();
     QSqlQuery query;
+    query.prepare("select id from user where username=? ;");
+    query.addBindValue(username);
+
+    if(!query.exec())
+        qWarning() << " - ERROR: Server::UsernameCheckExistance " << query.lastError().text();
+
+    if(query.first()) {
+        qDebug()<< query.value(0).toString();
+        QSqlDatabase::database().rollback();
+        return false;
+    }
+
     QString sale = GetRandomString();
     QString passwordHashed = QCryptographicHash::hash((password+sale).toUtf8(), QCryptographicHash::Sha256) ;
 
@@ -368,30 +385,13 @@ bool Server::DatabasePopulate(QString username, QString password, int avatar) {
 
     if(!query.exec()) {
         qWarning() << "MainWindow::DatabasePopulate - ERROR: " << query.lastError().text();
+        QSqlDatabase::database().rollback();
         return false;
     }
     else {
-
+        QSqlDatabase::database().commit();
         return true;
 
-    }
-}
-
-bool Server::UsernameCheckExistance(QString username){
-    QSqlQuery query;
-    query.prepare("select id from user where username=? ;");
-    query.addBindValue(username);
-
-    if(!query.exec())
-        qWarning() << " - ERROR: Server::UsernameCheckExistance " << query.lastError().text();
-
-    if(query.first()) {
-        qDebug()<< query.value(0).toString();
-        return false;
-    }
-    else {
-        qDebug() << "person not found";
-        return true;
     }
 }
 
@@ -494,11 +494,9 @@ bool Server::DocumentRandomTitleCheckExistance(QString document){
         qWarning() << " - ERROR: Server::DocumentRndTitleCheckExistance " << query.lastError().text();
 
     if(query.first()) {
-//        qDebug()<< query.value(0).toString();
         return false;
     }
     else {
-//        qDebug() << "DocumentRndTitle not found";
         return true;
     }
 }
@@ -539,11 +537,9 @@ bool Server::DocumentOriginalTitleCheckExistance(QString document){
         qWarning() << " - ERROR: Server::DocumentRndTitleCheckExistance " << query.lastError().text();
 
     if(query.first()) {
-//        qDebug()<< query.value(0).toString();
         return false;
     }
     else {
-//        qDebug() << "DocumentRndTitle not found";
         return true;
     }
 }
@@ -561,47 +557,18 @@ void Server::DocumentOpening(QString username, QString document) {
         return;
     }
 
-//    qDebug()<<"sto per mandare il file " + document + " e l'ho anche aperto mamma mia oh";
-//    int TotalBytes = file->size();
-//    qDebug()<<"il file ha dimensione "+QString::number(TotalBytes);
-
-
-//    bytesToWrite = TotalBytes - (int)clientConnection->write(file->read(qMin(TotalBytes, PayloadSize)));
-//    qDebug()<<"ho inviato "+QString::number(PayloadSize)+" e devo ancora mandare "+ QString::number(bytesToWrite);
-
-//    if(bytesToWrite == 0) {
-//        disconnect(clientConnection, SIGNAL(bytesWritten(qint64)), 0, 0);
-//        qDebug()<<"ho inviato tutto yay!!";
-//    }
-
-
-
-
-    /* secondo metodo */
-//    if(clientConnection->state() == QAbstractSocket::ConnectedState)
-//        {
-//            qint64 sentSize = clientConnection->write(IntToArray(file->size())); //write size of data
-//            qDebug()<<"ho inviato la dimensione= "+QString::number(sentSize);
-//            qint64 sentData = clientConnection->write(file->readAll()); //write the data itself
-//            qDebug()<<"ho inviato questi dati= "+QString::number(sentData);
-
-
-//        }
 
     QByteArray block; // Data that will be sent
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_5);
     out << (quint64)file->size(); // Space for size of data
     out << file->readAll(); // Actual data
-    //out.device()->seek(0);
-    //out << (quint64)(block.size() - sizeof(quint64));
 
     // signal
     connect(clientConnection, SIGNAL(disconnected()),
         clientConnection, SLOT(deleteLater()));
     // write the string into the socket
     clientConnection->write(block);
-    qDebug()<<block.size();
     // Wait until data are written to the native socket buffer
     clientConnection->waitForBytesWritten();
     return;

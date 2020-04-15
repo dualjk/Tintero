@@ -3,7 +3,8 @@
 #include <QTextBrowser>
 #include "Client.h"
 
-//! [0]
+static const int port = 50505;
+
 Client::Client(QWidget *parent)
     : QDialog(parent)
     , hostCombo(new QComboBox)
@@ -42,6 +43,7 @@ Client::Client(QWidget *parent)
     }
 
     portLineEdit->setValidator(new QIntValidator(1, 65535, this));
+    portLineEdit->setText(QString::number(port));
 
     /*Comando per oscurare la password durante l'inserimento*/
     pswLineEdit->setEchoMode(QLineEdit::Password);
