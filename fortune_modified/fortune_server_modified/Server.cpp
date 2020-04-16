@@ -9,6 +9,7 @@
 static const int PayloadSize = 20 * 1024; // 64 KB
 static const int port = 50505;
 
+//costruttore del server
 Server::Server(QWidget *parent)
     : QDialog(parent)
     , statusLabel(new QLabel)
@@ -27,7 +28,7 @@ Server::Server(QWidget *parent)
         // If the saved network configuration is not currently discovered use the system default
         QNetworkConfiguration config = manager.configurationFromIdentifier(id);
         if ((config.state() & QNetworkConfiguration::Discovered) !=
-            QNetworkConfiguration::Discovered) {
+                QNetworkConfiguration::Discovered) {
             config = manager.defaultConfiguration();
         }
 
@@ -39,16 +40,6 @@ Server::Server(QWidget *parent)
     } else {
         sessionOpened();
     }
-
-    //! [2]
-    fortunes << tr("You've been leading a dog's life. Stay off the furniture.")
-             << tr("You've got to think about tomorrow.")
-             << tr("You will be surprised by a loud noise.")
-             << tr("You will feel hungry again in another hour.")
-             << tr("You might have mail.")
-             << tr("You cannot kill time without injuring eternity.")
-             << tr("Computers are not intelligent. They only think they are.");
-
 
     auto quitButton = new QPushButton(tr("Quit"));
     quitButton->setAutoDefault(false);
@@ -92,6 +83,7 @@ Server::Server(QWidget *parent)
 
 }
 
+//stabilisce la connessione con il client
 void Server::sessionOpened()
 {
     // Save the used configuration
@@ -115,7 +107,7 @@ void Server::sessionOpened()
     // use the first non-localhost IPv4 address
     for (int i = 0; i < ipAddressesList.size(); ++i) {
         if (ipAddressesList.at(i) != QHostAddress::LocalHost &&
-            ipAddressesList.at(i).toIPv4Address()) {
+                ipAddressesList.at(i).toIPv4Address()) {
             ipAddress = ipAddressesList.at(i).toString();
             break;
         }
@@ -125,7 +117,7 @@ void Server::sessionOpened()
         ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
 
     tcpServer = new QTcpServer(this);
-    if (!tcpServer->listen(QHostAddress(ipAddress) , port)) {
+    if (!tcpServer->listen(QHostAddress(ipAddress) , port)) {       //la porta utilizzata è sempre la 50505
         QMessageBox::critical(this, tr("Fortune Server"),
                               tr("Unable to start the server: %1.")
                               .arg(tcpServer->errorString()));
@@ -141,7 +133,7 @@ void Server::sessionOpened()
 
 }
 
-//! [4]
+// Il server è connesso al client e attende di ricevere dati
 void Server::sendFortune()
 {
     clientConnection = tcpServer->nextPendingConnection();
@@ -151,7 +143,7 @@ void Server::sendFortune()
 
 }
 
-
+// Il server ha ricevuto dei dati dal client sotto forma di json, identifico l'azione richiesta
 void Server::receive(){
 
     in.startTransaction();
@@ -161,40 +153,40 @@ void Server::receive(){
     QJsonDocument jsonResponse = QJsonDocument::fromJson(nextFortune.toLatin1());
     QJsonArray jsonArray = jsonResponse.array();
 
-    if(!jsonArray.isEmpty())
+    if(!jsonArray.isEmpty())    //controllo che ci siano dei dati da leggere
     {
         QJsonObject jsonObject = jsonArray.first().toObject();
 
         if (!in.commitTransaction())
             return;
 
-        int c = jsonObject.value("action").toInt();
-        QString username = jsonObject.value("username").toString();
-        QString password = jsonObject.value("password").toString();
+        int c = jsonObject.value("action").toInt();                 //il primo campo del json definisce l'azione richiesta
 
         //creazione obj
 
-        QJsonArray jsarray;
+        QJsonArray jsarray; //creo l'array che dovrò mandare al client come risposta
 
         switch (c) {
         case 0: {/* login */
-            if(OnSearchClicked(username, password)){
-                int avatar = (getAvatarFromDB(username,password));
+            QString username = jsonObject.value("username").toString(); //salvo il valore username
+            QString password = jsonObject.value("password").toString(); //salvo il valore password
+            if(OnSearchClicked(username, password)){    //controllo se i dati ricevuti per il login sono corretti
+                int avatar = (getAvatarFromDB(username));  //recupero l'avatar dell'utente
                 statusLabel->setText("A pirate from our crew has returned! Hoorray!\nUsername: " +
                                      username + "\nPassword: " +
-                                     password + "\nAvatar scelto: "+QString::number(avatar));
+                                     password + "\nAvatar scelto: "+QString::number(avatar));   //aggiorno l'interfaccia grafica
 
                 QJsonObject loginSuccessful{
                     {"action", 1},
                     {"username", username},
                     {"avatar", avatar}
-                };
-                jsarray.push_back(loginSuccessful);
-                DocumentRetrievingByUser(username, jsarray);
+                };  //compilo il json da inviare come conferma al client
+                jsarray.push_back(loginSuccessful); //inserisco il json nell'array
+                DocumentRetrievingByUser(username, jsarray);    //vado alla funzione che si occupa di mandare al client la lista di file a cui l'utente ha accesso
 
 
             }
-            else {
+            else {  //login fallito
                 QJsonObject loginFailed{
                     {"action", 0}
                 };
@@ -202,77 +194,70 @@ void Server::receive(){
 
                 statusLabel->setText("Pirate does not remembah its password: too much rum drunk, bad pirate!");
             }
-            sendJsonFromServer(jsarray);
+            sendJsonFromServer(jsarray);    //invio il json creato (che indica successo o fallimento) al client
             break;
         }
 
         case 1: { /* sign up */
-            int avatar=jsonObject.value("avatar").toInt();
-            if(Server::DatabasePopulate(username,
-                                        password,
-                                        avatar)){
-
+            QString username = jsonObject.value("username").toString(); //salvo il valore username
+            QString password = jsonObject.value("password").toString(); //salvo il valore password
+            int avatar=jsonObject.value("avatar").toInt();  //salvo il valore avatar
+            if(DatabasePopulate(username, password, avatar)){   //chiamo la funzione che inserisce il nuovo utente nel database e controllo se ha successo
                 statusLabel->setText("A new pirate wants to join our crey! Cheers!\nUsername: " +
                                      username
-                                     + "\nPassword: " + password + "\nAvatar scelto: " + QString::number(avatar));
-
-
+                                     + "\nPassword: " + password + "\nAvatar scelto: " + QString::number(avatar));  //aggiorno la ui
                 QJsonObject signUpSuccessful{
                     {"action", 1}
-                };
-                jsarray.push_back(signUpSuccessful);
+                };  //creo il json da inviare al client
+                jsarray.push_back(signUpSuccessful);    //aggiungo il json all'array
             }
-            else{
-                /* username già esistente */
+            else{   // username già esistente
                 QJsonObject signUpFailed{
                     {"action", 0}
-                };
-                jsarray.push_back(signUpFailed);
+                };  //creo il json da inviare al client
+                jsarray.push_back(signUpFailed);    //aggiungo il json all'array
             }
-            sendJsonFromServer(jsarray);
+            sendJsonFromServer(jsarray);    //invio il json al client
             break;
         }
 
-        case 2: {
-            QString userDoc = jsonObject.value("user").toString();
-            QString docname = jsonObject.value("docTitle").toString();
-            QString debugdoc = " l'utente " +userDoc + " ha creato il file " + docname;
-            QString rndTitle = DocumentInsertion(userDoc, docname);
-            if(rndTitle!=nullptr){
+        case 2: {   //richiesta di creazione nuovo file
+            QString userDoc = jsonObject.value("user").toString();  //salvo il valore username
+            QString docname = jsonObject.value("docTitle").toString();  //salvo il valore nome originale file
+            QString rndTitle = DocumentInsertion(userDoc, docname); //chiamo la funzione che aggiunge il documento nel database e ritorna il nome random del file
+            if(rndTitle!=nullptr){  //controllo che la funzione si sia conclusa con successo
                 QJsonObject createDocSuccess{
                     {"action", 1},
                     {"rndTitle", rndTitle}
-                };
-                jsarray.push_back(createDocSuccess);
+                };  //creo il json da inviare al client
+                jsarray.push_back(createDocSuccess);    //aggiungo il json all'array
             }
-            else {
+            else {  //inserimento del documento nel database concluso con fallimento
                 QJsonObject createDocFailed{
                     {"action", 0}
                 };
                 jsarray.push_back(createDocFailed);
             }
 
-            sendJsonFromServer(jsarray);
+            sendJsonFromServer(jsarray);    //invio il json al client
             break;
         }
 
-        case 3: {
+        case 3: {   //richiesta di apertura di un file
             QString userDoc = jsonObject.value("user").toString();
             QString docname = jsonObject.value("docTitle").toString();
 
-            DocumentOpening(userDoc, docname);
+            DocumentOpening(userDoc, docname);  //chiamo la funzione che invia il file al client
 
             break;
         }
 
 
-        case 4: {
-            //TODO
-            qDebug()<<"case 4";
+        case 4: {   //richiesta di aggiunta file condiviso
             QString userDoc = jsonObject.value("user").toString();
             QString docname = jsonObject.value("docTitle").toString();
-            if(requestUriSetup(userDoc, docname))
-                DocumentOpening(userDoc, docname);
+            if(requestUriSetup(userDoc, docname))   //controllo che l'utente non abbia già accesso al file ed eventualmente aggiorno il db
+                DocumentOpening(userDoc, docname);  //se l'aggiunta ha avuto successo, invio il file al client
             break;
         }
         }
@@ -280,6 +265,7 @@ void Server::receive(){
 
 }
 
+//funzione che si occupa di aprire la connessione con il database
 void Server::DatabaseConnect() {
     const QString DRIVER("QSQLITE");
 
@@ -297,14 +283,14 @@ void Server::DatabaseConnect() {
         qWarning() << "MainWindow::DatabaseConnect - ERROR: no driver " << DRIVER << " available";
 }
 
-
+//funzione che si occupa di controllare se i dati inviati per il login sono corretti
 bool Server::OnSearchClicked(QString username, QString password)
 {
     QString sale;
     QSqlQuery query_sale;
     query_sale.prepare("SELECT sale FROM user WHERE username=?;");
     query_sale.addBindValue(username);
-    if(!query_sale.exec())
+    if(!query_sale.exec())  //recupero il sale per l'username con il quale si sta tentando di fare il login
         qWarning() << "MainWindow::OnSearchClicked - ERROR Query Sale: " << query_sale.lastError().text();
     if(query_sale.first()) {
         sale = query_sale.value(0).toString();
@@ -313,14 +299,13 @@ bool Server::OnSearchClicked(QString username, QString password)
     QSqlQuery query;
     query.prepare("SELECT id FROM user WHERE username=? AND password=?;");
     query.addBindValue(username);
-    QString passwordHashed = QCryptographicHash::hash((password+sale).toUtf8(), QCryptographicHash::Sha256);
-    qDebug()<<passwordHashed;
+    QString passwordHashed = QCryptographicHash::hash((password+sale).toUtf8(), QCryptographicHash::Sha256);    //calcolo l'hash della password inviata dall'utente aggiungendo il sale recuperato dal db
     query.addBindValue(passwordHashed);
 
     if(!query.exec())
         qWarning() << "MainWindow::OnSearchClicked - ERROR: " << query.lastError().text();
 
-    if(query.first()) {
+    if(query.first()) { //se la query mi torna una tupla, allora i dati inviati dall'utente sono corretti e permetto di proseguire
         qDebug()<< query.value(0).toString();
         return true;
     }
@@ -329,24 +314,25 @@ bool Server::OnSearchClicked(QString username, QString password)
     }
 }
 
-
-int Server::getAvatarFromDB(QString username, QString password)
+//funzione che si occupa di recuperare l'avatar dell'utente dal db
+int Server::getAvatarFromDB(QString username)
 {
     QSqlQuery query;
     query.prepare("SELECT avatar FROM user WHERE username=?;");
     query.addBindValue(username);
-    //query.addBindValue(password);
 
     if(!query.exec())
         qWarning() << "MainWindow::OnSearchClicked - ERROR: " << query.lastError().text();
 
     if(query.first()) {
-            return query.value(0).toInt();
+        return query.value(0).toInt();
     }
+    else
+        return -1;
 }
 
 
-
+//funzione che si occupa di aggiungere un nuovo utente al database
 bool Server::DatabasePopulate(QString username, QString password, int avatar) {
     QSqlDatabase::database().transaction();
     QSqlQuery query;
@@ -356,19 +342,14 @@ bool Server::DatabasePopulate(QString username, QString password, int avatar) {
     if(!query.exec())
         qWarning() << " - ERROR: Server::UsernameCheckExistance " << query.lastError().text();
 
-    if(query.first()) {
-        qDebug()<< query.value(0).toString();
+    if(query.first()) { //se la query ritorna una tupla vuol dire che l'username era già utilizzato
         QSqlDatabase::database().rollback();
         return false;
     }
 
-    QString sale = GetRandomString();
-    QString passwordHashed = QCryptographicHash::hash((password+sale).toUtf8(), QCryptographicHash::Sha256) ;
-
-    qDebug()<<passwordHashed;
-
-
-    query.prepare("INSERT INTO user(username, password, sale, avatar) VALUES(?, ?, ?, ?)");
+    QString sale = GetRandomString();   //chiamo la funzione che genera una stringa casuale da usare come sale
+    QString passwordHashed = QCryptographicHash::hash((password+sale).toUtf8(), QCryptographicHash::Sha256) ;   //genero l'hash della password
+    query.prepare("INSERT INTO user(username, password, sale, avatar) VALUES(?, ?, ?, ?)"); //inserisco il nuovo utente nel db
     query.addBindValue(username);
     query.addBindValue(passwordHashed);
     query.addBindValue(sale);
@@ -387,16 +368,16 @@ bool Server::DatabasePopulate(QString username, QString password, int avatar) {
     }
 }
 
+//funzione da utilizzare per inserire avatar personalizzati
+/*QPixmap Server::pixmapFrom(const QJsonValue &val) {
+    auto const encoded = val.toString().toLatin1();
+    QPixmap p;
+    p.loadFromData(QByteArray::fromBase64(encoded), "PNG");
+    return p;
+}*/
 
-QPixmap Server::pixmapFrom(const QJsonValue &val) {
-  auto const encoded = val.toString().toLatin1();
-  QPixmap p;
-  p.loadFromData(QByteArray::fromBase64(encoded), "PNG");
-  return p;
-}
 
-
-
+//funzione che si occupa di inviare il json al client attraverso il tcpSocket
 void Server::sendJsonFromServer(QJsonArray &jsarray) {
     QJsonDocument jsDoc(jsarray);
 
@@ -412,39 +393,39 @@ void Server::sendJsonFromServer(QJsonArray &jsarray) {
     return;
 }
 
-QJsonValue Server::jsonValFromPixmap(const QPixmap &p) {
-  QBuffer buffer;
-  buffer.open(QIODevice::WriteOnly);
-  p.save(&buffer, "PNG");
-  auto const encoded = buffer.data().toBase64();
-  return {QLatin1String(encoded)};
-}
+//funzione da utilizzare per inserire avatar personalizzati
+/*QJsonValue Server::jsonValFromPixmap(const QPixmap &p) {
+    QBuffer buffer;
+    buffer.open(QIODevice::WriteOnly);
+    p.save(&buffer, "PNG");
+    auto const encoded = buffer.data().toBase64();
+    return {QLatin1String(encoded)};
+}*/
 
-
+//funzione che genera una stringa casuale
 QString Server::GetRandomString() const
 {
-   const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
-   const int randomStringLength = 12; // assuming you want random strings of 12 characters
+    const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+    const int randomStringLength = 12; // assuming you want random strings of 12 characters
 
-   QString randomString;
-   for(int i=0; i<randomStringLength; ++i)
-   {
-       int index = qrand() % possibleCharacters.length();
-       QChar nextChar = possibleCharacters.at(index);
-       randomString.append(nextChar);
-   }
-   return randomString;
+    QString randomString;
+    for(int i=0; i<randomStringLength; ++i)
+    {
+        int index = qrand() % possibleCharacters.length();
+        QChar nextChar = possibleCharacters.at(index);
+        randomString.append(nextChar);
+    }
+    return randomString;
 }
 
-
-
+//funzione che si occupa di aggiungere un nuovo documento al db
 QString Server::DocumentInsertion(QString username, QString document) {
     QSqlQuery query;
     QString titleDocRnd;
-    if(DocumentOriginalTitleCheckExistance(document)) {
+    if(DocumentOriginalTitleCheckExistance(document,username)) { //controllo se esiste un documento creato dall'utente con stesso nome originale
         do
-            titleDocRnd = GetRandomString();
-        while (!DocumentRandomTitleCheckExistance(titleDocRnd));
+            titleDocRnd = GetRandomString();    //genero il nome casuale per il file
+        while (!DocumentRandomTitleCheckExistance(titleDocRnd));    //itero finché il nome casuale non è univoco
 
         query.prepare("INSERT INTO documents(user, document_rnd_title, document_original_title, owner) "
                       "VALUES(?, ?, ?, ?)");
@@ -458,11 +439,11 @@ QString Server::DocumentInsertion(QString username, QString document) {
             return nullptr;
         }
         else {
-
+            //se l'inserimento è andato a buon fine scrivo "something" nel file per avere del contenuto
             QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
-                             +titleDocRnd+".html");    //giulio
-//            QFile file("F:/Git/Tintero/fortune_modified/fortune_server_modified/doc/"
-//                                 +titleDocRnd+".html");    //salvo
+                       +titleDocRnd+".html");    //giulio
+            //            QFile file("F:/Git/Tintero/fortune_modified/fortune_server_modified/doc/"
+            //                                 +titleDocRnd+".html");    //salvo
             if ( file.open(QIODevice::ReadWrite) )
             {
                 QTextStream stream( &file );
@@ -476,7 +457,7 @@ QString Server::DocumentInsertion(QString username, QString document) {
         return nullptr;
 }
 
-
+//controllo se il nome casuale è univoco nel db
 bool Server::DocumentRandomTitleCheckExistance(QString document){
     QSqlQuery query;
     query.prepare("select document_rnd_title from documents where document_rnd_title=? ;");
@@ -493,7 +474,7 @@ bool Server::DocumentRandomTitleCheckExistance(QString document){
     }
 }
 
-
+//funzione usata per prendere e inviare al client la lista dei documenti a cui ha accesso
 void Server::DocumentRetrievingByUser(QString user, QJsonArray &array){
 
     QSqlQuery query;
@@ -508,25 +489,26 @@ void Server::DocumentRetrievingByUser(QString user, QJsonArray &array){
         return;
     }
 
-    while(query.next()) {
-    QJsonObject recordObject;
+    while(query.next()) {   //prossima tupla
+        QJsonObject recordObject;
 
-        for(int x=0; x < query.record().count(); x++) {
-         recordObject.insert( query.record().fieldName(x), QJsonValue::fromVariant(query.value(x)) );
+        for(int x=0; x < query.record().count(); x++) { //itero tra gli attributi
+            recordObject.insert( query.record().fieldName(x), QJsonValue::fromVariant(query.value(x)) );
         }
-     array.push_back(recordObject);
+        array.push_back(recordObject);
     }
     return;
 
 }
 
-bool Server::DocumentOriginalTitleCheckExistance(QString document){
+bool Server::DocumentOriginalTitleCheckExistance(QString document, QString username){
     QSqlQuery query;
-    query.prepare("select document_original_title from documents where document_original_title=? ;");
+    query.prepare("select document_original_title from documents where document_original_title=? AND owner=? ;");
     query.addBindValue(document);
+    query.addBindValue(username);
 
     if(!query.exec())
-        qWarning() << " - ERROR: Server::DocumentRndTitleCheckExistance " << query.lastError().text();
+        qWarning() << " - ERROR: Server::DocumentOriginalTitleCheckExistance " << query.lastError().text();
 
     if(query.first()) {
         return false;
@@ -557,7 +539,7 @@ void Server::DocumentOpening(QString username, QString document) {
 
     // signal
     connect(clientConnection, SIGNAL(disconnected()),
-        clientConnection, SLOT(deleteLater()));
+            clientConnection, SLOT(deleteLater()));
     // write the string into the socket
     clientConnection->write(block);
     // Wait until data are written to the native socket buffer

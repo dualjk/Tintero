@@ -44,7 +44,7 @@ private slots:
     bool OnSearchClicked(QString username, QString password);
     bool DatabasePopulate(QString username, QString password, int avatar);
     QPixmap pixmapFrom(const QJsonValue &val);
-    int getAvatarFromDB(QString username, QString password);
+    int getAvatarFromDB(QString username);
     QJsonValue jsonValFromPixmap(const QPixmap &p);
 
     void sendJsonFromServer(QJsonArray &jsarray);
@@ -52,7 +52,7 @@ private slots:
 
     QString DocumentInsertion(QString username, QString document);
     bool DocumentRandomTitleCheckExistance(QString document);
-    bool DocumentOriginalTitleCheckExistance(QString document);
+    bool DocumentOriginalTitleCheckExistance(QString document,QString username);
     void DocumentRetrievingByUser(QString user, QJsonArray &array);
     void DocumentOpening(QString username, QString document);
     void updateServerProgress();
