@@ -25,7 +25,7 @@ class QTcpSocket;
 class QNetworkSession;
 QT_END_NAMESPACE
 
-//! [0]
+
 class Client : public QDialog
 {
     Q_OBJECT
@@ -47,7 +47,6 @@ private slots:
     void signUp();
     void avatar();
     QJsonValue jsonValFromPixmap(const QPixmap &p);
-    //void sendJson(QJsonObject obj);
     void labelClicked();
     void selectedAvatar(int avatar);
     void toMainPage(QString username, QJsonArray jarray);
@@ -63,8 +62,6 @@ private:
     QLineEdit *portLineEdit = nullptr;
     QLabel *statusLabel = nullptr;
     QPushButton *getFortuneButton = nullptr;
-    //QTcpSocket *tcpSocket = nullptr;
-    //QDataStream in;
     QString currentFortune;
     QNetworkSession *networkSession = nullptr;
     QLineEdit *pswLineEdit = nullptr;
@@ -114,6 +111,5 @@ private:
 
 
 };
-//! [0]
 
 #endif

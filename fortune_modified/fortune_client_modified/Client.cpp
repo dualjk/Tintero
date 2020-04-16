@@ -1,3 +1,9 @@
+/* La classe Client gestisce il login e il sign up del client.
+ * Le due schermate sono gestite da uno stackedLayout e i widget per "port"
+ * e "address" sono riutilizzati sia da un layout che dall'altro (venogono "riassegnati").
+ */
+
+
 #include <QtNetwork>
 #include <QDir>
 #include <QTextBrowser>
@@ -10,7 +16,6 @@ Client::Client(QWidget *parent)
     , hostCombo(new QComboBox)
     , portLineEdit(new QLineEdit)
     , getFortuneButton(new QPushButton(tr("Login!")))
-//    , t->getTcpSocket()(new Qt->getTcpSocket()(this))
     , pswLineEdit(new QLineEdit)
     , usernameLineEdit(new QLineEdit)
     , newUserButton(new QPushButton(tr("Not a member? Join us here")))
@@ -69,7 +74,7 @@ Client::Client(QWidget *parent)
 
     picRegLabel = new QLabel(tr(""));
     appRegLabel = new QLabel(tr("<b>Tintero Client</b>: esplora con noi il magico mondo del c++\n"
-                             "Speriamo di prendere 30."));
+                                "Speriamo di prendere 30."));
     QPixmap pixReg(tmp_picPath);
     picRegLabel->setPixmap(pixReg.scaled(128,128, Qt::KeepAspectRatio));
 
@@ -85,11 +90,7 @@ Client::Client(QWidget *parent)
     buttonBox->addButton(getFortuneButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
 
-    /*dichiarazione di transmission*/
-
-//    in.setDevice(t->getTcpSocket());
-//    in.setVersion(QDataStream::Qt_4_0);
-    t = new Transmission(this);
+    t = new Transmission(this); // viene creata un'istanza di Transmission per gestire il tcpSocket
 
     connect(hostCombo, &QComboBox::editTextChanged,
             this, &Client::enableGetFortuneButton);
@@ -110,7 +111,7 @@ Client::Client(QWidget *parent)
     mainLayout = new QGridLayout(login);
 
 
-    for(int i=0; i<12; i++) {
+    for(int i=0; i<12; i++) { //creo un vettore di possibili avatar
         pixmapVector.append(QPixmap(":/img/avatar/"+QString::number(i+1)+".png"));
     }
 
@@ -190,7 +191,6 @@ Client::Client(QWidget *parent)
             this, &Client::avatar);
 
     stackedWidget = new QStackedWidget();
-
     stackedWidget->addWidget(login);
     stackedWidget->addWidget(reg);
 
@@ -212,7 +212,7 @@ Client::Client(QWidget *parent)
         // If the saved network configuration is not currently discovered use the system default
         QNetworkConfiguration config = manager.configurationFromIdentifier(id);
         if ((config.state() & QNetworkConfiguration::Discovered) !=
-            QNetworkConfiguration::Discovered) {
+                QNetworkConfiguration::Discovered) {
             config = manager.defaultConfiguration();
         }
 
@@ -243,50 +243,31 @@ void Client::logIn()
 
 }
 
-//QJsonObject Client::readJson()
-//{
-//    in.startTransaction();
-
-//    QString nextFortune;
-//    in >> nextFortune;
-//    QJsonDocument jsonResponse = QJsonDocument::fromJson(nextFortune.toLatin1());
-//    QJsonArray jsonArray = jsonResponse.array();
-
-
-//    if (!in.commitTransaction()){
-//        QJsonObject jsonObjectEmpty{
-
-//        };
-
-//        return jsonObjectEmpty;
-//    }
-
-//    if(!jsonArray.isEmpty())
-//    {
-//        QJsonObject jsonObject = jsonArray.first().toObject();
-//        return jsonObject;
-//    }
-//}
-
+/*
+ * Questa funzione legge il jsonObject tramite l'oggetto t ricevuto dopo il sign up
+ * e lo interpreta
+ */
 void Client::readJsonSignUp(){
     QJsonObject jsonObject = t->readJson();
     int c = jsonObject.value("action").toInt();
 
     switch (c) {
-        case 0:
-            appRegLabel->setText("<b>Tintero Client:</b> username già in utilizzo, cambialo animale bestia");
+    case 0:
+        appRegLabel->setText("<b>Tintero Client:</b> username già in utilizzo, cambialo animale bestia");
         break;
 
-        case 1:
-            backToLoginPage();
-            appLabel->setText("<b>Tintero Client:</b> registrazione andata a buon fine");
+    case 1:
+        backToLoginPage();
+        appLabel->setText("<b>Tintero Client:</b> registrazione andata a buon fine");
         break;
 
     }
-
-
 }
 
+/*
+ * Questa funzione legge il jsonObject tramite l'oggetto t ricevuto dopo il log in
+ * e lo interpreta
+ */
 void Client::readJsonLogIn(){
 
     QJsonArray jarray = t->readJsonArray();
@@ -294,16 +275,16 @@ void Client::readJsonLogIn(){
     int c = jsonObject.value("action").toInt();
 
     switch (c) {
-        case 0:
-            appLabel->setText("<b>Tintero Client:</b> username o password errati");
+    case 0:
+        appLabel->setText("<b>Tintero Client:</b> username o password errati");
         break;
 
-        case 1:
-            /* da implementare le pagina */
-            numAvatar=jsonObject.value("avatar").toInt();
-            appLabel->setText("<b>Tintero Client:</b> benvenuto "+jsonObject.value("username").toString() +
-                              ", avatar: " + QString::number( jsonObject.value("avatar").toInt()));
-            toMainPage(jsonObject.value("username").toString(), jarray);
+    case 1:
+        /* da implementare le pagina */
+        numAvatar=jsonObject.value("avatar").toInt();
+        appLabel->setText("<b>Tintero Client:</b> benvenuto "+jsonObject.value("username").toString() +
+                          ", avatar: " + QString::number( jsonObject.value("avatar").toInt()));
+        toMainPage(jsonObject.value("username").toString(), jarray);
 
         break;
 
@@ -317,26 +298,26 @@ void Client::displayError(QAbstractSocket::SocketError socketError)
     case QAbstractSocket::RemoteHostClosedError:
         break;
     case QAbstractSocket::HostNotFoundError:
-        QMessageBox::information(this, tr("Fortune Client"),
+        QMessageBox::information(this, tr("Tintero Client"),
                                  tr("The host was not found. Please check the "
                                     "host name and port settings."));
         break;
     case QAbstractSocket::ConnectionRefusedError:
-        QMessageBox::information(this, tr("Fortune Client"),
+        QMessageBox::information(this, tr("Tintero Client"),
                                  tr("The connection was refused by the peer. "
                                     "Make sure the fortune server is running, "
                                     "and check that the host name and port "
                                     "settings are correct."));
         break;
     default:
-        QMessageBox::information(this, tr("<s>Fortune Client</s> Tintero Client"),
+        QMessageBox::information(this, tr("Tintero Client"),
                                  tr("The following error occurred: %1.")
                                  .arg(t->getTcpSocket()->errorString()));
     }
 
     getFortuneButton->setEnabled(true);
 }
-//! [13]
+\
 
 void Client::enableGetFortuneButton()
 {
@@ -345,8 +326,8 @@ void Client::enableGetFortuneButton()
                                  !portLineEdit->text().isEmpty());
 
     signUpButton->setEnabled((!networkSession || networkSession->isOpen()) &&
-                                 !hostCombo->currentText().isEmpty() &&
-                                 !portLineEdit->text().isEmpty());
+                             !hostCombo->currentText().isEmpty() &&
+                             !portLineEdit->text().isEmpty());
 
 }
 
@@ -372,6 +353,9 @@ void Client::sessionOpened()
 }
 
 
+/*
+ * Funzioni per switchare pagina tra login e sign up e viceversa
+ */
 void Client::newUser(){
 
     secondLayout->addWidget(hostLabel, 1, 0);
@@ -394,9 +378,12 @@ void Client::backToLoginPage(){
     stackedWidget->setCurrentIndex(0);
 }
 
+/*
+ * Funzione per passare alla pagina principale dopo il login.
+ * Notare come vengano passati l'oggetto t per permettere le trasmissioni di dati tra processi
+ * L'username e la lista dei documenti a cui l'utente ha accesso sottoforma di vector.
+ */
 void Client::toMainPage(QString username, QJsonArray jarray){
-    qDebug()<<numAvatar;
-
     QVector<Document> *documentList = new QVector<Document>;
     for(int i=1; i<jarray.size(); i++) {
         QJsonObject jobj = jarray.at(i).toObject();
@@ -457,35 +444,13 @@ void Client::avatar() {
 
 
 QJsonValue Client::jsonValFromPixmap(const QPixmap &p) {
-  QBuffer buffer;
-  buffer.open(QIODevice::WriteOnly);
-  p.save(&buffer, "PNG");
-  auto const encoded = buffer.data().toBase64();
-  return {QLatin1String(encoded)};
+    QBuffer buffer;
+    buffer.open(QIODevice::WriteOnly);
+    p.save(&buffer, "PNG");
+    auto const encoded = buffer.data().toBase64();
+    return {QLatin1String(encoded)};
 }
 
-//void Client::sendJson(QJsonObject obj) {
-
-//    if(firstConnection) {
-//    t->getTcpSocket()->abort();
-//    t->getTcpSocket()->connectToHost(hostCombo->currentText(),
-//                             portLineEdit->text().toInt());
-
-//    firstConnection=false;
-//    }
-
-//    QJsonArray jsarray {obj};
-//    QJsonDocument jsDoc(jsarray);
-
-//    QString jsString = QString::fromLatin1(jsDoc.toJson());
-
-//    QByteArray block;
-//    QDataStream out(&block, QIODevice::WriteOnly);
-//    out.setVersion(QDataStream::Qt_5_10);
-
-//    out << jsString;
-//    t->getTcpSocket()->write(block);
-//}
 
 
 void Client::labelClicked(){
