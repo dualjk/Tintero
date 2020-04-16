@@ -268,8 +268,12 @@ void Server::receive(){
 
         case 4: {
             //TODO
-
-        break;
+            qDebug()<<"case 4";
+            QString userDoc = jsonObject.value("user").toString();
+            QString docname = jsonObject.value("docTitle").toString();
+            if(requestUriSetup(userDoc, docname))
+                DocumentOpening(userDoc, docname);
+            break;
         }
         }
     }
@@ -534,7 +538,6 @@ bool Server::DocumentOriginalTitleCheckExistance(QString document){
 
 
 void Server::DocumentOpening(QString username, QString document) {
-    //connect(clientConnection, &QIODevice::bytesWritten, this, &Server::updateServerProgress);
     file = new QFile("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_server_modified/doc/"
                      +document+".html");    //giulio
     /*file = new QFile("F:/Git/Tintero/fortune_modified/fortune_server_modified/doc/"
@@ -584,6 +587,62 @@ void Server::updateServerProgress() {
     if(bytesToWrite == 0) {
         disconnect(clientConnection, SIGNAL(bytesWritten(qint64)), 0, 0);
         qDebug()<<"ho inviato tutto yay!!";
+    }
+
+}
+
+
+bool Server::requestUriSetup(QString username, QString documentRndTitle){
+    qDebug()<<"entro nella requesturisetup";
+    QSqlDatabase::database().transaction();
+
+    QSqlQuery query;
+    query.prepare("select count(*) from documents where document_rnd_title=? and user=?");
+    query.addBindValue(documentRndTitle);
+    query.addBindValue(username);
+
+    if(!query.exec()) {
+        qWarning() << " - ERROR: Server::requestUriSetup #1 " << query.lastError().text();
+        QSqlDatabase::database().rollback();
+        return false;
+    }
+
+    if(query.first()) {
+        if(query.value(0)>0) {
+            QSqlDatabase::database().rollback();
+            qDebug()<< "Rollback #2";
+            return false;
+        }
+
+        query.prepare("select document_original_title, owner from documents where document_rnd_title=?");
+        query.addBindValue(documentRndTitle);
+
+        if(!query.exec()) {
+            qWarning() << " - ERROR: Server::requestUriSetup #2 " << query.lastError().text();
+            QSqlDatabase::database().rollback();
+        }
+
+        if(query.first()) {
+            QString documentOriginalTitle= query.value(0).toString();
+            QString owner = query.value(1).toString();
+            qDebug()<<documentOriginalTitle << " " << owner;
+
+            query.prepare("INSERT INTO documents(user, document_rnd_title, document_original_title, owner) "
+                          "VALUES(?, ?, ?, ?)");
+            query.addBindValue(username);
+            query.addBindValue(documentRndTitle);
+            query.addBindValue(documentOriginalTitle);
+            query.addBindValue(owner);
+
+            if(!query.exec()) {
+                qWarning() << " - ERROR: Server::requestUriSetup #3 " << query.lastError().text();
+                QSqlDatabase::database().rollback();
+                return false;
+            }
+            qDebug()<<"ho inserito la tupla";
+            QSqlDatabase::database().commit();
+            return true;
+        }
     }
 
 }

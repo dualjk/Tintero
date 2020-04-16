@@ -33,9 +33,14 @@ page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>
 #if user
     QDir dir("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/");
     dir.removeRecursively();
+    if(!QDir("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/").exists())
+        QDir().mkdir("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/");
+
 #else
     QDir dir("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/");
     dir.removeRecursively();
+    if(!QDir("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/").exists())
+        QDir().mkdir("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/");
 
 #endif
 
@@ -165,25 +170,26 @@ TextEdit* page::textEditStart(){
 
 
 void page::newDocumentCreate(){
-    QString rndTitle = readJsonNewDocument();
-    if(rndTitle!=nullptr){
+    titleDocumentRnd = readJsonNewDocument();
+    if(titleDocumentRnd!=nullptr){
 #if user
         QFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                       +rndTitle+".html" );
+                       +titleDocumentRnd+".html" );
         file.open(QIODevice::ReadWrite);
 
         TextEdit *te=textEditStart();
         te->load("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                 +rndTitle+".html"); //giulio
+                 +titleDocumentRnd+".html"); //giulio
 #else
         QFile file("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                               +rndTitle+".html" );
+                               +titleDocumentRnd+".html" );
         file.open(QIODevice::ReadWrite);
 
         TextEdit *te=textEditStart();
         te->load("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                 +rndTitle+".html"); //salvo
+                 +titleDocumentRnd+".html"); //salvo
 #endif
+
         te->setCurrentFileName(titleDocumentOriginal);
         te->show();
 
@@ -278,15 +284,11 @@ void page::dataReceived(QByteArray data) {
 
 
 #if user
-    if(!QDir("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/").exists())
-        QDir().mkdir("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/");
 
     QSaveFile file("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/"
                    +titleDocumentRnd+".html" ); //giulio
 
 #else
-    if(!QDir("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/").exists())
-        QDir().mkdir("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/");
 
     QSaveFile file("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
                    +titleDocumentRnd+".html" ); //salvo
@@ -328,10 +330,23 @@ void page::on_actionOpen_triggered()
     if((d.exec() !=  QDialog::Accepted) || d.getUri().isEmpty())
         return;
 
+
+
     QString uri = d.getUri();
     QStringList list = uri.split("/");
     titleDocumentRnd= list.at(1);
     titleDocumentOriginal= list.at(2);
+
+    for(int i=0;i<documentVector->size(); i++) {
+        if(documentVector->value(i).getRndTitle() == titleDocumentRnd) {
+            QMessageBox msgBox(this);
+            msgBox.setText("Il documento è già condiviso");
+            msgBox.setInformativeText("Inserisci un altro URI");
+            msgBox.exec();
+            return;
+        }
+
+    }
 
 
     QJsonObject title{
@@ -340,13 +355,9 @@ void page::on_actionOpen_triggered()
         {"docTitle", titleDocumentRnd}
     };
 
-
-
     this->t->sendJson(title, "", -1); //questo e' molto brutto ma dovrebbe funzionare
 
-    /*
     disconnect(t->getTcpSocket(), &QIODevice::readyRead, 0, 0);
     connect(t->getTcpSocket(), &QIODevice::readyRead, this, &page::readFile);
-    */
 
 }

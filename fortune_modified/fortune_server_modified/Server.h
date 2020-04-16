@@ -57,6 +57,7 @@ private slots:
     void DocumentOpening(QString username, QString document);
     void updateServerProgress();
     QByteArray IntToArray(qint64 source);
+    bool requestUriSetup(QString username, QString documentRndTitle);
 
 
 private:

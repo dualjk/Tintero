@@ -102,7 +102,7 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
 4. **programmino molto stupido che legga un documento arricchito e lo faccia stampare da un textEdit**
 5. **programmino stupido che restituisca TRUE se username e password sono presenti in un db (acquisizione username e psw, scrittura della query, scrittura/lettura del db)** -> fatto e sembra un sayan
 
-### **TODO (AGGIORNATO AL 15/4/2020)**
+### **TODO (AGGIORNATO AL 16/4/2020)**
 
 + AUTENTICAZIONE (REGISTRAZIONE, LOGIN)
 	
@@ -125,6 +125,6 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
  	* **Implementare controllo univocità nome documento da parte dello stesso utente (u1 non può creare due file chiamati entrambi "d1")** -> fatto
  	* **differenziare file creati dall'utente con file condivisi dagli altri** -> fatto
  	* **aprire il file dopo aver cliccato il bottone** -> fatto
- 	* **condivisione file (con uri)**
+ 	* **condivisione file (con uri)** -> fatto
  	* **gestione concorrenza operazioni database** -> fatto
  	* **lista client collegati**
