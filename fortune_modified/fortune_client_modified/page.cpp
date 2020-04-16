@@ -1,3 +1,17 @@
+/* Page gestisce la schermata principale successiva al login, in cui è presente l'icona dell'avatar,
+ * l'username dell'utente, l'elenco dei file in ordine alfabetico e la lista dei file in ordine di ultimo accesso.
+ * Questa classe gestisce la comunicazione con il server nel momento in cui il client decidesse di compiere una
+ * delle seguenti azioni:
+ * 1 - creazione di un nuovo documento
+ * 2 - apertura di un documento a cui ha accesso
+ * 3 - inserzione dell'uri per ottenere l'accesso ad un file
+ *
+ * Dopo ogni azione viene aperto il text editor. Per tornare alla schermata principale l'utente dovrebbe chiudere il text
+ * editor, lanciare nuovamente l'applicazione e quindi rifare l'accesso.
+ *
+ */
+
+
 #include "page.h"
 #include "ui_page.h"
 #include "uridialog.h"
@@ -30,6 +44,7 @@ page::page(QWidget *parent, Transmission* t, QString username, QVector<Document>
         ui->recentTableWidget->setItem(i,1, owner);
     }
 
+/* Ad ogni login viene rimossa la cartella tmp e viene ricreata */
 #if user
     QDir dir("/Users/giuliodg/Documents/GitHub/Tintero/fortune_modified/fortune_client_modified/tmp/");
     dir.removeRecursively();
@@ -62,6 +77,10 @@ void page::setUsernameLabel() {
     ui->usernameLabel->setAlignment(Qt::AlignCenter);
 }
 
+/* Questa funzione riempie la griglia contenente tutti i documenti a cui ha accesso l'utente
+ * tramite l'utlizzo di ClickableFrame
+ * Frame = Label con icona + Label con owner + Label con titolo documento (titolo originale)
+ */
 void page::setGridLayout(){
     QLabel *newDoc = new QLabel();
     newDoc->setPixmap(QPixmap(":/img/icons/new-file.png").scaled(64,64, Qt::KeepAspectRatio, Qt::SmoothTransformation));
@@ -97,7 +116,6 @@ void page::setGridLayout(){
     for(int i = 1; i <= documentVector->size(); i++)
     {
         containerVector.append(new ClickableFrame);
-
 
         labels.append(new QLabel);
         if(username == documentVector->value(i-1).getOwner()) {
@@ -137,6 +155,9 @@ void page::setGridLayout(){
 
 }
 
+
+/* Dico al server che ho intenzione di creare un documento.
+ */
 void page::newDocumentSetup(){
 
     DocTitleDialog *d = new DocTitleDialog(this);
@@ -156,6 +177,7 @@ void page::newDocumentSetup(){
     connect(t->getTcpSocket(), &QIODevice::readyRead, this, &page::newDocumentCreate);
 }
 
+
 TextEdit* page::textEditStart(){
     TextEdit *te = new TextEdit(this);
 
@@ -169,6 +191,9 @@ TextEdit* page::textEditStart(){
 }
 
 
+/*
+ * Il server mi risponde con un json contenente il titolo randomico (univoco) che ha generato.
+ */
 void page::newDocumentCreate(){
     titleDocumentRnd = readJsonNewDocument();
     if(titleDocumentRnd!=nullptr){
@@ -193,9 +218,7 @@ void page::newDocumentCreate(){
         te->setCurrentFileName(titleDocumentOriginal);
         te->show();
 
-
         this->hide();
-
     }
     else {
         QMessageBox msgBox(this);
