@@ -593,7 +593,6 @@ void Server::updateServerProgress() {
 
 
 bool Server::requestUriSetup(QString username, QString documentRndTitle){
-    qDebug()<<"entro nella requesturisetup";
     QSqlDatabase::database().transaction();
 
     QSqlQuery query;
@@ -610,7 +609,6 @@ bool Server::requestUriSetup(QString username, QString documentRndTitle){
     if(query.first()) {
         if(query.value(0)>0) {
             QSqlDatabase::database().rollback();
-            qDebug()<< "Rollback #2";
             return false;
         }
 
@@ -639,7 +637,6 @@ bool Server::requestUriSetup(QString username, QString documentRndTitle){
                 QSqlDatabase::database().rollback();
                 return false;
             }
-            qDebug()<<"ho inserito la tupla";
             QSqlDatabase::database().commit();
             return true;
         }

@@ -1,5 +1,23 @@
+/* Classe "generale" utilizzata dal client per gestire la connessione con il socket
+ * e per inviare JsonArray e ricevere JsonObject.
+ *
+ * Tenere presente che la gerarchia di incapsulamento dei json è la seguente:
+ * JsonObject -> JsonArray -> JsonDocument -> QString -> INVIO
+ * Pertanto la ricezione di un json prevederà lo "scapsulamento":
+ * RICEZIONE -> QString -> JsonDocument -> JsonArray -> JsonObject
+ *
+ * N.B. Le funzioni contenute in questa classe inviano solo JsonARRAY, ma leggono JsonOBJECT.
+ *
+ */
+
+
 #include "transmission.h"
 
+/*
+ * Il costruttore di Transmission inizializza un nuovo tcpSocket
+ * e istanzia un DataStream che utilizzerà nelle successive trasmissioni.
+ *
+ */
 Transmission::Transmission(QObject *client)
     : tcpSocket(new QTcpSocket(client))
 {
@@ -57,6 +75,8 @@ QJsonArray Transmission::readJsonArray()
 }
 
 
+/* Prendo come parametro un JsonObject, un indirizzo Ip e una porta e invio le informazioni contenute nel JsonObject
+ */
 void Transmission::sendJson(QJsonObject obj, QString address, int port) {
 
     if(firstConnection) {

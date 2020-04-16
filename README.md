@@ -128,3 +128,4 @@ L'architettura è di tipo client-server: il server apre la connessione al databa
  	* **condivisione file (con uri)** -> fatto
  	* **gestione concorrenza operazioni database** -> fatto
  	* **lista client collegati**
+ 	* **pulsante di logout**
