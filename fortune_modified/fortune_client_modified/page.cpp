@@ -17,7 +17,7 @@
 #include "uridialog.h"
 
 #include <QStandardItemModel>
-#define user 1      //giulio = 1, salvo = 0
+#define user 0      //giulio = 1, salvo = 0
 
 
 
@@ -207,12 +207,12 @@ void page::newDocumentCreate(){
                  +titleDocumentRnd+".html"); //giulio
 #else
         QFile file("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                               +titleDocumentRnd+".html" );
+                               +titleDocumentRnd+".mp4" );
         file.open(QIODevice::ReadWrite);
 
         TextEdit *te=textEditStart();
         te->load("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                 +titleDocumentRnd+".html"); //salvo
+                 +titleDocumentRnd+".mp4"); //salvo
 #endif
 
         te->setCurrentFileName(titleDocumentOriginal);
@@ -314,7 +314,7 @@ void page::dataReceived(QByteArray data) {
 #else
 
     QSaveFile file("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
-                   +titleDocumentRnd+".html" ); //salvo
+                   +titleDocumentRnd+".mp4" ); //salvo
 #endif
 
 
@@ -329,7 +329,7 @@ void page::dataReceived(QByteArray data) {
              +titleDocumentRnd+".html");    //giulio
 #else
     te->load("F:/Git/Tintero/fortune_modified/fortune_client_modified/tmp/"
-             +titleDocumentRnd+".html");    //salvo
+             +titleDocumentRnd+".mp4");    //salvo
 #endif
     te->setCurrentFileName(titleDocumentOriginal);
     te->show();

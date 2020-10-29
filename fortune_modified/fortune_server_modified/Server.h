@@ -43,9 +43,9 @@ private slots:
     void DatabaseConnect();
     bool OnSearchClicked(QString username, QString password);
     bool DatabasePopulate(QString username, QString password, int avatar);
-    QPixmap pixmapFrom(const QJsonValue &val);
+    //QPixmap pixmapFrom(const QJsonValue &val);
     int getAvatarFromDB(QString username);
-    QJsonValue jsonValFromPixmap(const QPixmap &p);
+    //QJsonValue jsonValFromPixmap(const QPixmap &p);
 
     void sendJsonFromServer(QJsonArray &jsarray);
     QString GetRandomString() const;
